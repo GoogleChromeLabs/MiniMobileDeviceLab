@@ -1,0 +1,30 @@
+.select-account {
+	header {
+		padding: 0 $padding;
+	}
+
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	a {
+		display: block;
+		padding: $padding;
+	}
+
+	li:nth-child(2n) {
+		&:active {
+			background-color: rgba(255, 255, 255, 0.1);
+		}
+	}
+
+	li:nth-child(2n+1) {
+		background-color: rgba(255, 255, 255, 0.2);
+
+		&:active {
+			background-color: rgba(255, 255, 255, 0.3);
+		}
+	}
+}

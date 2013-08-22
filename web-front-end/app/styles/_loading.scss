@@ -1,0 +1,12 @@
+.loading {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+
+	justify-content: center;
+   	align-items: center;
+
+	.spinner {
+		align-items: center;
+	}
+}

@@ -1,0 +1,19 @@
+require.config({
+    paths: {
+        jquery: '../bower_components/jquery/jquery'
+    }
+});
+
+require(['app', 'jquery'], function (app, $) {
+    'use strict';
+    // use app here
+    console.log(app);
+    console.log('Running jQuery %s', $().jquery);
+
+    document.addEventListener("deviceready", function() {
+        console.log('Device is Ready');
+        require(['login-ui-controller'], function(loginController) {
+            loginController.init();
+        });
+    }, false);
+});

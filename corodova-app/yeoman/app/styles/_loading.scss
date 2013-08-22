@@ -1,0 +1,11 @@
+.loading {
+	display: flex;
+	flex: 1;
+
+	justify-content: center;
+   	align-items: center;
+
+	.spinner {
+		align-items: center;
+	}
+}

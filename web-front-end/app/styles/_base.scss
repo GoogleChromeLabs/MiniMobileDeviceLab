@@ -1,0 +1,38 @@
+html, body {
+	height: 100%;
+
+	margin: 0;
+	padding: 0;
+
+	background-color: $bg-color;
+	color: $primary-color;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
+	font-size: 20px;
+
+	-webkit-tap-highlight-color: rgba(0,0,0, 0.0);
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: $secondary-color;
+	font-weight: 300;
+}
+
+h1 {
+	font-size: 1.6rem;
+}
+
+input {
+	font-family: inherit;
+	font-size: 1rem;
+	font-weight: inherit;
+	color: inherit;
+	background-color: rgba(255, 255, 255, 0.2);
+	border-style: none;
+
+	outline: none;
+}
+
+input:focus {
+	background-color: rgba(255, 255, 255, 0.3);
+}

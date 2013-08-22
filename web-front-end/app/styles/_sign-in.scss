@@ -1,0 +1,54 @@
+.sign-in, .home {
+	display: flex;
+   	flex-direction: column;
+
+   	height: 0;
+   	flex: 1;
+
+   	padding: 0 $padding;
+
+   	header {
+	   position: relative;
+
+	   flex: 1;
+
+	   h1 {
+	      position: absolute;
+	      bottom: 0;
+	      margin: 0 0 $padding 0;
+	      padding: 0;
+	   }
+	}
+
+	p {
+		font-size: 1.4rem;
+		margin: 0 0 $padding 0;
+	}
+
+	.sign-in-button,
+	.log-out-button {
+		position: relative;
+		display: block;
+
+		padding: 0.5rem;
+		margin: $padding 0;
+
+		background-color: $button-color;
+
+	    color: $button-text-color;
+	    font-size: 1.4em;
+	    text-align: center;
+	    text-decoration: none;
+
+		transition: all .1s ease;
+	}
+
+	.sign-in-button:active,
+	.log-out-button:active {
+    	background-color: darken($button-color, 8%);
+	}
+
+	#signinButton {
+		margin: $padding 0 !important;
+	}
+}
