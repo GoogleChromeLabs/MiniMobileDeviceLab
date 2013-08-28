@@ -17,20 +17,5 @@ define([], function () {
         }, "CordovaGPlusOauthPlugin", "loginGPlus", []);
     }
 
-    /**exports.loginToAccount = function(accountIndex, account, success, error) {
-        if(typeof cordova === 'undefined') {
-            success({userId: 1});
-            return;
-        }
-
-        cordova.exec(function(args) {
-            // Success Callback
-            success(args);
-        }, function(err) {
-            // Error Callback
-            error(err);
-        }, "CordovaGPlusOauthPlugin", "loginToAccount", [accountIndex, account.name]);
-    }**/
-
     return exports;
 });
