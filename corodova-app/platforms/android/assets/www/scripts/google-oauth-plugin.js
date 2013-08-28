@@ -6,10 +6,8 @@ define([], function () {
 
     exports.getUserAccounts = function(success, error) {
         cordova.exec(function(args) {
-            // Success Callback
             success(args);
         }, function(err) {
-            // Error Callback
             error(err);
         }, "CordovaGOauthPlugin", "getUserAccounts", []);
     }
@@ -17,10 +15,8 @@ define([], function () {
     exports.loginToAccount = function(accountIndex, account, success, error) {
         console.log("google-oauth-plugin: loginToAccount() accountIndex = "+accountIndex+" account.name = "+account.name);
         cordova.exec(function(args) {
-            // Success Callback
             success(args);
         }, function(err) {
-            // Error Callback
             error(err);
         }, "CordovaGOauthPlugin", "loginToAccount", [accountIndex, account.name]);
     }
