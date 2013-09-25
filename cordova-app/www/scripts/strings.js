@@ -24,7 +24,7 @@ define([], function () {
     exports.select_account_title = 'Please Select Your Account';
     exports.home_title = "Device Lab";
     exports.home_msgs = ["There isn't much you can do with this...",
-    "But if you send a url from the Chrome extension, we'll be waiting and ready to handle it for you"];
+    "But if you send a URL from your device lab site, we'll be ready and waiting to handle it for you"];
     exports.log_out = "Log Out";
 
     return exports;

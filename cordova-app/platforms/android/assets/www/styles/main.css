@@ -46,7 +46,35 @@ See the License for the specific language governing permissions and
 limitations under the License.
 **/
 
-/* line 16, ../../app/styles/_base.scss */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  src: local("Roboto Light"), local("Roboto-Light"), url(../fonts/Roboto-Light.ttf) format("ttf");
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local("Roboto Regular"), local("Roboto-Regular"), url(../fonts/Roboto-Regular.ttf) format("ttf");
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: local("Roboto Bold"), local("Roboto-Bold"), url(../fonts/Roboto-Bold.ttf) format("ttf");
+}
+
+/* line 35, ../../app/styles/_base.scss */
+
+* {
+  outline: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* line 40, ../../app/styles/_base.scss */
 
 html,
 body {
@@ -58,10 +86,9 @@ body {
   font-family: "Roboto", sans-serif;
   font-weight: 300;
   font-size: 20px;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-/* line 31, ../../app/styles/_base.scss */
+/* line 53, ../../app/styles/_base.scss */
 
 h1,
 h2,
@@ -73,7 +100,7 @@ h6 {
   font-weight: 300;
 }
 
-/* line 36, ../../app/styles/_base.scss */
+/* line 58, ../../app/styles/_base.scss */
 
 h1 {
   font-size: 1.6rem;

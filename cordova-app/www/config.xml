@@ -2,13 +2,13 @@
 <widget id="co.uk.gauntface.mobile.devicelab" version="0.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Device Lab</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        An application which can be used to create a virtual device lab
     </description>
-    <author email="dev@callback.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="matt@gauntface.co.uk" href="http://www.gauntface.co.uk/">
+        Matt Gaunt
     </author>
     <access origin="*" />
-    <preference name="fullscreen" value="true" />
+    <preference name="fullscreen" value="false" />
     <preference name="webviewbounce" value="true" />
     <content src="index.html" />
 </widget>
