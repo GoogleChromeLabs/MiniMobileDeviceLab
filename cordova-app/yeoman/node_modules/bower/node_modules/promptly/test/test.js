@@ -214,6 +214,20 @@ describe('choose()', function () {
 
         process.stdin.emit('data', 'apple\n');
     });
+
+    it('should not use strict comparison when matching against valid choices', function (next) {
+        stdout = '';
+
+        promptly.choose('choices: ', [1, 2, 3], function (err, value) {
+            expect(err).to.be(null);
+            expect(typeof value).to.equal('number');
+            expect(value).to.be(1);
+            expect(stdout).to.contain('choices: ');
+            next();
+        });
+
+        process.stdin.emit('data', '1\n');
+    });
 });
 
 describe('confirm()', function () {

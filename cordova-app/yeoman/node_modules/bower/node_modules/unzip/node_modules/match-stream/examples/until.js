@@ -6,7 +6,7 @@ var ms = new MatchStream({ pattern: 'World'}, function (buf, matched, extra) {
     return this.push(buf);
   }
   this.push(buf);
-  return this.push(null); //end the stream
+  return this.push(null); //signal end of data
 });
 
 var sourceStream = new streamBuffers.ReadableStreamBuffer();

@@ -36,7 +36,10 @@ Match.prototype._transform = function (chunk, encoding, callback) {
   if (index >= 0) {
     processMatches.call(this, index, pattern, callback);
   } else {
-    this._matchFn(this._bufs.splice(0, this._bufs.length - chunk.length));
+    var buf = this._bufs.splice(0, this._bufs.length - chunk.length);
+    if (buf && buf.length > 0) {
+      this._matchFn(buf.toBuffer());
+    }
     callback();
   }
 };

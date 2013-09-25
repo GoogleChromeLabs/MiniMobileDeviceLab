@@ -503,11 +503,17 @@ This example specifies some dependencies to load as soon as require.js defines r
 
 <p>When run in a browser, <a href="#pathsfallbacks">paths fallbacks</a> can be specified, to allow trying a load from a CDN location, but falling back to a local location if the CDN location fails to load.</p>
 
-<p id="config-shim"><strong><a href="#config-shim">shim</a></strong>: Configure the dependencies and exports for older, traditional "browser globals" scripts that do not use define() to declare the dependencies and set a module value.</p>
+<p id="config-shim"><strong><a href="#config-shim">shim</a></strong>: Configure the dependencies, exports, and custom initialization for older, traditional "browser globals" scripts that do not use define() to declare the dependencies and set a module value.</p>
 
 <p>Here is an example. It requires RequireJS 2.1.0+, and assumes backbone.js, underscore.js and jquery.js have been installed in the baseUrl directory. If not, then you may need to set a paths config for them:</p>
 
 <pre><code>requirejs.config({
+    //Remember: only use shim config for non-AMD scripts,
+    //scripts that do not already call define(). The shim
+    //config will not work correctly if used on AMD scripts,
+    //in particular, the exports and init config will not
+    //be triggered, and the deps config will be confusing
+    //for those cases.
     shim: {
         'backbone': {
             //These script dependencies should be loaded before loading
@@ -532,6 +538,9 @@ This example specifies some dependencies to load as soon as require.js defines r
                 //function arguments. If this function returns a value,
                 //then that value is used as the module export value
                 //instead of the object found via the 'exports' string.
+                //Note: jQuery registers as an AMD module via define(),
+                //so this will not work for jQuery. See notes section
+                //below for an approach for jQuery.
                 return this.Foo.noConflict();
             }
         }
@@ -601,6 +610,11 @@ loaded (a return from init is <strong>not</strong> used for <code>enforceDefine<
     AMD module may not be evaluated until after the shimmed code in the build
     executes, and an error will occur. The ultimate fix is to upgrade all the
     shimmed code to have optional AMD define() calls.</li>
+    <li>The init function will <strong>not</strong> be called for AMD modules.
+    For example, you cannot use a shim init function to call jQuery's noConflict.
+    See <a href="jquery.html#noconflictmap">Mapping Modules to use noConflict</a>
+    for an alternate approach to jQuery.</li>
+    <li>Shim config is not supported when running AMD modules in node via RequireJS (it works for optimizer use though). Depending on the module being shimmed, it may fail in Node because Node does not have the same global environment as browsers. As of RequireJS 2.1.7, it will warn you in the console that shim config is not supported, and it may or may not work. If you wish to suppress that message, you can pass <code>requirejs.config({ suppress: { nodeShim: true }});</code>.</li>
 </ul>
 
 <p><b>Important optimizer notes for "shim" config</b>:</p>
@@ -998,7 +1012,7 @@ require(['jquery'], function ($) {
 }, function (err) {
     //The errback, error callback
     //The error has a list of modules that failed
-    var failedId = err.requireModules && err.requireModules[0],
+    var failedId = err.requireModules && err.requireModules[0];
     if (failedId === 'jquery') {
         //undef is function only on the global requirejs object.
         //Use it to clear internal knowledge of jQuery. Any modules

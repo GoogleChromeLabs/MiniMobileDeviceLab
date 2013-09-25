@@ -1,4 +1,3 @@
-//@ sourceMappingURL=coffeeJoin.map
 (function() {
   var HelloWorld;
 
@@ -14,3 +13,7 @@
   console.log('hi');
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=coffeeJoin.js.map
+*/

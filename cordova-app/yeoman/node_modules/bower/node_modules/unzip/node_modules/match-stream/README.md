@@ -22,7 +22,7 @@ var ms = new MatchStream({ pattern: 'World'}, function (buf, matched, extra) {
     return this.push(buf);
   }
   this.push(buf);
-  return this.push(null); //end the stream
+  return this.push(null); //signal end of data
 });
 
 var sourceStream = new streamBuffers.ReadableStreamBuffer();
@@ -60,7 +60,7 @@ var ms = new MatchStream({ pattern: '.', consume: true}, function (buf, matched,
 
 fs.createReadStream('lorem.txt')
   .pipe(ms)
-  .once('end', function() {
+  .once('finish', function() {
     console.log(loremLines);
   });
 ```

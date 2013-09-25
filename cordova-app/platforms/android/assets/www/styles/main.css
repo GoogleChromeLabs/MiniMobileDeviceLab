@@ -1,4 +1,52 @@
-/* line 1, ../../app/styles/_base.scss */
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+/* line 16, ../../app/styles/_base.scss */
 
 html,
 body {
@@ -13,7 +61,7 @@ body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-/* line 16, ../../app/styles/_base.scss */
+/* line 31, ../../app/styles/_base.scss */
 
 h1,
 h2,
@@ -25,13 +73,29 @@ h6 {
   font-weight: 300;
 }
 
-/* line 21, ../../app/styles/_base.scss */
+/* line 36, ../../app/styles/_base.scss */
 
 h1 {
   font-size: 1.6rem;
 }
 
-/* line 1, ../../app/styles/_sign-in.scss */
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+/* line 16, ../../app/styles/_sign-in.scss */
 
 .sign-in,
 .home {
@@ -52,7 +116,7 @@ h1 {
   padding: 0 1rem;
 }
 
-/* line 10, ../../app/styles/_sign-in.scss */
+/* line 25, ../../app/styles/_sign-in.scss */
 
 .sign-in header,
 .home header {
@@ -63,7 +127,7 @@ h1 {
   flex: 1;
 }
 
-/* line 15, ../../app/styles/_sign-in.scss */
+/* line 30, ../../app/styles/_sign-in.scss */
 
 .sign-in header h1,
 .home header h1 {
@@ -73,7 +137,7 @@ h1 {
   padding: 0;
 }
 
-/* line 23, ../../app/styles/_sign-in.scss */
+/* line 38, ../../app/styles/_sign-in.scss */
 
 .sign-in p,
 .home p {
@@ -81,7 +145,7 @@ h1 {
   margin: 0 0 1rem 0;
 }
 
-/* line 33, ../../app/styles/_sign-in.scss */
+/* line 48, ../../app/styles/_sign-in.scss */
 
 .sign-in .sign-in-button,
 .sign-in .log-out-button,
@@ -100,7 +164,7 @@ h1 {
   transition: all 0.1s ease;
 }
 
-/* line 51, ../../app/styles/_sign-in.scss */
+/* line 66, ../../app/styles/_sign-in.scss */
 
 .sign-in .sign-in-button:active,
 .sign-in .log-out-button:active,
@@ -109,7 +173,23 @@ h1 {
   background-color: #bcbcbc;
 }
 
-/* line 1, ../../app/styles/_loading.scss */
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+/* line 16, ../../app/styles/_loading.scss */
 
 .loading {
   display: -webkit-box;
@@ -130,7 +210,7 @@ h1 {
   align-items: center;
 }
 
-/* line 8, ../../app/styles/_loading.scss */
+/* line 23, ../../app/styles/_loading.scss */
 
 .loading .spinner {
   -webkit-box-align: center;
@@ -139,13 +219,29 @@ h1 {
   align-items: center;
 }
 
-/* line 2, ../../app/styles/_select-account.scss */
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+/* line 17, ../../app/styles/_select-account.scss */
 
 .select-account header {
   padding: 0 1rem;
 }
 
-/* line 6, ../../app/styles/_select-account.scss */
+/* line 21, ../../app/styles/_select-account.scss */
 
 .select-account ul {
   list-style-type: none;
@@ -153,38 +249,38 @@ h1 {
   padding: 0;
 }
 
-/* line 12, ../../app/styles/_select-account.scss */
+/* line 27, ../../app/styles/_select-account.scss */
 
 .select-account a {
   display: block;
   padding: 1rem;
 }
 
-/* line 18, ../../app/styles/_select-account.scss */
+/* line 33, ../../app/styles/_select-account.scss */
 
 .select-account li:nth-child(2n):active {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* line 23, ../../app/styles/_select-account.scss */
+/* line 38, ../../app/styles/_select-account.scss */
 
 .select-account li:nth-child(2n+1) {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* line 26, ../../app/styles/_select-account.scss */
+/* line 41, ../../app/styles/_select-account.scss */
 
 .select-account li:nth-child(2n+1):active {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-/* line 8, ../../app/styles/main.scss */
+/* line 23, ../../app/styles/main.scss */
 
 body #main-content {
   height: 100%;
 }
 
-/* line 13, ../../app/styles/main.scss */
+/* line 28, ../../app/styles/main.scss */
 
 .spinner {
   height: 60px;
@@ -196,7 +292,7 @@ body #main-content {
   border-radius: 100%;
 }
 
-/* line 22, ../../app/styles/main.scss */
+/* line 37, ../../app/styles/main.scss */
 
 .spinner:before {
   content: "";
@@ -214,11 +310,13 @@ body #main-content {
 }
 
 @-webkit-keyframes rotation {
+  /* line 53, ../../app/styles/main.scss */
   from {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
 
+  /* line 54, ../../app/styles/main.scss */
   to {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg);
@@ -226,11 +324,13 @@ body #main-content {
 }
 
 @keyframes rotation {
+  /* line 53, ../../app/styles/main.scss */
   from {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
 
+  /* line 54, ../../app/styles/main.scss */
   to {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg);

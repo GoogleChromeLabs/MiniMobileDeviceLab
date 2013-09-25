@@ -4,20 +4,16 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-
+import co.uk.gauntface.mobile.devicelab.C;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-
-import co.uk.gauntface.mobile.devicelab.C;
 
 /**
  * Created by mattgaunt on 12/07/2013.

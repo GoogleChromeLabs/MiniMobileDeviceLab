@@ -50,9 +50,9 @@ function XUnit(runner) {
       , tests: stats.tests
       , failures: stats.failures
       , errors: stats.failures
-      , skip: stats.tests - stats.failures - stats.passes
+      , skipped: stats.tests - stats.failures - stats.passes
       , timestamp: (new Date).toUTCString()
-      , time: stats.duration / 1000
+      , time: (stats.duration / 1000) || 0
     }, false));
 
     tests.forEach(test);

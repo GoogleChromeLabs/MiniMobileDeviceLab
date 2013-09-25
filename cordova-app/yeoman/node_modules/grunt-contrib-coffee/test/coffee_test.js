@@ -112,8 +112,8 @@ exports.coffee = {
       'Compilation of single file with source maps should generate javascript');
 
     assertFileEquality(test,
-      'tmp/maps/coffee.map',
-      'test/expected/maps/coffee.map',
+      'tmp/maps/coffee.js.map',
+      'test/expected/maps/coffee.js.map',
       'Compilation of single file with source maps should generate map');
 
     assertFileEquality(test,
@@ -122,8 +122,8 @@ exports.coffee = {
       'Compilation of multiple files with source maps should generate javascript');
 
     assertFileEquality(test,
-      'tmp/maps/coffeeJoin.map',
-      'test/expected/maps/coffeeJoin.map',
+      'tmp/maps/coffeeJoin.js.map',
+      'test/expected/maps/coffeeJoin.js.map',
       'Compilation of multiple files with source maps should generate map');
 
     assertFileEquality(test,
@@ -137,8 +137,8 @@ exports.coffee = {
       'Bare compilation of single file with source maps should generate javascript');
 
     assertFileEquality(test,
-      'tmp/maps/coffeeBare.map',
-      'test/expected/maps/coffeeBare.map',
+      'tmp/maps/coffeeBare.js.map',
+      'test/expected/maps/coffeeBare.js.map',
       'Bare compilation of single file with source maps should generate map');
 
     assertFileEquality(test,
@@ -147,8 +147,8 @@ exports.coffee = {
       'Bare compilation of multiple files with source maps should generate javascript');
 
     assertFileEquality(test,
-      'tmp/maps/coffeeBareJoin.map',
-      'test/expected/maps/coffeeBareJoin.map',
+      'tmp/maps/coffeeBareJoin.js.map',
+      'test/expected/maps/coffeeBareJoin.js.map',
       'Bare compilation of multiple files with source maps should generate map');
 
     assertFileEquality(test,
@@ -174,13 +174,13 @@ exports.coffee = {
       'Separate compilation of coffee and litcoffee files with source maps should generate javascript');
 
     assertFileEquality(test,
-      'tmp/eachMap/coffee1.map',
-      'test/expected/eachMap/coffee1.map',
+      'tmp/eachMap/coffee1.js.map',
+      'test/expected/eachMap/coffee1.js.map',
       'Separate compilation of coffee and litcoffee files with source maps should generate map');
 
     assertFileEquality(test,
-      'tmp/eachMap/litcoffee.map',
-      'test/expected/eachMap/litcoffee.map',
+      'tmp/eachMap/litcoffee.js.map',
+      'test/expected/eachMap/litcoffee.js.map',
       'Separate compilation of coffee and litcoffee files with source maps should generate map');
 
     test.done();

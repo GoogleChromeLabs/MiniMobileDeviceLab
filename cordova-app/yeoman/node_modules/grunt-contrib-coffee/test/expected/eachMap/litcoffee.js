@@ -1,4 +1,3 @@
-//@ sourceMappingURL=litcoffee.map
 (function() {
   var sayHello;
 
@@ -7,3 +6,7 @@
   };
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=litcoffee.js.map
+*/

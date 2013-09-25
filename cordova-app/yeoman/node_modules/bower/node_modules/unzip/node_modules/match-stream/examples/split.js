@@ -14,7 +14,7 @@ var ms = new MatchStream({ pattern: '.', consume: true}, function (buf, matched,
 
 fs.createReadStream(path.join(__dirname, 'lorem.txt'))
   .pipe(ms)
-  .once('end', function() {
+  .once('finish', function() {
     console.log(loremLines);
   });
 

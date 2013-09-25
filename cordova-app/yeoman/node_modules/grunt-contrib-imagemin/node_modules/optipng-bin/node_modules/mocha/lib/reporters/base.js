@@ -161,19 +161,21 @@ exports.list = function(failures){
       , expected = err.expected
       , escape = true;
 
+    // uncaught
+    if (err.uncaught) {
+      msg = 'Uncaught ' + msg;
+    }
+
     // explicitly show diff
-    if (err.showDiff) {
+    if (err.showDiff && sameType(actual, expected)) {
       escape = false;
-      err.actual = actual = JSON.stringify(actual, null, 2);
-      err.expected = expected = JSON.stringify(expected, null, 2);
+      err.actual = actual = stringify(actual);
+      err.expected = expected = stringify(expected);
     }
 
     // actual / expected diff
     if ('string' == typeof actual && 'string' == typeof expected) {
-      var len = Math.max(actual.length, expected.length);
-
-      if (len < 20) msg = errorDiff(err, 'Chars', escape);
-      else msg = errorDiff(err, 'Words', escape);
+      msg = errorDiff(err, 'Words', escape);
 
       // linenos
       var lines = msg.split('\n');
@@ -282,48 +284,38 @@ function Base(runner) {
  */
 
 Base.prototype.epilogue = function(){
-  var stats = this.stats
-    , fmt
-    , tests;
+  var stats = this.stats;
+  var tests;
+  var fmt;
 
   console.log();
 
-  function pluralize(n) {
-    return 1 == n ? 'test' : 'tests';
-  }
-
-  // failure
-  if (stats.failures) {
-    fmt = color('bright fail', '  ' + exports.symbols.err)
-      + color('fail', ' %d of %d %s failed')
-      + color('light', ':')
-
-    console.error(fmt,
-      stats.failures,
-      this.runner.total,
-      pluralize(this.runner.total));
-
-    Base.list(this.failures);
-    console.error();
-    return;
-  }
-
-  // pass
+  // passes
   fmt = color('bright pass', ' ')
-    + color('green', ' %d %s complete')
+    + color('green', ' %d passing')
     + color('light', ' (%s)');
 
   console.log(fmt,
-    stats.tests || 0,
-    pluralize(stats.tests),
+    stats.passes || 0,
     ms(stats.duration));
 
   // pending
   if (stats.pending) {
     fmt = color('pending', ' ')
-      + color('pending', ' %d %s pending');
+      + color('pending', ' %d pending');
 
-    console.log(fmt, stats.pending, pluralize(stats.pending));
+    console.log(fmt, stats.pending);
+  }
+
+  // failures
+  if (stats.failures) {
+    fmt = color('fail', '  %d failing');
+
+    console.error(fmt,
+      stats.failures);
+
+    Base.list(this.failures);
+    console.error();
   }
 
   console.log();
@@ -378,4 +370,32 @@ function colorLines(name, str) {
   return str.split('\n').map(function(str){
     return color(name, str);
   }).join('\n');
+}
+
+/**
+ * Stringify `obj`.
+ *
+ * @param {Mixed} obj
+ * @return {String}
+ * @api private
+ */
+
+function stringify(obj) {
+  if (obj instanceof RegExp) return obj.toString();
+  return JSON.stringify(obj, null, 2);
+}
+
+/**
+ * Check that a / b have the same type.
+ *
+ * @param {Object} a
+ * @param {Object} b
+ * @return {Boolean}
+ * @api private
+ */
+
+function sameType(a, b) {
+  a = Object.prototype.toString.call(a);
+  b = Object.prototype.toString.call(b);
+  return a == b;
 }

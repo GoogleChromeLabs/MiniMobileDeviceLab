@@ -1,10 +1,10 @@
 {
-  "name": "www",
+  "name": "yeoman",
   "version": "0.0.0",
   "dependencies": {
-    "requirejs": "~2.1.4",
+    "requirejs": "~2.1.8",
     "modernizr": "~2.6.2",
-    "jquery": "~1.9.1"
+    "jquery": "~1.10.2"
   },
   "devDependencies": {}
 }

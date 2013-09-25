@@ -1,3 +1,8 @@
+v0.7.0:
+  date: 2013-04-19
+  changes:
+    - Place Sourcemaps at bottom of file
+    - Change extension for Sourcemaps from .maps to .js.map
 v0.6.7:
   date: 2013-04-18
   changes:

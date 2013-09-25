@@ -1,4 +1,3 @@
-//@ sourceMappingURL=coffee.map
 (function() {
   var HelloWorld;
 
@@ -12,3 +11,7 @@
   })();
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=coffee.js.map
+*/

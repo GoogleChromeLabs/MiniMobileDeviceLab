@@ -19,14 +19,10 @@ require.config({
     }
 });
 
-require(['app', 'jquery'], function (app, $) {
+require(['jquery'], function ($) {
     'use strict';
-    // use app here
-    console.log(app);
-    console.log('Running jQuery %s', $().jquery);
 
     document.addEventListener("deviceready", function() {
-        console.log('Device is Ready');
         require(['login-ui-controller'], function(loginController) {
             loginController.init();
         });

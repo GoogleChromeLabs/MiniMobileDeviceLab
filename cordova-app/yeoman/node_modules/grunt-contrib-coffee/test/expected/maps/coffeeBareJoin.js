@@ -1,4 +1,3 @@
-//@ sourceMappingURL=coffeeBareJoin.map
 var HelloWorld;
 
 HelloWorld = (function() {
@@ -11,3 +10,7 @@ HelloWorld = (function() {
 })();
 
 console.log('hi');
+
+/*
+//@ sourceMappingURL=coffeeBareJoin.js.map
+*/
