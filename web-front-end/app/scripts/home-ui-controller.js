@@ -1,4 +1,18 @@
-/*global define */
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
 define(['config', 'strings', 'device-list-controller', 'gcm-controller', 'android-browser-model'], function (config, strings, deviceListController, gcmController, androidBrowserModel) {
     'use strict';
 
@@ -11,6 +25,7 @@ define(['config', 'strings', 'device-list-controller', 'gcm-controller', 'androi
     var mainContentElement = document.getElementById('main-content');
     var devices = [];
     var idToken;
+    var isAutoSignIn = false;
 
     function clearUpCurrentStateUI() {
         var childNode = mainContentElement.firstChild;
@@ -31,7 +46,7 @@ define(['config', 'strings', 'device-list-controller', 'gcm-controller', 'androi
             case LOADING:
                 return 'loading';
             case DEVICE_LIST:
-                return 'device-list';
+                return 'device-lab-home';
             default:
                 return null;
         }
@@ -120,9 +135,9 @@ define(['config', 'strings', 'device-list-controller', 'gcm-controller', 'androi
 
             if(i === selectedBrowser) {
                 liElement.classList.add('selected-browser');
-            } else {
-                liElement.onclick = onBrowserClickHandler(i);
             }
+
+            liElement.onclick = onBrowserClickHandler(i);
 
             ulElement.appendChild(liElement);
         }
@@ -134,23 +149,15 @@ define(['config', 'strings', 'device-list-controller', 'gcm-controller', 'androi
 
     function onBrowserClickHandler(index) {
         return function(e){
-            var browserOptions = document.getElementsByClassName('browser-options');
-            for (var i = 0; i < browserOptions.length; ++i) {
-                var browserList = browserOptions[i]; 
-                
-                var selectedItems = browserList.getElementsByClassName('selected-browser'); 
-                for(var j = 0; j < selectedItems.length; i++) {
-                    selectedItems[j].classList.remove('selected-browser');
-                }
-
-                if(browserList.children.length > index) {
-                    browserList.children[index].classList.add('selected-browser');
-                }
+            var browserList = document.querySelector('.browser-options');
+            var selectedItems = browserList.querySelectorAll('.selected-browser'); 
+            for(var i = 0; i < selectedItems.length; i++) {
+                selectedItems[i].classList.remove('selected-browser');
             }
 
-            console.log('onBrowserClickHandler: index = '+index);
+            browserList.children[index].classList.add('selected-browser');
+
             androidBrowserModel.setSelectedBrowser(index);
-            //element.classList.add('selected-browser');
         };
     }
 
@@ -165,7 +172,9 @@ define(['config', 'strings', 'device-list-controller', 'gcm-controller', 'androi
         var stateClassName = getStateClass(newState);
         switch(newState) {
             case LOADING:
-                mainContentElement.appendChild(getTitleElement(strings.device_list_loading_title, newState));
+                if(!isAutoSignIn) {
+                    mainContentElement.appendChild(getTitleElement(strings.device_list_loading_title, newState));
+                }
 
                 element = document.createElement('div');
                 element.classList.add('spinner');
@@ -185,12 +194,6 @@ define(['config', 'strings', 'device-list-controller', 'gcm-controller', 'androi
                     playStoreButton.appendChild(document.createTextNode(strings.play_store));
                     playStoreButton.href= "http://play.google.com/";
                     mainContentElement.appendChild(playStoreButton);
-
-                    var appStoreButton = document.createElement('a');
-                    appStoreButton.classList.add('app-store-button');
-                    appStoreButton.appendChild(document.createTextNode(strings.app_store));
-                    appStoreButton.href= "https://itunes.apple.com/";
-                    mainContentElement.appendChild(appStoreButton);
                 } else {
                     mainContentElement.appendChild(createBrowserOptions());
 
@@ -218,9 +221,10 @@ define(['config', 'strings', 'device-list-controller', 'gcm-controller', 'androi
         currentState = newState;
     }
 
-    exports.init = function(token) {
+    exports.init = function(token, autoSignIn) {
         console.log('home-ui-controller: init() token = '+token);
         idToken = token;
+        isAutoSignIn = autoSignIn;
 
         if(typeof idToken !== 'undefined') {
             setUIState(LOADING);

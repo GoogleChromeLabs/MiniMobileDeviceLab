@@ -30,16 +30,18 @@ Install this grunt plugin next to your project's [Gruntfile][getting_started] wi
 
 ## Configuration
 
-This is a very simple task and takes only one configuration parameter, `path`.
+This is a very simple task and takes two configuration parameter, `path` (required) and `app` (optionnal). If app is unused, default application will launch. 
 
 ```js
 grunt.initConfig({
   open : {
     dev : {
-      path: 'http://127.0.0.1:8888/src'
+      path: 'http://127.0.0.1:8888/src',
+      app: 'Google Chrome'
     },
     google : {
-      path : 'http://google.com/'
+      path : 'http://google.com/',
+      app: 'Firefox'
     },
     file : {
       path : '/etc/hosts'

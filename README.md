@@ -25,5 +25,5 @@ Once you've done that, the next step is to build the Android APK, to do this you
 
 Then add a dependency on the Google Play Services Extra http://developer.android.com/google/play-services/setup.html. This will give support for Google Cloud Messaging and Google Plus Sign In.
 
-Now get yourself a working build :)
+Now you've got yourself a working build :)
 

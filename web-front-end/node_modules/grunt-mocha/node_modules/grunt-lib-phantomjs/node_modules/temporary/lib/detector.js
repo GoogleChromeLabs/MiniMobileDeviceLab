@@ -22,7 +22,18 @@ var detector = module.exports;
 var normalize = function(path) {
   var last = Array.prototype.pop.apply(path);
   
-  if (process.platform !== "win32" && last !== '/') {
+  if (process.platform !== "win32") {
+    if (last !== '/') {
+      path += '/';
+    }
+  } else {
+    //This is fine b/c Windows will 
+    //correctly resolve filepaths with additional slashes
+    //and it is not correct to assume that on Windows the value
+    //of path will be a string that terminates in '\'.
+    //
+    //See: http://stackoverflow.com/questions/4158597/extra-slashes-in-path-variable-of-file-copy-or-directory-createdirectory-met
+    //
     path += '/';
   }
   
@@ -42,3 +53,5 @@ detector.tmp = function() {
   
   return normalize(temp);
 };
+
+detector._normalize = normalize;

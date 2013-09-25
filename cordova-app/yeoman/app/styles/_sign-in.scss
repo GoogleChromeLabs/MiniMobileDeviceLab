@@ -62,8 +62,20 @@ limitations under the License.
 		transition: all .1s ease;
 	}
 
+	.sign-in-button:hover,
+	.log-out-button:hover {
+    	background-color: darken($button-color, 4%);
+	}
+	
 	.sign-in-button:active,
 	.log-out-button:active {
     	background-color: darken($button-color, 8%);
+	}
+
+	.sign-in-button > img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		max-height: 100%;
 	}
 }

@@ -1,5 +1,19 @@
-/*global define */
-define(['config', 'strings', 'gplus-identity', 'chrome-identity'], function (config, strings, gplusIdentity, chromeIdentity) {
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+define(['config', 'strings', 'gplus-identity'], function (config, strings, gplusIdentity) {
     'use strict';
 
     var LOADING = 0;
@@ -12,6 +26,7 @@ define(['config', 'strings', 'gplus-identity', 'chrome-identity'], function (con
     var mainContentElement = document.getElementById('main-content');
     var controller;
     var idToken;
+    var isAutoSignIn = false;
 
     function clearUpCurrentStateUI() {
         var childNode = mainContentElement.firstChild;
@@ -57,23 +72,38 @@ define(['config', 'strings', 'gplus-identity', 'chrome-identity'], function (con
         var stateClassName = getStateClass(newState);
         switch(newState) {
             case SIGN_IN:
-                mainContentElement.appendChild(getTitleElement(strings.welcome_title));
+                var spinner = document.createElement('div');
+                spinner.classList.add('spinner');
+                mainContentElement.appendChild(spinner);
+
+                var signInWrapper = document.createElement('section');
+                signInWrapper.classList.add('sign-in-wrapper');
+                signInWrapper.style.display = 'none';
+                signInWrapper.appendChild(getTitleElement(strings.welcome_title));
 
                 for(var i = 0; i < strings.welcome_msgs.length; i++) {
                     var pElement = document.createElement('p');
                     pElement.appendChild(document.createTextNode(strings.welcome_msgs[i]));
-                    mainContentElement.appendChild(pElement);
+                    signInWrapper.appendChild(pElement);
                 }
 
-                controller.addSignInButton(mainContentElement, function(token) {
+                controller.addSignInButton(signInWrapper, function(token, autoSignIn) {
                     idToken = token;
+                    isAutoSignIn = autoSignIn;
                     // Success - Signed In
-                    console.log('login-ui-controller Signed In');
                     setUIState(HOME)
                 }, function(errorMsg) {
                     // Error
                     console.log('login-ui-controller - error on signing in '+errorMsg);
+                }, function() {
+                    var spinner = document.querySelector('.spinner');
+                    var signInWrapper = document.querySelector('.sign-in-wrapper');
+
+                    spinner.style.display = 'none';
+                    signInWrapper.style.display = 'block';
                 });
+
+                mainContentElement.appendChild(signInWrapper);
                 break;
             case LOADING:
                 element = document.createElement('div');
@@ -87,8 +117,7 @@ define(['config', 'strings', 'gplus-identity', 'chrome-identity'], function (con
 
                 window.location.hash = '#home';
                 require(['home-ui-controller'], function(homeController){
-                    console.log('login-ui-controller: homeController.init()');
-                    homeController.init(idToken);
+                    homeController.init(idToken, isAutoSignIn);
                 });
                 break;
         }
@@ -104,14 +133,7 @@ define(['config', 'strings', 'gplus-identity', 'chrome-identity'], function (con
     }
 
     exports.init = function() {
-        //if(chrome.experimental) {
-        //    console.log('Using the ChromeIdentity controller');
-        //    controller = chromeIdentity;
-        //} else {
-            console.log('Using the gplusIdentity controller');
-            controller = gplusIdentity;
-        //}
-
+        controller = gplusIdentity;
 
         setUIState(SIGN_IN); 
     }

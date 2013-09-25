@@ -20,5 +20,21 @@ describe('detector', function() {
           || (process.platform === "win32" ? "c:\\windows\\temp\\" : "/tmp/");
       detector.tmp().should.eql(tmp);
     });
+    it('should normalize windows paths correctly', function () {
+      var platform_noConflict = process.platform;
+      
+      process.platform = 'win32';
+      detector._normalize('c:\\windows\\foo\\bar\\')
+          .should.eql('c:\\windows\\foo\\bar\\/');
+      detector._normalize('c:/windows/foo/bar/')
+         .should.eql('c:/windows/foo/bar//');
+      detector._normalize('c:/windows/foo/bar')
+         .should.eql('c:/windows/foo/bar/');
+      detector._normalize('c:\\windows\\foo\\bar')
+         .should.eql('c:\\windows\\foo\\bar/');
+      process.platform = platform_noConflict;
+    });
+
   });
 });
+
