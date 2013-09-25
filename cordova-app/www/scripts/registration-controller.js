@@ -13,7 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-/*global define */
 define(['config', 'device-controller'], function (config, deviceController) {
     'use strict';
 
@@ -27,8 +26,6 @@ define(['config', 'device-controller'], function (config, deviceController) {
 
         cordova.exec(function(args) {
             // Success Callback
-            //success(args.regId);
-            console.log('Registration-controller: cordova.exec args.regId = '+args.regId);
             registerWithBackEnd(idToken, args.regId, success, error);
         }, function(err) {
             // Error Callback
@@ -38,11 +35,7 @@ define(['config', 'device-controller'], function (config, deviceController) {
 
     function registerWithBackEnd(idToken, regId, successCb, errorCb) {
         deviceController.getDevice(function(device) {
-            // Success
             var that = this;
-
-            console.log('Registration-controller: registering device = '+config.url+'/devicelab/devices/register/');
-            console.log('Registration-controller: regId = '+regId);
 
             // Use the auth token to do an XHR to get the user information.
             var xhr = new XMLHttpRequest();
@@ -62,7 +55,6 @@ define(['config', 'device-controller'], function (config, deviceController) {
                 paramString += '&device_id='+encodeURIComponent(device.deviceId);
             }
 
-            //xhr.setRequestHeader("Content-length", paramString.length);
             xhr.send(paramString);
         }, function(err){
             // Error
@@ -75,15 +67,12 @@ define(['config', 'device-controller'], function (config, deviceController) {
         return function(e) {
             if (this.readyState == 4) {
                 if(this.status != 200) {
-                    console.log('Registration-controller: xhr error msg = '+this.responseText);
+                    console.log('registration-controller: xhr error msg = '+this.responseText);
                     errorCb();
                     return;
                 } else {
-                    console.log('registration-controller: registerDeviceWithLab() xhr.responseText = '+this.responseText);
                     var data = JSON.parse(this.responseText);
-                    console.log('registration-controller: Step 1');
                     device.deviceId = data.device_id;
-                    console.log('registration-controller: Step 2');
                     successCb(device);
                 }
             }

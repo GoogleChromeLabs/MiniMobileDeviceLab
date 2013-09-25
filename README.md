@@ -24,3 +24,6 @@ cordova prepare
 Once you've done that, the next step is to build the Android APK, to do this you'll need to import the Android project into IntelliJ or Eclipse (NOTE: Android Studio isn't currently supported).
 
 Then add a dependency on the Google Play Services Extra http://developer.android.com/google/play-services/setup.html. This will give support for Google Cloud Messaging and Google Plus Sign In.
+
+Now get yourself a working build :)
+

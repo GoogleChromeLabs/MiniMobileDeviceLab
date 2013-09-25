@@ -13,7 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-/*global define */
 define(['config', 'sign-in-controller', 'registration-controller', 'strings', 'device-controller'], function (config, signInController, regController, strings, deviceController) {
     'use strict';
 
@@ -115,7 +114,6 @@ define(['config', 'sign-in-controller', 'registration-controller', 'strings', 'd
         regController.registerDeviceWithLab(idToken, function(device) {
             // Success
             deviceController.saveDevice(device);
-
             setUIState(HOME);
         }, function(){
             // Error
@@ -134,7 +132,6 @@ define(['config', 'sign-in-controller', 'registration-controller', 'strings', 'd
     }
 
     exports.init = function() {
-        console.log('login-ui-state: init() userID');
         setUIState(SIGN_IN);
     }
 

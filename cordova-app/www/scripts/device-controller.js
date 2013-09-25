@@ -13,14 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-/*global define */
 define([], function () {
     'use strict';
 
     var exports = {};
 
     exports.saveDevice = function(device) {
-        if(!(Modernizr && Modernizr.localstorage)) {
+        if(!hasLocalStorage()) {
             return;
         }
 
@@ -32,7 +31,6 @@ define([], function () {
             getFilteredDevice(successCb, errorCb);
         } else {
             document.addEventListener("deviceready", function() {
-                console.log('Device-Controller: Device is Ready');
                 getFilteredDevice(successCb, errorCb);
             }, false);
         }
@@ -70,7 +68,7 @@ define([], function () {
     }
 
     function getDeviceId() {
-        if(!(Modernizr && Modernizr.localstorage)) {
+        if(!hasLocalStorage()) {
             return;
         }
 
@@ -78,11 +76,15 @@ define([], function () {
     }
 
     function getDeviceNickname() {
-        if(!(Modernizr && Modernizr.localstorage)) {
+        if(!hasLocalStorage()) {
             return window.device.model;
         }
 
         return localStorage.getItem("device-nickname");
+    }
+
+    function hasLocalStorage() {
+        return Modernizr && Modernizr.localstorage;
     }
 
 

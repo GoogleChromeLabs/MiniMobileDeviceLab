@@ -13,7 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-/*global define */
 define([], function () {
     'use strict';
 
@@ -21,21 +20,16 @@ define([], function () {
 
     exports.getUserAccounts = function(success, error) {
         cordova.exec(function(args) {
-            // Success Callback
             success(args);
         }, function(err) {
-            // Error Callback
             error(err);
         }, "CordovaGOauthPlugin", "getUserAccounts", []);
     }
 
     exports.loginToAccount = function(accountIndex, account, success, error) {
-        console.log("google-oauth-plugin: loginToAccount() accountIndex = "+accountIndex+" account.name = "+account.name);
         cordova.exec(function(args) {
-            // Success Callback
             success(args);
         }, function(err) {
-            // Error Callback
             error(err);
         }, "CordovaGOauthPlugin", "loginToAccount", [accountIndex, account.name]);
     }

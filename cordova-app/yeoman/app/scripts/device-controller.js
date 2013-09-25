@@ -19,7 +19,7 @@ define([], function () {
     var exports = {};
 
     exports.saveDevice = function(device) {
-        if(!(Modernizr && Modernizr.localstorage)) {
+        if(!hasLocalStorage()) {
             return;
         }
 
@@ -68,7 +68,7 @@ define([], function () {
     }
 
     function getDeviceId() {
-        if(!(Modernizr && Modernizr.localstorage)) {
+        if(!hasLocalStorage()) {
             return;
         }
 
@@ -76,11 +76,15 @@ define([], function () {
     }
 
     function getDeviceNickname() {
-        if(!(Modernizr && Modernizr.localstorage)) {
+        if(!hasLocalStorage()) {
             return window.device.model;
         }
 
         return localStorage.getItem("device-nickname");
+    }
+
+    function hasLocalStorage() {
+        return Modernizr && Modernizr.localstorage;
     }
 
 
