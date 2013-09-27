@@ -1,3 +1,18 @@
+/**
+ * Copyright 2013 Google Inc. All Rights Reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package co.uk.gauntface.devicelab.appengine;
 
 import com.google.android.gcm.server.Message;
@@ -9,11 +24,9 @@ import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
 
 import co.uk.gauntface.devicelab.appengine.controller.DevicesController;
-import co.uk.gauntface.devicelab.appengine.controller.PushMessageController;
 import co.uk.gauntface.devicelab.appengine.model.Device;
 import co.uk.gauntface.devicelab.appengine.utils.C;
 import co.uk.gauntface.devicelab.appengine.utils.GPlusTokenInfo;
-import co.uk.gauntface.devicelab.appengine.utils.Utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,24 +40,19 @@ import javax.servlet.http.HttpServletResponse;
 
 public class GCMServlet extends HttpServlet {
 
-    private PushMessageController mPushMessageController;
-    
     public GCMServlet() {
-        mPushMessageController = new PushMessageController();
+        
     }
     
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  { 
         // pre-flight request processing
-        System.out.println("GCMServlet: doPost() req.getRequestURI() = "+req.getRequestURI());
-        
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
     }
     
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("GCMServlet: doPost() req.getRequestURI() = "+req.getRequestURI());
         String requestUri = req.getRequestURI();
         
         String[] uriParts = requestUri.split("/");
@@ -56,7 +64,7 @@ public class GCMServlet extends HttpServlet {
         }
         
         String action = uriParts[3];
-        System.out.println("GCMServlet: doPost() action = "+action);
+        
         if(action.equals("url")) {
             handlePushMessage(req, resp);
         }
@@ -86,7 +94,6 @@ public class GCMServlet extends HttpServlet {
         }
         
         String jsonData = sb.toString();
-        System.out.println("GCMServlet: handlePushMessage() = "+jsonData);
         
         JSONObject jsonObj = null;
         try {
@@ -156,17 +163,6 @@ public class GCMServlet extends HttpServlet {
                 System.out.println("GCMServlet: handlePushMessage() IOException e = "+e.getMessage());
             }
         }
-        
-        /**String userId = Utils.getPostParameter("user_id", req);
-        String url = Utils.getPostParameter("url", req);
-        
-        System.out.println("userId = "+userId);
-        System.out.println("url = "+url);
-        
-        DevicesController devicesCtrl = new DevicesController();
-        List<Device> deviceList = devicesCtrl.getDevices(userId);
-        
-        **/
         
         String jsonResponse = "{";
         

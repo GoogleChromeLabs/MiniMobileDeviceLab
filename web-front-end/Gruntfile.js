@@ -19,7 +19,8 @@ module.exports = function (grunt) {
     // configurable paths
     var yeomanConfig = {
         app: 'app',
-        dist: 'dist'
+        dist: 'dist',
+        prod: '../app-engine/war/front-end'
     };
 
     grunt.initConfig({
@@ -363,6 +364,33 @@ module.exports = function (grunt) {
                 cwd: '<%= yeoman.app %>/styles',
                 dest: '.tmp/styles/',
                 src: '{,*/}*.css'
+            },
+            prod: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.dist %>',
+                    dest: '<%= yeoman.prod %>',
+                    src: [
+                        '*.*',
+                        '*/{,*/}*.*'
+                    ]
+                }, {
+                    expand: true,
+                    cwd: '.tmp/images',
+                    dest: '<%= yeoman.dist %>/images',
+                    src: [
+                        'generated/*'
+                    ]
+                }, {
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>/chrome-app',
+                    dest: '<%= yeoman.dist %>/chrome-app',
+                    src: [
+                        '{,*/}*'
+                    ]
+                }]
             }
         },
         concurrent: {
@@ -438,6 +466,11 @@ module.exports = function (grunt) {
         'autoprefixer',
         'copy:debug',
     ]);
+
+    grunt.registerTask('build-prod', [
+        'build',
+        'copy:prod'
+        ]);
 
     grunt.registerTask('default', [
         'jshint',
