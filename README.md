@@ -7,7 +7,7 @@ Mini Mobile Device Lab
 
 There is a real problem testing web pages across multiple devices and the browsers that run on them. The best solutions today are to either enter a url to a tool to manage the devices or use applications across the devices, keeping them open and testing in a WebView.
 
-This project is a Virtual Device Lab. It allows you to quickly launch url's across all of a  configured devices in an instant, selecting which browser to launch.
+This project is a Virtual Device Lab. It allows you to quickly launch URLs across all configured devices in an instant, selecting which browser to launch.
 
 This is still in early stages of development, which means you can probably expect things to break, but we'd love help, bugs and feature requests.
 
