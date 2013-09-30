@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DeviceLabTheme" parent="android:Theme.Holo.NoActionBar">
+        <item name="@android:windowBackground">@color/window_bg</item>
+    </style>
+</resources>
