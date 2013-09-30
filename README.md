@@ -5,14 +5,14 @@
 Mini Mobile Device Lab
 ======================
 
-There is a real problem testing web pages across multiple device form factors and the browsers that run on them (normally it's a case of manually entering a url or IP address on each device).
+There is a real problem testing web pages across multiple device form factors and the browsers that run on them. The usual technique of manually entering a url or IP address on each device or relying on a tool to help synchronize the devices, but loosing the ability to test in real browsers.
 
-This project is a Virtual Device Lab.  It allows you to quickly launch url's across all of a  configured devices in an instant, selecting which browser to launch.
+This project is a Virtual Device Lab. It allows you to quickly launch url's across all of a  configured devices in an instant, selecting which browser to launch.
 
-This is still in early stages of development, so things may very well break.
+This is still in early stages of development, so things may very well break, but we'd love help, bugs and feature requests.
 
 <p align="center">
-<iframe width="420" height="315" src="//www.youtube.com/embed/qmfNZXADCwQ" frameborder="0" allowfullscreen></iframe>
+[![ScreenShot](http://i.imgur.com/8Pyoc1E.png)](http://www.youtube.com/watch?v=qmfNZXADCwQ)
 </p>
 
 Building the App Engine App
