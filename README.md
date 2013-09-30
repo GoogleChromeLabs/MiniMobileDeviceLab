@@ -12,7 +12,9 @@ This project is a Virtual Device Lab. It allows you to quickly launch url's acro
 This is still in early stages of development, so things may very well break, but we'd love help, bugs and feature requests.
 
 <p align="center">
-[![ScreenShot](http://i.imgur.com/8Pyoc1E.png)](http://www.youtube.com/watch?v=qmfNZXADCwQ)
+  <a href="http://www.youtube.com/watch?v=qmfNZXADCwQ">
+  	<img src="http://i.imgur.com/8Pyoc1E.png" alt="Device Lab Front End"/>
+  </a>
 </p>
 
 Building the App Engine App
