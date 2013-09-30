@@ -12,7 +12,7 @@ This project is a Virtual Device Lab. It allows you to quickly launch url's acro
 This is still in early stages of development, which means you can probably expect things to break, but we'd love help, bugs and feature requests.
 
 <p align="center">
-  <a href="http://www.youtube.com/watch?v=qmfNZXADCwQ">
+  <a href="http://youtu.be/DgwntGgosTQ">
   	<img src="http://i.imgur.com/8Pyoc1E.png" alt="Device Lab Front End"/>
   </a>
 </p>
