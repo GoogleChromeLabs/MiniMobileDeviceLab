@@ -9,6 +9,8 @@ There is a real problem testing web pages across multiple device form factors an
 
 This project is a Virtual Device Lab.  It allows you to quickly launch url's across all of a  configured devices in an instant, selecting which browser to launch.
 
+This is still in early stages of development, so things may very well break.
+
 <p align="center">
 <iframe width="420" height="315" src="//www.youtube.com/embed/qmfNZXADCwQ" frameborder="0" allowfullscreen></iframe>
 </p>
