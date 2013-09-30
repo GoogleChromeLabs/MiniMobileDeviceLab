@@ -45,7 +45,9 @@ Building the Cordova App
 
 This can be a little fiddly I'm afraid, but we can get through it.
 
-First, get the grunt task to build in the yeoman directory.
+A little bit of admin is needed to gain access to the Google Plus API, you'll need to create a project in the [Google API Console](https://code.google.com/apis/console/), switch on the Google Plus Service, then create a client ID for installed applications and create one for an Android app, which will require you debug key. Then just pop the client ID in `cordova-app/platforms/android/src/co/uk/gauntface/mobile/devicelab/C.java` for `DEBUG_CLIENT_ID`.
+
+Then get the grunt task to build in the yeoman directory.
 
 `cd cordova-app/yeoman`
 
