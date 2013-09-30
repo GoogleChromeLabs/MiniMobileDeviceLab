@@ -1,3 +1,18 @@
+/**
+ Copyright 2013 Google Inc. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ **/
 package co.uk.gauntface.mobile.devicelab.plugins;
 
 import android.accounts.Account;
@@ -42,9 +57,6 @@ import co.uk.gauntface.mobile.devicelab.C;
 
 public class CordovaGPlusOauthPlugin extends CordovaPlugin implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 
-    private static final String PRODUCTION_CLIENT_ID = "148156526883-o5idu9ocjcafdfrtts27p2ojv7bggc5s.apps.googleusercontent.com";
-    private static final String DEBUG_CLIENT_ID = "148156526883-fr8venmd66rn418s0qc5ilbtq7mbnqu9.apps.googleusercontent.com";
-
     private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
 
     private PlusClient mPlusClient;
@@ -53,7 +65,7 @@ public class CordovaGPlusOauthPlugin extends CordovaPlugin implements GooglePlay
 
     private String getClienId() {
         boolean isDebuggable =  ((this.cordova.getActivity().getApplicationInfo().flags &= ApplicationInfo.FLAG_DEBUGGABLE) != 0);
-        return isDebuggable ? DEBUG_CLIENT_ID : PRODUCTION_CLIENT_ID;
+        return isDebuggable ? C.DEBUG_CLIENT_ID : C.PRODUCTION_CLIENT_ID;
     }
 
     private PlusClient getPlusClient() {

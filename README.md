@@ -20,6 +20,14 @@ You'll need [Eclipse with the App Engine plugin](https://developers.google.com/a
 
 Open Eclipse and import the project `File > Import` and set the directory to `app-engine` which should display the `mini-device-lab` project as an option.
 
+You may need to right click the src folder and go to `Build Path > Make Source Folder`. Then right click the war directory and go to `Build Path > Exclude`.
+
+Right click project file, go to Java Build Path > Output folder - Browse` and select mini-device-lab/war/WEB-INF/classes.
+
+Right click the project and go to `Properties > Java Build Path > Add JARs > mini-device-lab > war > WEB_INF > lib` and select all the jar files except `app-engine-api-1.0-sdk-1.7.4.jar`. Then go to `Add Library > Google App Engine > Finish`. Then finall go to `Add Library > JRE System Library > Finish`.
+
+You'll need to add a Google Cloud Messaging API key in `mini-device-lab > src > utils > C.java` and follow the instructions [here](// Get your API key following these steps http://developer.android.com/google/gcm/gs.html)
+
 You'll need to make the local server accessible on your local network. To do this go to `Run > Run Configurations`, go to the arguments tab and add `--address=0.0.0.0 ` to the start of the existing text.
 
 You can view the controller site @ [http://localhost:8888/front-end/](http://localhost:8888/front-end/)
@@ -54,6 +62,15 @@ Now you've got yourself a working build :)
 <p align="center">
   <img src="http://i.imgur.com/xxF0ovI.png" alt="Device Lab App"/>
 </p>
+
+Building the Web Front-End
+---------------------------
+
+You only need to do this if you are altering / developing the Web Front End.
+
+The front end can be run seperate from app-engine with `grunt server`.
+
+But if you want to produce a build for app-engine, the command `grunt build-prod` will build the site and copy it to the `app-engine` directory.
 
 Future of Device Lab
 =====================
