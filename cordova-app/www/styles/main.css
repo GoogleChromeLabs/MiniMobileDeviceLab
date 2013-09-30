@@ -193,11 +193,30 @@ limitations under the License.
 
 /* line 66, ../../app/styles/_sign-in.scss */
 
+.sign-in .sign-in-button:hover,
+.sign-in .log-out-button:hover,
+.home .sign-in-button:hover,
+.home .log-out-button:hover {
+  background-color: #c6c6c6;
+}
+
+/* line 71, ../../app/styles/_sign-in.scss */
+
 .sign-in .sign-in-button:active,
 .sign-in .log-out-button:active,
 .home .sign-in-button:active,
 .home .log-out-button:active {
   background-color: #bcbcbc;
+}
+
+/* line 75, ../../app/styles/_sign-in.scss */
+
+.sign-in .sign-in-button > img,
+.home .sign-in-button > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-height: 100%;
 }
 
 /**

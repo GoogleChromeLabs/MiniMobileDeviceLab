@@ -31,14 +31,13 @@ public class DeviceLab extends DroidGap
         super.onCreate(savedInstanceState);
         // Set by <content src="index.html" /> in config.xml
         super.loadUrl(Config.getStartUrl());
-        //super.loadUrl("file:///android_asset/www/index.html")
 
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        //if(this.appView != null) {
+        if(this.appView != null && this.root != null) {
             this.root.setBackgroundColor(getResources().getColor(R.color.window_bg));
             this.appView.setBackgroundColor(getResources().getColor(R.color.window_bg));
-        //}
+        }
     }
 }
 

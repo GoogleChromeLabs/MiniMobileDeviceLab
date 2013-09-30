@@ -18,7 +18,7 @@ define([], function () {
 
     var exports = {};
 
-    exports.welcome_title = "Welcome to<br />Device Lab";
+    exports.welcome_title = "Welcome to Your<br />Device Lab";
     exports.welcome_msgs = ['Sign in to register this device to your lab'];
     exports.sign_in = "Sign In";
     exports.select_account_title = 'Please Select Your Account';
