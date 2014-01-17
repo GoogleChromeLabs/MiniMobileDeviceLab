@@ -13,80 +13,65 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-define(['strings'], function (strings) {
+define([], function () {
     'use strict';
 
     var exports = {};
 
-    var clientId = "148156526883-75soacsqseft7npagv6226t9pg0vtbel.apps.googleusercontent.com";
-    var callback;
+    var clientId = '148156526883-75soacsqseft7npagv6226t9pg0vtbel.apps.googleusercontent.com';
     var autoSignIn = true;
 
     exports.getUserInfo = function(successCb, errorCb) {
-		this.performUserInfoRequest(false, successCb, errorCb);
-	}
+        this.performUserInfoRequest(false, successCb, errorCb);
+    };
 
+    exports.performUserInfoRequest = function(isInteractive, successCb) {
+        console.log('MockIdentity.prototype.performUserInfoRequest ');
+        populateUserInfo({userId: -1}, successCb);
+    };
 
-	exports.performUserInfoRequest = function(isInteractive, successCb, errorCb) {
-	    console.log('MockIdentity.prototype.performUserInfoRequest ');
-		populateUserInfo({userId: -1}, successCb, errorCb);
-	}
+    exports.isLoggedIn = function() {
+        return false;
+    };
 
-	exports.isLoggedIn = function() {
-		return false;
-	}
-
-	exports.addSignInButton = function(element, successCb, errorCb, requiresLoginCb) {
-		var signInSpan = document.createElement('span');
-		signInSpan.appendChild(document.createTextNode(strings.sign_in));
-
-		var gplusLogo = document.createElement('img');
-		gplusLogo.src = './images/g-plus-logo.png';
-
-		var signInButton = document.createElement('span');
-        signInButton.classList.add('sign-in-button');
-        signInButton.appendChild(gplusLogo);
-        signInButton.appendChild(signInSpan);
-        signInButton.href= "#signin";
-
-        element.appendChild(signInButton);
-
+    exports.initSignInButton = function(signInButton, successCb, errorCb, requiresLoginCb) {
         gapi.signin.render(
- 			signInButton,
- 			{
- 				clientid: clientId,
- 				cookiepolicy: "single_host_origin",
- 				scope: "https://www.googleapis.com/auth/plus.login",
- 				callback: getLoginCallback(successCb, errorCb, requiresLoginCb)
- 			}
-		);
-	}
+            signInButton,
+            {
+                clientid: clientId,
+                cookiepolicy: 'single_host_origin',
+                scope: 'https://www.googleapis.com/auth/plus.login',
+                callback: getLoginCallback(successCb, errorCb, requiresLoginCb)
+            }
+        );
+    };
 
-	function getLoginCallback(successCb, errorCb, requiresLoginCb) {
-		return function(authResult) {
-			ongplusLogin(authResult, successCb, errorCb, requiresLoginCb);
-		};
-	}
+    function getLoginCallback(successCb, errorCb, requiresLoginCb) {
+        return function(authResult) {
+            ongplusLogin(authResult, successCb, errorCb, requiresLoginCb);
+        };
+    }
 
-	function ongplusLogin(authResult, successCb, errorCb, requiresLoginCb) {
-		if (authResult['access_token']) {
-    		// Successfully authorized
-    		successCb(authResult.id_token, autoSignIn);
-  		} else if (authResult['error'] === 'immediate_failed') {
-  			autoSignIn = false;
-  			requiresLoginCb();
-  		} else if (authResult['error']) {
-    		// There was an error.
-    		// Possible error codes:
-    		//   "access_denied" - User denied access to your app
-    		autoSignIn = false;
-    		errorCb(authResult['error']);
-  		}
-	}
+    function ongplusLogin(authResult, successCb, errorCb, requiresLoginCb) {
+        /*jshint camelcase: false */
+        if (authResult.access_token) {
+            // Successfully authorized
+            successCb(authResult.id_token, autoSignIn);
+        } else if (authResult.error === 'immediate_failed') {
+            autoSignIn = false;
+            requiresLoginCb();
+        } else if (authResult.error) {
+            // There was an error.
+            // Possible error codes:
+            //   "access_denied" - User denied access to your app
+            autoSignIn = false;
+            errorCb(authResult.error);
+        }
+    }
 
-	function populateUserInfo(userData, successCb, errorCb) {
-    	successCb(userData);
-	}
+    function populateUserInfo(userData, successCb) {
+        successCb(userData);
+    }
 
     return exports;
 });

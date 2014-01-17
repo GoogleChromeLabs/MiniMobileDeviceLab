@@ -21,9 +21,6 @@ var url = phantom.args[1];
 // Extra, optionally overridable stuff.
 var options = JSON.parse(phantom.args[2] || {});
 
-// Default options.
-if (!options.timeout) { options.timeout = 5000; }
-
 // Keep track of the last time a client message was sent.
 var last = new Date();
 

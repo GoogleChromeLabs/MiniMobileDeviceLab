@@ -21,9 +21,11 @@ describe('detector', function() {
       detector.tmp().should.eql(tmp);
     });
     it('should normalize windows paths correctly', function () {
-      var platform_noConflict = process.platform;
+      var platform_noConflict = detector.platform;
       
-      process.platform = 'win32';
+      detector.platform = function() {
+        return 'win32';
+      };
       detector._normalize('c:\\windows\\foo\\bar\\')
           .should.eql('c:\\windows\\foo\\bar\\/');
       detector._normalize('c:/windows/foo/bar/')
@@ -32,7 +34,7 @@ describe('detector', function() {
          .should.eql('c:/windows/foo/bar/');
       detector._normalize('c:\\windows\\foo\\bar')
          .should.eql('c:\\windows\\foo\\bar/');
-      process.platform = platform_noConflict;
+      detector.platform = platform_noConflict;
     });
 
   });

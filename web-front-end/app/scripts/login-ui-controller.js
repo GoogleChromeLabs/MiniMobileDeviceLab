@@ -23,12 +23,12 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
     var exports = {};
 
     var currentState;
-    var mainContentElement = document.getElementById('main-content');
+    //var mainContentElement;// = document.querySelector('.sign-in');
     var controller;
     var idToken;
     var isAutoSignIn = false;
 
-    function clearUpCurrentStateUI() {
+    /**function clearUpCurrentStateUI() {
         var childNode = mainContentElement.firstChild;
 
         while(childNode) {
@@ -40,7 +40,7 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
         if(currentClassName != null) {
             mainContentElement.classList.remove(currentClassName);
         }
-    }
+    }**/
 
     function getStateClass(state) {
         switch(state) {
@@ -53,57 +53,52 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
         }
     }
 
-    function getTitleElement(title) {
-        var headerSection = document.createElement('header');
-        var titleElement = document.createElement('h1');
-        titleElement.innerHTML = title;
-        headerSection.appendChild(titleElement);
-        return headerSection;
-    }
-
     function setUIState(newState) {
-        if(currentState == newState) {
+        if(currentState === newState) {
             return;
         }
 
-        clearUpCurrentStateUI();
+        //clearUpCurrentStateUI();
 
         var element;
         var stateClassName = getStateClass(newState);
         switch(newState) {
             case SIGN_IN:
-                var spinner = document.createElement('div');
-                spinner.classList.add('spinner');
-                mainContentElement.appendChild(spinner);
+                //var spinner = document.createElement('div');
+                //spinner.classList.add('spinner');
+                //mainContentElement.appendChild(spinner);
 
-                var signInWrapper = document.createElement('section');
-                signInWrapper.classList.add('sign-in-wrapper');
-                signInWrapper.style.display = 'none';
-                signInWrapper.appendChild(getTitleElement(strings.welcome_title));
+                //var signInWrapper = document.createElement('section');
+                //signInWrapper.classList.add('sign-in-wrapper');
+                //signInWrapper.style.display = 'none';
+                //signInWrapper.appendChild(getTitleElement(strings.welcome_title));
 
-                for(var i = 0; i < strings.welcome_msgs.length; i++) {
-                    var pElement = document.createElement('p');
-                    pElement.appendChild(document.createTextNode(strings.welcome_msgs[i]));
-                    signInWrapper.appendChild(pElement);
-                }
+                var signInWrapper = document.querySelector('.sign-in > .wrapper');
+                var signInBtn = signInWrapper.querySelector('button');
 
-                controller.addSignInButton(signInWrapper, function(token, autoSignIn) {
+                //for(var i = 0; i < strings.welcome_msgs.length; i++) {
+                //    var pElement = document.createElement('p');
+                //    pElement.appendChild(document.createTextNode(strings.welcome_msgs[i]));
+                //    signInWrapper.appendChild(pElement);
+                //}
+
+                controller.initSignInButton(signInBtn, function(token, autoSignIn) {
                     idToken = token;
                     isAutoSignIn = autoSignIn;
                     // Success - Signed In
-                    setUIState(HOME)
+                    setUIState(HOME);
                 }, function(errorMsg) {
                     // Error
                     console.log('login-ui-controller - error on signing in '+errorMsg);
                 }, function() {
-                    var spinner = document.querySelector('.spinner');
-                    var signInWrapper = document.querySelector('.sign-in-wrapper');
+                    //var spinner = document.querySelector('.loading');
+                    //var signInWrapper = document.querySelector('.sign-in');
 
-                    spinner.style.display = 'none';
-                    signInWrapper.style.display = 'block';
+                    //spinner.style.display = 'none';
+                    //signInWrapper.style.display = 'block';
                 });
 
-                mainContentElement.appendChild(signInWrapper);
+                //mainContentElement.appendChild(signInWrapper);
                 break;
             case LOADING:
                 element = document.createElement('div');
@@ -122,12 +117,12 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
                 break;
         }
 
-        if(stateClassName != null) {
-            mainContentElement.classList.add(stateClassName);
+        if(stateClassName !== null) {
+            //mainContentElement.classList.add(stateClassName);
         }
 
         if(element) {
-            mainContentElement.appendChild(element);
+            //mainContentElement.appendChild(element);
         }
         currentState = newState;
     }
@@ -135,8 +130,8 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
     exports.init = function() {
         controller = gplusIdentity;
 
-        setUIState(SIGN_IN); 
-    }
+        setUIState(SIGN_IN);
+    };
 
     return exports;
 });

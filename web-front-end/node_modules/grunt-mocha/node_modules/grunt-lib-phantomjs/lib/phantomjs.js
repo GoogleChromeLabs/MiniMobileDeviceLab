@@ -2,7 +2,7 @@
  * grunt-lib-phantomjs
  * http://gruntjs.com/
  *
- * Copyright (c) 2012 "Cowboy" Ben Alman, contributors
+ * Copyright (c) 2013 "Cowboy" Ben Alman, contributors
  * Licensed under the MIT license.
  */
 
@@ -155,6 +155,8 @@ exports.init = function(grunt) {
       cleanup();
       grunt.verbose.or.writeln();
       grunt.log.write('Running PhantomJS...').error();
+      // Print result to stderr because sometimes the 127 code means that a shared library is missing
+      String(result).split('\n').forEach(grunt.log.error, grunt.log);
       if (code === 127) {
         grunt.log.errorlns(
           'In order for this task to work properly, PhantomJS must be installed locally via NPM. ' +
@@ -164,7 +166,6 @@ exports.init = function(grunt) {
         );
         grunt.warn('PhantomJS not found.', failCode);
       } else {
-        String(result).split('\n').forEach(grunt.log.error, grunt.log);
         grunt.warn('PhantomJS exited unexpectedly with exit code ' + code + '.', failCode);
       }
       options.done(code);

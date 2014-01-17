@@ -1,10 +1,9 @@
 {
-  "name": "device-lab-chrome-app-yeoman",
-  "version": "0.0.0",
+  "name": "web-front-end",
+  "private": true,
   "dependencies": {
-    "requirejs": "~2.1.4",
     "modernizr": "~2.6.2",
-    "jquery": "~1.9.1"
+    "requirejs": "~2.1.10"
   },
   "devDependencies": {}
 }

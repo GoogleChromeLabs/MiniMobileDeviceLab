@@ -41,7 +41,7 @@ cp require.js ../example-libglobal/lib/require.js
 cp ../r.js/r.js ../example-libglobal/tools/r.js
 
 echo "Updating volojs/create-template"
-cp require.js ../../volojs/create-template/www/js/lib/require.js
+cp require.js ../../volojs/create-template/www/lib/require.js
 cp ../r.js/r.js ../../volojs/create-template/tools/r.js
 
 echo "Updating volojs/create-responsive-template"
@@ -65,3 +65,7 @@ cp ../r.js/r.js ../require-cs/tools/r.js
 echo "Updating requirejs-npm"
 cp require.js ../requirejs-npm/requirejs/require.js
 cp ../r.js/r.js ../requirejs-npm/requirejs/bin/r.js
+
+# The bower container stuff
+echo "Updating requirejs-bower"
+cp require.js ../requirejs-bower/require.js

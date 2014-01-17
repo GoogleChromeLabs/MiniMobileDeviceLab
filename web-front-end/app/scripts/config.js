@@ -13,9 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
+
+/* jshint unused: false */
 define([], function () {
     'use strict';
-
+    
     var exports = {};
 
 	var localhost = 'http://localhost:8888';
@@ -24,7 +26,7 @@ define([], function () {
 
 	exports.getRootUrl = function() {
 		return production;
-	}
+	};
 
     return exports;
 });

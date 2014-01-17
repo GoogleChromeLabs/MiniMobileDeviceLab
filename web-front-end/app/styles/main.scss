@@ -1,36 +1,108 @@
-/**
-Copyright 2013 Google Inc. All Rights Reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-**/
-@import "variables";
-@import "base";
-@import "sign-in";
+@import "colors";
+@import "dimens";
 @import "loading";
-@import "select-account";
-@import "device-list";
+@import "login";
+
+html, body {
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    
+}
 
 body {
-   #main-content {
-      height: 100%;
-   }
+    display: block;
+
+    position: relative;
+
+    background-color: $bg-color;
+    color: $primary-color;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+
+    text-align: center;
+}
+
+section {
+    display: block;
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    left: 0;
+    top: 0;
+
+    box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-align: left;
+    color: $secondary-color;
+    font-weight: 300;
+}
+
+h1 {
+    font-size: 1.6rem;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+button {
+    position: relative;
+    display: block;
+    
+    width: 100%;
+
+    padding: 0.5rem;
+    margin: $padding 0;
+
+    background-color: $button-color;
+
+    color: $button-text-color;
+    font-size: 1.4em;
+    text-align: center;
+    text-decoration: none;
+
+    border: none;
+
+    transition: all .1s ease;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:hover {
+    background-color: darken($button-color, 4%);
+}
+
+button:active {
+    background-color: darken($button-color, 8%);
+}
+
+button:focus {
+    outline: none;
+}
+
+button > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-height: 100%;
 }
 
 .spinner {
    height:60px;
    width:60px;
    position:relative;
-   animation: rotation .8s infinite linear;
+   animation: rotation 1.0s infinite linear;
    border: 6px solid $spinner-track-color;
    border-radius:100%;
 }
