@@ -13,8 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-.sign-in {
-	display: inline-flex;
+.empty-lab {
+    display: inline-flex;
 
     flex-direction: column;
 
@@ -24,19 +24,20 @@ limitations under the License.
     visibility: hidden;
 }
 
-.sign-in > .wrapper {
+.empty-lab > .wrapper {
+    max-width: 600px;
 
-   	padding: $padding;
+    padding: $padding;
 
-   	header {
-	   h1 {
-	      margin: 0 0 $padding 0;
-	      padding: 0;
-	   }
-	}
+    header {
+       h1 {
+          margin: 0 0 $padding 0;
+          padding: 0;
+       }
+    }
 
-	p {
-		font-size: 1.4rem;
-		margin: 0 0 $padding 0;
-	}
+    p {
+        font-size: 1.4rem;
+        margin: 0 0 $padding 0;
+    }
 }

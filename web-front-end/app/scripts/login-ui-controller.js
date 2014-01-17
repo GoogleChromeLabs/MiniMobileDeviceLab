@@ -24,7 +24,7 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
 
     var currentState;
     //var mainContentElement;// = document.querySelector('.sign-in');
-    var controller;
+    var identityController;
     var idToken;
     var isAutoSignIn = false;
 
@@ -54,55 +54,28 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
     }
 
     function setUIState(newState) {
+        console.log('setUIState = '+newState);
         if(currentState === newState) {
             return;
         }
 
         //clearUpCurrentStateUI();
 
+        var signIn = document.querySelector('.sign-in');
+        var loading = document.querySelector('.loading');
+
         var element;
         var stateClassName = getStateClass(newState);
         switch(newState) {
             case SIGN_IN:
-                //var spinner = document.createElement('div');
-                //spinner.classList.add('spinner');
-                //mainContentElement.appendChild(spinner);
-
-                //var signInWrapper = document.createElement('section');
-                //signInWrapper.classList.add('sign-in-wrapper');
-                //signInWrapper.style.display = 'none';
-                //signInWrapper.appendChild(getTitleElement(strings.welcome_title));
-
-                var signInWrapper = document.querySelector('.sign-in > .wrapper');
-                var signInBtn = signInWrapper.querySelector('button');
-
-                //for(var i = 0; i < strings.welcome_msgs.length; i++) {
-                //    var pElement = document.createElement('p');
-                //    pElement.appendChild(document.createTextNode(strings.welcome_msgs[i]));
-                //    signInWrapper.appendChild(pElement);
-                //}
-
-                controller.initSignInButton(signInBtn, function(token, autoSignIn) {
-                    idToken = token;
-                    isAutoSignIn = autoSignIn;
-                    // Success - Signed In
-                    setUIState(HOME);
-                }, function(errorMsg) {
-                    // Error
-                    console.log('login-ui-controller - error on signing in '+errorMsg);
-                }, function() {
-                    //var spinner = document.querySelector('.loading');
-                    //var signInWrapper = document.querySelector('.sign-in');
-
-                    //spinner.style.display = 'none';
-                    //signInWrapper.style.display = 'block';
-                });
+                loading.style.visibility = 'hidden';
+                signIn.style.visibility = 'visible';
 
                 //mainContentElement.appendChild(signInWrapper);
                 break;
             case LOADING:
-                element = document.createElement('div');
-                element.classList.add('spinner');
+                loading.style.visibility = 'visible';
+                signIn.style.visibility = 'hidden';
                 break;
             case HOME:
                 if(typeof(idToken) === 'undefined' || idToken === null) {
@@ -128,9 +101,24 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
     }
 
     exports.init = function() {
-        controller = gplusIdentity;
+        identityController = gplusIdentity;
 
-        setUIState(SIGN_IN);
+        var signInBtn = document.querySelector('.sign-in > .wrapper > button');
+        identityController.initSignInButton(signInBtn, function(token, autoSignIn) {
+            idToken = token;
+            isAutoSignIn = autoSignIn;
+            // Success - Signed In
+            setUIState(HOME);
+        }, function(errorMsg) {
+            // Error
+            console.log('login-ui-controller - error on signing in '+errorMsg);
+            setUIState(SIGN_IN);
+        }, function() {
+            // Requires Interactive Login
+            setUIState(SIGN_IN);
+        });
+
+        setUIState(LOADING);
     };
 
     return exports;

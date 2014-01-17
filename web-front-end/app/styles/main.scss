@@ -2,6 +2,7 @@
 @import "dimens";
 @import "loading";
 @import "login";
+@import "empty_lab";
 
 html, body {
     width: 100%;
@@ -23,8 +24,6 @@ body {
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
     font-size: 20px;
-
-    text-align: center;
 }
 
 section {
