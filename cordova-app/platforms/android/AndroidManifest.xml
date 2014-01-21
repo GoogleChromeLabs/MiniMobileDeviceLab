@@ -30,6 +30,8 @@ limitations under the License.
                 <category android:name="co.uk.gauntface.mobile.devicelab" />
             </intent-filter>
         </receiver>
+        
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
     </application>
     <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />

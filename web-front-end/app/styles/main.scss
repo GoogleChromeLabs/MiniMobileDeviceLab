@@ -1,8 +1,13 @@
 @import "colors";
 @import "dimens";
+@import "buttons";
+@import "inputs";
 @import "loading";
 @import "login";
 @import "empty_lab";
+@import "navbar";
+@import "device_list";
+@import "toggle_switch";
 
 html, body {
     width: 100%;
@@ -10,8 +15,6 @@ html, body {
 
     margin: 0;
     padding: 0;
-
-    
 }
 
 body {
@@ -26,7 +29,7 @@ body {
     font-size: 20px;
 }
 
-section {
+body > section {
     display: block;
 
     position: absolute;
@@ -55,46 +58,8 @@ img {
     height: auto;
 }
 
-button {
-    position: relative;
-    display: block;
-    
-    width: 100%;
-
-    padding: 0.5rem;
-    margin: $padding 0;
-
-    background-color: $button-color;
-
-    color: $button-text-color;
-    font-size: 1.4em;
-    text-align: center;
-    text-decoration: none;
-
-    border: none;
-
-    transition: all .1s ease;
-
-    -webkit-tap-highlight-color: transparent;
-}
-
-button:hover {
-    background-color: darken($button-color, 4%);
-}
-
-button:active {
-    background-color: darken($button-color, 8%);
-}
-
-button:focus {
-    outline: none;
-}
-
-button > img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    max-height: 100%;
+.hide {
+  display: none;
 }
 
 .spinner {

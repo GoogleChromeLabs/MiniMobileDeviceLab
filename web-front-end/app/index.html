@@ -41,7 +41,7 @@ limitations under the License.
             <div class="spinner"></div>
         </section>
 
-        <section class="sign-in">
+        <section class="sign-in hide">
             <div class="wrapper">
                 <header>
                     <h1>Welcome to Your Device Lab</h1>
@@ -53,14 +53,50 @@ limitations under the License.
             </div>
         </section>
 
-        <section class="empty-lab">
-            <div class="wrapper">
+
+        <section class="app-screens hide">
+            <section class="nav-bar hide">
                 <header>
                     <h1>Device Lab</h1>
                 </header>
-                <p>Oops, no devices in this lab.</p>
-                <p>Install the Device Lab app on your Andorid and iPhone, sign in with the same Google account as this page and check back :)</p>
-            </div>
+
+                <input class="url-to-send" type="email" />
+                <button class="image-btn send-url">Send URL</button>
+                <button class="image-btn logout">Logout</button>
+            </section>
+
+            <section class="device-list hide">
+                <header class="os-header android-header">
+                    <h1>Android</h1>
+
+                    <span class="toggle-switch">
+                        <input id="android-header-checkbox" class="checkbox" type="checkbox" checked>
+                        <label for="android-header-checkbox" class="checkbox-label"></label>
+                    </span>
+                </header>
+                <ul class="list-elem android">
+
+                </ul>
+
+                <header class="os-header ios-header">
+                    <h1>iOS</h1>
+
+                    <span class="toggle-switch">
+                        <input id="ios-header-checkbox" class="checkbox" type="checkbox" checked>
+                        <label for="ios-header-checkbox" class="checkbox-label"></label>
+                    </span>
+                </header>
+                <ul class="list-elem ios">
+
+                </ul>
+            </section>
+
+            <section class="empty-lab hide">
+                <div class="wrapper">
+                    <p>Oops, no devices in this lab.</p>
+                    <p>Install the Device Lab app on your Andorid and iPhone, sign in with the same Google account as this page and check back :)</p>
+                </div>
+            </section>
         </section>
 
         <!-- G+ Sign In-->

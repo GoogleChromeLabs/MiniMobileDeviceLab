@@ -23,65 +23,40 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
     var exports = {};
 
     var currentState;
-    //var mainContentElement;// = document.querySelector('.sign-in');
     var identityController;
     var idToken;
     var isAutoSignIn = false;
 
-    /**function clearUpCurrentStateUI() {
-        var childNode = mainContentElement.firstChild;
-
-        while(childNode) {
-            mainContentElement.removeChild(childNode);
-            childNode = mainContentElement.firstChild;
-        }
-
-        var currentClassName = getStateClass(currentState);
-        if(currentClassName != null) {
-            mainContentElement.classList.remove(currentClassName);
-        }
-    }**/
-
-    function getStateClass(state) {
-        switch(state) {
-            case SIGN_IN:
-                return 'sign-in';
-            case LOADING:
-                return 'loading';
-            default:
-                return null;
-        }
-    }
-
     function setUIState(newState) {
-        console.log('setUIState = '+newState);
+        console.log('login-ui-controller: setUIState = '+newState);
         if(currentState === newState) {
             return;
         }
 
-        //clearUpCurrentStateUI();
-
         var signIn = document.querySelector('.sign-in');
         var loading = document.querySelector('.loading');
+        var navbar = document.querySelector('.nav-bar');
+        navbar.classList.add('hide');
 
-        var element;
-        var stateClassName = getStateClass(newState);
         switch(newState) {
             case SIGN_IN:
-                loading.style.visibility = 'hidden';
-                signIn.style.visibility = 'visible';
+                loading.classList.add('hide');
+                signIn.classList.remove('hide');
 
-                //mainContentElement.appendChild(signInWrapper);
                 break;
             case LOADING:
-                loading.style.visibility = 'visible';
-                signIn.style.visibility = 'hidden';
+                loading.classList.remove('hide');
+                signIn.classList.add('hide');
+
                 break;
             case HOME:
                 if(typeof(idToken) === 'undefined' || idToken === null) {
                     setUIState(SIGN_IN);
                     return;
                 }
+
+                loading.classList.remove('hide');
+                signIn.classList.add('hide');
 
                 window.location.hash = '#home';
                 require(['home-ui-controller'], function(homeController){
@@ -90,17 +65,11 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
                 break;
         }
 
-        if(stateClassName !== null) {
-            //mainContentElement.classList.add(stateClassName);
-        }
-
-        if(element) {
-            //mainContentElement.appendChild(element);
-        }
         currentState = newState;
     }
 
     exports.init = function() {
+        console.log('login-ui-controller: init()');
         identityController = gplusIdentity;
 
         var signInBtn = document.querySelector('.sign-in > .wrapper > button');
@@ -110,8 +79,9 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
             // Success - Signed In
             setUIState(HOME);
         }, function(errorMsg) {
+            /* jshint unused: false */
+            
             // Error
-            console.log('login-ui-controller - error on signing in '+errorMsg);
             setUIState(SIGN_IN);
         }, function() {
             // Requires Interactive Login

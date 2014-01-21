@@ -13,99 +13,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-define(['config', /**'device-list-controller', 'gcm-controller', 'android-browser-model'**/], function (config) {
+define(['device-list-controller'/**, 'gcm-controller', 'android-browser-model'**/], function (deviceListController) {
     'use strict';
 
     var LOADING = 0;
     var DEVICE_LIST = 1;
+    var SIGN_OUT = 2;
 
     var exports = {};
 
     var currentState;
-    //var mainContentElement = document.getElementById('main-content');
     var devices = [];
     var idToken;
     var isAutoSignIn = false;
-
-    /**function clearUpCurrentStateUI() {
-        var childNode = mainContentElement.firstChild;
-
-        while(childNode) {
-            mainContentElement.removeChild(childNode);
-            childNode = mainContentElement.firstChild;
-        }
-
-        var currentClassName = getStateClass(currentState);
-        if(currentClassName != null) {
-            mainContentElement.classList.remove(currentClassName);
-        }
-    }**/
-
-    function getStateClass(state) {
-        switch(state) {
-            case LOADING:
-                return 'loading';
-            case DEVICE_LIST:
-                return 'device-lab-home';
-            default:
-                return null;
-        }
-    }
-
-    /**function getTitleElement(title, state) {
-        var headerSection = document.createElement('header');
-        var titleElement = document.createElement('h1');
-        titleElement.innerHTML = title;
-        headerSection.appendChild(titleElement);
-
-        if(state === DEVICE_LIST && devices.length > 0) {
-            var div = document.createElement('div');
-            div.classList.add('search-container');
-
-            var input = document.createElement('input');
-            input.id = 'url-input';
-            input.type = 'url';
-            input.size = 35;
-            input.onkeyup = function(e) {
-                if(Modernizr && Modernizr.localstorage) {
-                    localStorage.setItem('url-input-field', input.value);
-                }
-            };
-
-            if(Modernizr && Modernizr.localstorage) {
-                input.value = localStorage.getItem('url-input-field');
-            }
-
-            var launchButton = document.createElement('a');
-            launchButton.appendChild(document.createTextNode(strings.launch_btn));
-            launchButton.onclick = function(e) {
-                e.preventDefault();
-                var inputField = document.getElementById('url-input');
-                if(typeof inputField === 'undefined') {
-                    return;
-                }
-
-                var url = inputField.value;
-                if(url === null || url.length === 0) {
-                    // TODO Show error
-                    return;
-                }
-
-                var browserOptions = [{
-                    platform: 0,
-                    pkg: androidBrowserModel.getSupportedBrowsers()[androidBrowserModel.getSelectedBrowser()].pkg
-                }];
-
-                gcmController.sendUrlPushMessage(idToken, url, devices, browserOptions);
-            };
-
-            div.appendChild(input);
-            div.appendChild(launchButton);
-            headerSection.appendChild(div);
-        }
-
-        return headerSection;
-    }**/
 
     /**function createBrowserOptions() {
         var sectionElement = document.createElement('section');
@@ -166,60 +86,174 @@ define(['config', /**'device-list-controller', 'gcm-controller', 'android-browse
             return;
         }
 
-        //clearUpCurrentStateUI();
-
         var loading = document.querySelector('.loading');
         var emptyLabScreen = document.querySelector('.empty-lab');
+        var devicelistScreen = document.querySelector('.device-list');
+        var navbar = document.querySelector('.nav-bar');
+        var appScreens = document.querySelector('.app-screens');
 
-        var element;
-        var stateClassName = getStateClass(newState);
         switch(newState) {
             case LOADING:
-                loading.style.visibility = 'visible';
-                emptyLabScreen.style.visibility = 'hidden';
+                loading.classList.remove('hide');
+                emptyLabScreen.classList.add('hide');
+                devicelistScreen.classList.add('hide');
+                navbar.classList.add('hide');
+                appScreens.classList.add('hide');
                 break;
             case DEVICE_LIST:
-                //mainContentElement.appendChild(getTitleElement(strings.device_list_title, newState));
-                loading.style.visibility = 'hidden';
+                navbar.classList.remove('hide');
+                appScreens.classList.remove('hide');
+                loading.classList.add('hide');
+                
                 if(devices.length === 0) {
-                    /**for(var i = 0; i < strings.no_device_msgs.length; i++) {
-                        var pElement = document.createElement('p');
-                        pElement.appendChild(document.createTextNode(strings.no_device_msgs[i]));
-                        mainContentElement.appendChild(pElement);
-                    }    
-
-                    var playStoreButton = document.createElement('a');
-                    playStoreButton.classList.add('play-store-button');
-                    playStoreButton.appendChild(document.createTextNode(strings.play_store));
-                    playStoreButton.href= "http://play.google.com/";
-                    mainContentElement.appendChild(playStoreButton);**/
-                    emptyLabScreen.style.visibility = 'visible';
-                    
+                    emptyLabScreen.classList.remove('hide');
+                    devicelistScreen.classList.add('hide');
                 } else {
-                    /**mainContentElement.appendChild(createBrowserOptions());
+                    emptyLabScreen.classList.add('hide');
+                    devicelistScreen.classList.remove('hide');
 
-                    var ulElement = document.createElement('ul');
-                    ulElement.classList.add('device-list');
+                    // TODO: This needs to be set up for Android + iOS
 
+                    var androidDevicelistElem = document.querySelector('.device-list > .list-elem.android');
+                    
+                    var androidEnableCheckbox = document.querySelector('.android-header > .toggle-switch');
+                    androidEnableCheckbox.addEventListener('change', function(e){
+                        var androidDeviceList = document.querySelector('.device-list > .list-elem.android');
+                        if(e.target.checked) {
+                            // Android Devices Enabled
+                            androidDeviceList.classList.remove('disabled');
+                        } else {
+                            androidDeviceList.classList.add('disabled');
+                        }
+                    }, false);
                     for(var i = 0; i < devices.length; i++) {
                         var liElement = document.createElement('li');
-                        liElement.appendChild(document.createTextNode(devices[i].name));
-                        ulElement.appendChild(liElement);
+                        liElement.id = 'device-list-item-'+devices[i].id;
+
+                        var nameInputContainer = document.createElement('div');
+                        nameInputContainer.id = 'device-name-input-container-'+devices[i].id;
+                        nameInputContainer.classList.add('device-name-input-container');
+
+                        var nameInput = document.createElement('input');
+                        nameInput.classList.add('device-name-input');
+                        nameInput.id = 'device-name-input-'+devices[i].id;
+                        nameInput.value = devices[i].name;
+                        nameInput.disabled = true;
+                        nameInputContainer.appendChild(nameInput);
+
+                        var completeButton = document.createElement('button');
+                        completeButton.id = 'complete-button-'+devices[i].id;
+                        completeButton.classList.add('image-btn');
+                        completeButton.classList.add('complete-button');
+                        completeButton.classList.add('hide');
+                        nameInputContainer.appendChild(completeButton);
+
+                        liElement.appendChild(nameInputContainer);
+
+                        var enableSpan = document.createElement('span');
+                        enableSpan.classList.add('toggle-switch');
+
+                        var checkbox = document.createElement('input');
+                        checkbox.id = 'enabled-checkbox-'+devices[i].id;
+                        checkbox.classList.add('checkbox');
+                        checkbox.type = 'checkbox';
+                        checkbox.checked = true;
+                        enableSpan.appendChild(checkbox);
+
+                        var label = document.createElement('label');
+                        label.htmlFor = checkbox.id;
+                        label.classList.add('checkbox-label');
+                        enableSpan.appendChild(label);
+
+                        liElement.appendChild(enableSpan);
+
+                        var editButton = document.createElement('button');
+                        editButton.appendChild(document.createTextNode('Edit'));
+                        editButton.id = 'edit-button-'+devices[i].id;
+                        editButton.classList.add('image-btn');
+                        editButton.classList.add('edit-button');
+                        liElement.appendChild(editButton);
+
+                        var deleteButton = document.createElement('button');
+                        deleteButton.appendChild(document.createTextNode('Delete'));
+                        deleteButton.id = 'delete-button-'+devices[i].id;
+                        deleteButton.classList.add('image-btn');
+                        deleteButton.classList.add('delete-button');
+                        liElement.appendChild(deleteButton);
+
+                        androidDevicelistElem.appendChild(liElement);
+
+                        addListElementEvents(liElement, devices[i].id);
                     }
-                    mainContentElement.appendChild(ulElement);**/
                 }
                                
                 break;
-        }
+            case SIGN_OUT:
+                loading.classList.remove('hide');
+                emptyLabScreen.classList.add('hide');
 
-        if(stateClassName !== null) {
-            //mainContentElement.classList.add(stateClassName);
-        }
-
-        if(element) {
-            //mainContentElement.appendChild(element);
+                gapi.auth.signOut();
+                
+                break;
         }
         currentState = newState;
+    }
+
+    function addListElementEvents(liElement, deviceId) {
+        var editButton = document.querySelector('#edit-button-'+deviceId);
+        editButton.addEventListener('click', function() {
+            var inputField = document.querySelector('#device-name-input-'+deviceId);
+            inputField.disabled = false;
+            inputField.focus();
+
+            var completeButton = document.querySelector('#complete-button-'+deviceId);
+            completeButton.classList.remove('hide');
+
+            editButton.disabled = true;
+
+            var deleteButton = document.querySelector('#delete-button-'+deviceId);
+            deleteButton.disabled = true;
+
+            var checkbox = document.querySelector('#enabled-checkbox-'+deviceId);
+            checkbox.disabled = true;
+        }, true);
+
+        var deleteButton = document.querySelector('#delete-button-'+deviceId);
+        deleteButton.addEventListener('click', function() {
+            deviceListController.removeDevice(deviceId, idToken, function(){
+                // Success Callback
+                var liElement = document.querySelector('#device-list-item-'+deviceId);
+                liElement.parentNode.remove(liElement);
+            }, function() {
+                // Error Callback
+                window.alert('home-ui-controller.js: Handle delete failure error');
+            });
+        }, true);
+
+        var completeButton = document.querySelector('#complete-button-'+deviceId);
+        completeButton.addEventListener('click', function() {
+            var inputField = document.querySelector('#device-name-input-'+deviceId);
+            inputField.disabled = true;
+
+            var completeButton = document.querySelector('#complete-button-'+deviceId);
+            completeButton.classList.add('hide');
+
+            editButton.disabled = false;
+
+            var deleteButton = document.querySelector('#delete-button-'+deviceId);
+            deleteButton.disabled = false;
+
+            var checkbox = document.querySelector('#enabled-checkbox-'+deviceId);
+            checkbox.disabled = false;
+
+            deviceListController.changeDeviceName(deviceId, idToken, function(){
+                // Success Callback
+                window.alert('home-ui-controller.js: Change device name - does anything need doing?');
+            }, function() {
+                // Error Callback
+                window.alert('home-ui-controller.js: Handle device name change error');
+            });
+        }, true);
     }
 
     exports.init = function(token, autoSignIn) {
@@ -227,17 +261,22 @@ define(['config', /**'device-list-controller', 'gcm-controller', 'android-browse
         idToken = token;
         isAutoSignIn = autoSignIn;
 
+        var logoutBtn = document.querySelector('.nav-bar > .logout');
+        logoutBtn.addEventListener('click', function() {
+            setUIState(SIGN_OUT);
+        }, true);
+
         if(typeof idToken !== 'undefined') {
             setUIState(LOADING);
-            /**deviceListController.getDevices(idToken, function(d) {
+            deviceListController.getDevices(idToken, function(d) {
                 // Success
                 devices = d;
                 setUIState(DEVICE_LIST);
             }, function() {
                 // Error
 
-            });**/
-            setUIState(DEVICE_LIST);
+            });
+            //setUIState(DEVICE_LIST);
         } else {
             require(['login-ui-controller'], function(loginController){
                 console.log('home-ui-controller: loginController.init()');
