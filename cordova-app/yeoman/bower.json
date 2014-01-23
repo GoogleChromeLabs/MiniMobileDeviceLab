@@ -1,0 +1,7 @@
+{
+  "name": "yeoman",
+  "private": true,
+  "dependencies": {
+  },
+  "devDependencies": {}
+}
