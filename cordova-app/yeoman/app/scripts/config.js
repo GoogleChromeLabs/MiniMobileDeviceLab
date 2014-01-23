@@ -18,7 +18,7 @@ define(['google-oauth-plugin'], function (oauthPlugin) {
 
     var localhost = 'http://localhost:8888';
     var androidEmu = 'http://10.0.2.2:8888';
-    var localIP = 'http://<your_ip_addr>:8888';
+    var localIP = 'http://172.19.5.6:3000';
     var production = 'http://<your_app_id>.appspot.com';
 
     var exports = {};

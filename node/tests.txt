@@ -1,0 +1,117 @@
+/***********************************
+ *
+ * Stupid API Requests
+ *
+ **********************************/
+
+// No Good At API End Point GET
+curl -w "\n" -G --data-urlencode "nope=Nope" http://localhost:3000/nooooooooope/
+
+// No Good At API End Point POST
+curl -w "\n" --data-urlencode "nope=Nope" http://localhost:3000/nooooooooope/
+
+/***********************************
+ *
+ * /devices/get/
+ *
+ **********************************/
+
+Required Params:
+id_token
+
+// Valid Request but made by GET
+curl -w "\n" -G --data-urlencode "id_token=Well This Is Wrong" http://localhost:3000/devices/get/
+
+// No Param
+curl -w "\n" -d "" http://localhost:3000/devices/get/
+
+// Wrong Param
+curl -w "\n" --data-urlencode "random_param=This Could Be Anything" http://localhost:3000/devices/get/
+
+// Empty id_token
+curl -w "\n" --data-urlencode "id_token=" http://localhost:3000/devices/get/
+
+// Incorrect id_token
+curl -w "\n" --data-urlencode "id_token=Incorrect Token" http://localhost:3000/devices/get/
+
+// Valid id_token
+curl -w "\n" --data-urlencode "id_token=XXX”X http://localhost:3000/devices/get/
+
+/***********************************
+ *
+ * /devices/register/
+ *
+ **********************************/
+
+Required Params:
+id_token
+gcm_id
+device_name
+device_nickname
+platform_id
+platform_version
+
+Optional Params:
+device_id
+
+platform_id must be one of the following:
+0 - Android
+1 - iOS
+
+// Valid Request but made by GET
+curl -w "\n" -G --data-urlencode "id_token=Well This Is Wrong" http://localhost:3000/devices/register/
+
+// Valid Request but made by GET
+curl -w "\n" -G --data-urlencode "id_token=Well This Is Wrong&device_id=Oops Doops" http://localhost:3000/devices/register/
+
+// No Param
+curl -w "\n" -d "" http://localhost:3000/devices/register/
+
+// Wrong Param
+curl -w "\n" --data-urlencode "random_param=This Could Be Anything" http://localhost:3000/devices/register/
+
+// Wrong Param
+curl -w "\n" --data-urlencode "device_id=XXXX&random_param=This Could Be Anything" http://localhost:3000/devices/register/
+
+// Empty id_token
+curl -w "\n" --data-urlencode "id_token=" http://localhost:3000/devices/register/
+
+// Incorrect id_token
+curl -w "\n" --data-urlencode "id_token=Incorrect Token" --data-urlencode "gcm_id=XXXX" --data-urlencode "device_id=203450" --data-urlencode "device_name=Device Name" --data-urlencode "device_nickname=Device Nickname" --data-urlencode "platform_id=0" --data-urlencode "platform_version=4.4" http://localhost:3000/devices/register/
+
+// Incorrect Platform Id
+curl -w "\n" --data-urlencode "id_token=XXXX&gcm_id=XXXX&device)id=203450&device_name=Device Name&device_nickname=Device Nickname&platform_id=9&platform_version=4.4" http://localhost:3000/devices/register/
+
+// Platform Id which is not a number
+curl -w "\n" --data-urlencode "id_token=XXXX&gcm_id=XXXX&device)id=203450&device_name=Device Name&device_nickname=Device Nickname&platform_id=Broken&platform_version=4.4" http://localhost:3000/devices/register/
+
+// No device name
+curl -w "\n" --data-urlencode "id_token=XXXX&gcm_id=XXXX&device_nickname=Device Nickname&platform_id=0&platform_version=4.4" http://localhost:3000/devices/register/
+
+// No device nickname
+curl -w "\n" --data-urlencode "id_token=XXXX&gcm_id=XXXX&device_name=Device Name&platform_id=0&platform_version=4.4" http://localhost:3000/devices/register/
+
+// No Platform Id
+curl -w "\n" --data-urlencode "id_token=XXXX&gcm_id=XXXX&device_name=Device Name&device_nickname=Device Nickname&platform_version=4.4" http://localhost:3000/devices/register/
+
+// No Platform Version
+curl -w "\n" --data-urlencode "id_token=XXXX&gcm_id=XXXX&device_name=Device Name&device_nickname=Device Nickname&platform_id=0" http://localhost:3000/devices/register/
+
+// Valid request with device id
+curl -w "\n" --data-urlencode "id_token=XXXX&gcm_id=XXXX&device)id=203450&device_name=Device Name&device_nickname=Device Nickname&platform_id=0&platform_version=4.4" http://localhost:3000/devices/register/
+
+// Valid request without device id
+curl -w "\n" --data-urlencode "id_token=XXXX&gcm_id=XXXX&device_name=Device Name&device_nickname=Device Nickname&platform_id=0&platform_version=4.4" http://localhost:3000/devices/register/
+
+/***********************************
+ *
+ * Error Codes
+ *
+ **********************************/
+
+unknown_error
+incorrect_request_type
+required_param_missing
+invalid_param_value
+invalid_id_token
+failed_to_register
