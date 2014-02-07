@@ -24,39 +24,6 @@ function HomeController() {
 
     var currentState;
 
-    /**function clearUpCurrentStateUI() {
-        var childNode = mainContentElement.firstChild;
-
-        while(childNode) {
-            mainContentElement.removeChild(childNode);
-            childNode = mainContentElement.firstChild;
-        }
-
-        var currentClassName = getStateClass(currentState);
-        if(currentClassName !== null) {
-            mainContentElement.classList.remove(currentClassName);
-        }
-    }**/
-
-    /**function getStateClass(state) {
-        switch(state) {
-            case HOME:
-                return 'home';
-            case LOADING:
-                return 'loading';
-            default:
-                return null;
-        }
-    }**/
-
-    /**function getTitleElement(title) {
-        var headerSection = document.createElement('header');
-        var titleElement = document.createElement('h1');
-        titleElement.innerHTML = title;
-        headerSection.appendChild(titleElement);
-        return headerSection;
-    }**/
-
     function setUIState(newState) {
         if(currentState === newState) {
             return;
@@ -71,24 +38,6 @@ function HomeController() {
                 loading.classList.add('hide');
                 signIn.classList.add('hide');
                 home.classList.remove('hide');
-                //mainContentElement.appendChild(getTitleElement(strings.homeTitle));
-
-                /**for(var i = 0; i < strings.homeMsgs.length; i++) {
-                    var pElement = document.createElement('p');
-                    pElement.appendChild(document.createTextNode(strings.homeMsgs[i]));
-                    mainContentElement.appendChild(pElement);
-                }**/
-
-                /**var logOutButton = document.createElement('a');
-                logOutButton.classList.add('log-out-button');
-                logOutButton.appendChild(document.createTextNode(strings.logOut));
-                logOutButton.href= '#logout';
-                logOutButton.onclick = function(e){
-                    history.pushState(null, null, logOutButton.href);
-                    e.preventDefault();
-                    exports.logout();
-                };
-                mainContentElement.appendChild(logOutButton);**/
                 break;
             case LOADING:
                 loading.classList.remove('hide');
@@ -102,13 +51,6 @@ function HomeController() {
                 break;
         }
 
-        /**if(stateClassName !== null) {
-            mainContentElement.classList.add(stateClassName);
-        }
-
-        if(element) {
-            mainContentElement.appendChild(element);
-        }**/
         currentState = newState;
     }
 

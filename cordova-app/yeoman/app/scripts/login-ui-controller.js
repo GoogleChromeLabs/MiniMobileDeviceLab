@@ -22,39 +22,11 @@ function LoginController() {
     var SIGN_IN = 2;
     var HOME = 3;
 
-    //var exports = {};
-
     var signInController = new SignInController();
     var regController = new RegistrationController();
     var deviceController = new DeviceController();
 
     var currentState;
-    //var mainContentElement = document.getElementById('main-content');
-
-    /**function clearUpCurrentStateUI() {
-        var childNode = mainContentElement.firstChild;
-
-        while(childNode) {
-            mainContentElement.removeChild(childNode);
-            childNode = mainContentElement.firstChild;
-        }
-
-        var currentClassName = getStateClass(currentState);
-        if(currentClassName !== null) {
-            mainContentElement.classList.remove(currentClassName);
-        }
-    }**/
-
-    /**function getStateClass(state) {
-        switch(state) {
-            case SIGN_IN:
-                return 'sign-in';
-            case LOADING:
-                return 'loading';
-            default:
-                return null;
-        }
-    }**/
 
     function setUIState(newState) {
         if(currentState === newState) {
@@ -65,55 +37,24 @@ function LoginController() {
         var loading = document.querySelector('.loading');
         var home = document.querySelector('.home');
 
-        //var stateClassName = getStateClass(newState);
         switch(newState) {
             case SIGN_IN:
                 loading.classList.add('hide');
                 home.classList.add('hide');
                 signIn.classList.remove('hide');
-                //mainContentElement.appendChild(getTitleElement(strings.welcomeTitle));
-
-                /**for(var i = 0; i < strings.welcomeMsgs.length; i++) {
-                    var pElement = document.createElement('p');
-                    pElement.appendChild(document.createTextNode(strings.welcomeMsgs[i]));
-                    mainContentElement.appendChild(pElement);
-                }**/
-
-                /**var signInButton = document.createElement('a');
-                signInButton.classList.add('sign-in-button');
-                signInButton.appendChild(document.createTextNode(strings.signIn));
-                signInButton.href= '#signin';
-                signInButton.onclick = function(e){
-                    history.pushState(null, null, signInButton.href);
-                    e.preventDefault();
-                    exports.login();
-                };
-
-                mainContentElement.appendChild(signInButton);**/
                 break;
             case LOADING:
                 loading.classList.remove('hide');
                 signIn.classList.add('hide');
                 home.classList.add('hide');
-                //element = document.createElement('div');
-                //element.classList.add('spinner');
                 break;
             case HOME:
                 window.location.hash = '#home';
-                //require(['home-ui-controller'], function(homeController){
                 var homeController = new HomeController();
                 homeController.init();
-                //});
                 break;
         }
 
-        //if(stateClassName !== null) {
-        //    mainContentElement.classList.add(stateClassName);
-        //}
-
-        //if(element) {
-        //    mainContentElement.appendChild(element);
-        //}
         currentState = newState;
     }
 

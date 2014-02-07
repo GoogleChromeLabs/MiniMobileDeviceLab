@@ -25,7 +25,5 @@ if(typeof cordova !== 'undefined') {
         begin();
     }, false);
 } else {
-    window.addEventListener('load', function() {
-        begin();
-    }, false);
+    console.log('Cordova is not loaded');
 }
