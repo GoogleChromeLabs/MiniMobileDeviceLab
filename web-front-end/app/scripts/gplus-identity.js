@@ -13,29 +13,28 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-define([], function () {
-    'use strict';
+'use strict';
 
-    var exports = {};
-
+/* jshint unused: false */
+function GPlusIdentity() {
     var clientId = '148156526883-75soacsqseft7npagv6226t9pg0vtbel.apps.googleusercontent.com';
     var autoSignIn = true;
 
-    exports.getUserInfo = function(successCb, errorCb) {
+    this.getUserInfo = function(successCb, errorCb) {
         this.performUserInfoRequest(false, successCb, errorCb);
     };
 
-    exports.performUserInfoRequest = function(isInteractive, successCb) {
+    this.performUserInfoRequest = function(isInteractive, successCb) {
         console.log('MockIdentity.prototype.performUserInfoRequest ');
         populateUserInfo({userId: -1}, successCb);
     };
 
-    exports.isLoggedIn = function() {
+    this.isLoggedIn = function() {
         return false;
     };
 
-    exports.initSignInButton = function(signInButton, successCb, errorCb, requiresLoginCb) {
-        gapi.signin.render(
+    this.initSignInButton = function(signInButton, successCb, errorCb, requiresLoginCb) {
+        window.gapi.signin.render(
             signInButton,
             {
                 clientid: clientId,
@@ -72,6 +71,4 @@ define([], function () {
     function populateUserInfo(userData, successCb) {
         successCb(userData);
     }
-
-    return exports;
-});
+}

@@ -13,14 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-define(['device-list-controller'/**, 'gcm-controller', 'android-browser-model'**/], function (deviceListController) {
-    'use strict';
+'use strict';
+
+/* jshint unused: false */
+function HomeController() {
+    var deviceListController = new DeviceListController();
 
     var LOADING = 0;
     var DEVICE_LIST = 1;
     var SIGN_OUT = 2;
-
-    var exports = {};
 
     var currentState;
     var devices = [];
@@ -256,7 +257,7 @@ define(['device-list-controller'/**, 'gcm-controller', 'android-browser-model'**
         }, true);
     }
 
-    exports.init = function(token, autoSignIn) {
+    this.init = function(token, autoSignIn) {
         console.log('home-ui-controller: init() token = '+token);
         idToken = token;
         isAutoSignIn = autoSignIn;
@@ -276,7 +277,6 @@ define(['device-list-controller'/**, 'gcm-controller', 'android-browser-model'**
                 // Error
 
             });
-            //setUIState(DEVICE_LIST);
         } else {
             require(['login-ui-controller'], function(loginController){
                 console.log('home-ui-controller: loginController.init()');
@@ -285,5 +285,4 @@ define(['device-list-controller'/**, 'gcm-controller', 'android-browser-model'**
         }
     };
 
-    return exports;
-});
+}

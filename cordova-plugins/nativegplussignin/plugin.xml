@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="co.uk.gauntface.cordova.plugin.nativegplussignin"
+    version="0.0.1">
+    <name>NativeGPlusSignIn</name>
+    <description>Native G+ Sign In Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,NativeGPlusSignIn</keywords>
+    <repo><!-- URL --></repo>
+    <issue><!-- URL --></issue>
+
+    <js-module src="www/nativegplussignin.js" name="nativegplussignin">
+        <clobbers target="nativegplussignin" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="CordovaGPlusOauthPlugin" >
+                <param name="android-package" value="co.uk.gauntface.cordova.plugin.nativegplussignin.CordovaGPlusOauthPlugin"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/CordovaGPlusOauthPlugin.java" target-dir="src/co/uk/gauntface/cordova/plugin/nativegplussignin/" />
+        <source-file src="src/android/C.java" target-dir="src/co/uk/gauntface/cordova/plugin/nativegplussignin/" />
+    </platform>
+
+    <!-- ios -->
+    <!--<platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Device">
+                <param name="ios-package" value="CDVDevice"/>
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/CDVDevice.h" />
+        <source-file src="src/ios/CDVDevice.m" />
+    </platform>-->
+
+</plugin>

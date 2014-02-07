@@ -13,20 +13,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
+'use strict';
 
 /* jshint unused: false */
-define([], function () {
-    'use strict';
-    
-    var exports = {};
-
+function Config() {
 	var localhost = 'http://localhost:8888';
 	var localIP = 'http://192.168.0.2:8888';
 	var production = 'http://device-lab.appspot.com';
 
-	exports.getRootUrl = function() {
+	this.getRootUrl = function() {
 		return production;
 	};
 
-    return exports;
-});
+}

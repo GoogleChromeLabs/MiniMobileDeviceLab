@@ -1,0 +1,12 @@
+{
+    "version": "0.0.1",
+    "name": "co.uk.gauntface.cordova.plugin.nativegplussignin",
+    "cordova_name": "NativeGPlusSignIn",
+    "description": "Native G+ Sign In Plugin",
+    "license": "Apache 2.0",
+    "keywords": [
+        "cordova",
+        "NativeGPlusSignIn"
+    ],
+    "engines": []
+}

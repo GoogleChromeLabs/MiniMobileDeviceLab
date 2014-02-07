@@ -13,14 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-define(['config', 'strings', 'gplus-identity'], function (config, strings, gplusIdentity) {
-    'use strict';
+'use strict';
+
+/* jshint unused: false */
+function LoginController() {
+    var gplusIdentity = new GPlusIdentity();
 
     var LOADING = 0;
     var SIGN_IN = 1;
     var HOME = 2;
-
-    var exports = {};
 
     var currentState;
     var identityController;
@@ -59,16 +60,17 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
                 signIn.classList.add('hide');
 
                 window.location.hash = '#home';
-                require(['home-ui-controller'], function(homeController){
-                    homeController.init(idToken, isAutoSignIn);
-                });
+                //require(['home-ui-controller'], function(homeController){
+                var homeController = new HomeController();
+                homeController.init(idToken, isAutoSignIn);
+                //});
                 break;
         }
 
         currentState = newState;
     }
 
-    exports.init = function() {
+    this.init = function() {
         console.log('login-ui-controller: init()');
         identityController = gplusIdentity;
 
@@ -90,6 +92,4 @@ define(['config', 'strings', 'gplus-identity'], function (config, strings, gplus
 
         setUIState(LOADING);
     };
-
-    return exports;
-});
+}

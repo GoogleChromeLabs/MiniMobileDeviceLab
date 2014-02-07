@@ -13,12 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-define(['config'], function (config) {
-    'use strict';
+'use strict';
 
-    var exports = {};
+/* jshint unused: false */
+function DeviceListController() {
 
-    exports.getDevices = function(idToken, successCb, errorCb) {
+    var config = new Config();
+
+    this.getDevices = function(idToken, successCb, errorCb) {
         performDeviceListRequest(idToken, successCb, errorCb);
     };
 
@@ -44,15 +46,14 @@ define(['config'], function (config) {
         xhr.send(paramString);
     }
 
-    exports.removeDevice = function(deviceId, idToken, successCb, errorCb) {
+    this.removeDevice = function(deviceId, idToken, successCb, errorCb) {
         /* jshint unused: false */
         window.alert('device-list-controller.js: removeDevice() needs implementing');
     };
 
-    exports.changeDeviceName = function(deviceId, idToken, successCb, errorCb) {
+    this.changeDeviceName = function(deviceId, idToken, successCb, errorCb) {
         /* jshint unused: false */
         window.alert('device-list-controller.js: changeDeviceName() needs implementing');
     };
 
-    return exports;
-});
+}

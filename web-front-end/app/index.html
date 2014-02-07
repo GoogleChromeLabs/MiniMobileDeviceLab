@@ -26,6 +26,10 @@ limitations under the License.
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css styles/vendor.css -->
+        <!-- bower:css -->
+        <!-- endbower -->
+        <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
         <!-- endbuild -->
@@ -99,18 +103,27 @@ limitations under the License.
             </section>
         </section>
 
+        <!--<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>-->
+        <!-- build:js scripts/main.js -->
+        <script src="scripts/gplus-identity.js"></script>
+        <script src="scripts/config.js"></script>
+        <script src="scripts/device-list-controller.js"></script>
+        <script src="scripts/home-ui-controller.js"></script>
+        <script src="scripts/login-ui-controller.js"></script>
+        <script src="scripts/main.js"></script>
+        <!-- endbuild -->
+
         <!-- G+ Sign In-->
         <script type="text/javascript">
           (function() {
            window.___gcfg = { isSignedOut: true, parsetags: "explicit" };
-           var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-           po.src = 'https://apis.google.com/js/client:plusone.js';
-           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+           var po = document.createElement('script');
+           po.type = 'text/javascript';
+           po.async = true;
+           po.src = 'https://apis.google.com/js/client:plusone.js?onload=onGPlusLoadCallback';
+           var s = document.getElementsByTagName('script')[0];
+           s.parentNode.insertBefore(po, s);
          })();
         </script>
-
-        <!-- build:js scripts/main.js -->
-        <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
-        <!-- endbuild -->
 </body>
 </html>

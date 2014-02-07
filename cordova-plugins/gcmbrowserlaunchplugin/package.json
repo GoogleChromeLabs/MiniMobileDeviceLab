@@ -1,0 +1,12 @@
+{
+    "version": "0.0.1",
+    "name": "co.uk.gauntface.cordova.plugin.gcmbrowserlaunch",
+    "cordova_name": "GCMBrowserLaunch",
+    "description": "A GCM Based Plugin to Launch a Browser",
+    "license": "Apache 2.0",
+    "keywords": [
+        "cordova",
+        "GCMBrowserLaunch"
+    ],
+    "engines": []
+}

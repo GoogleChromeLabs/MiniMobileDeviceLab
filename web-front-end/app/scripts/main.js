@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-require(['login-ui-controller'], function (loginController) {
-    'use strict';
+'use strict';
 
+window.onGPlusLoadCallback = function() {
+    var loginController = new LoginController();
     loginController.init();
-});
+};

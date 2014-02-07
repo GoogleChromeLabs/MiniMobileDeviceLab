@@ -1,0 +1,19 @@
+input {
+    display: block;
+    
+    padding: $padding;
+
+    box-sizing: border-box;
+
+    color: $input-text-color;
+    font-size: 1rem;
+
+    background-color: $input-bg-color;
+
+    border: 0;
+}
+
+input:focus {
+    outline: none;
+    background-color: lighten($input-bg-color, 5%);
+}
