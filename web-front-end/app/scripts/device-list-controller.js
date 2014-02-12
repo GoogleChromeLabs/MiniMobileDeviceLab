@@ -37,7 +37,7 @@ function DeviceListController() {
                     return;
                 } else {
                     var data = JSON.parse(xhr.responseText);
-                    successCb(data.devices);
+                    successCb({ android: data.devices });
                 }
             }
         };
