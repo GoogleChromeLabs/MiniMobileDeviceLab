@@ -61,6 +61,7 @@ function LoginController() {
     function registerPushAccount(idToken) {
         regController.registerDeviceWithLab(idToken, function(device) {
             // Success
+            console.log('login-ui-controller: Signed In and Device Registered');
             deviceController.saveDevice(device);
             setUIState(HOME);
         }, function(errorMsg){
