@@ -29,11 +29,14 @@ function SignInController() {
             return;
         }
 
+        console.log('sign-in-controller: Attempting G+ Sign In');
         nativegplussignin.login(function(args) {
             // Success
+            console.log('sign-in-controller: Success - '+JSON.stringify(args));
             success(args);
         }, function(errMsg) {
             // Error
+            console.log('sign-in-controller: Error - '+JSON.stringify(errMsg));
             error(errMsg);
         });
         

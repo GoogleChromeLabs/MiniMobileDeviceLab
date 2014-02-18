@@ -1,7 +1,8 @@
 var PORT = 3000;
 
-var gplusController = require('./gplus-controller.js');
 var express = require('express');
+var deviceHandler = require('./device-handler.js');
+
 var app = express();
 
 // Parse Post Data
@@ -30,23 +31,6 @@ app.use(function(err, req, res, next){
 
 // TODO: Include a catch all - no api fix up
 
-app.get('/devices/get', function(req, res){
-    console.log('/devices/get GET Request');
-
-    var response = {
-        error: {
-            code: "incorrect_request_type",
-            msg: "/devices/get/ is only accessible with a POST request."
-        }
-    };
-
-    var body = JSON.stringify(response);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Content-Length', Buffer.byteLength(body));
-    res.end(body);
-});
-
 app.post('/devices/get', function(req, res){
     console.log('/devices/get POST Request');
 
@@ -66,7 +50,7 @@ app.post('/devices/get', function(req, res){
         response = {
             error: {
                 code: "required_param_missing",
-                msg: "/devices/register/ requires the "+missingStrings+" parameter to be included with the request"
+                msg: "/devices/get/ requires the "+missingStrings+" parameter to be included with the request"
             }
         };
     } else {
@@ -133,36 +117,22 @@ app.post('/devices/get', function(req, res){
     res.end(body);
 });
 
-app.get('/devices/register', function(req, res){
-    console.log('/devices/register GET Request');
+app.post('/devices/add', deviceHandler.add);
 
-    var response = {
-        error: {
-            code: "incorrect_request_type",
-            msg: "/devices/get/ is only accessible with a POST request."
-        }
-    };
-
-    var body = JSON.stringify(response);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Content-Length', Buffer.byteLength(body));
-    res.end(body);
-});
-
-app.post('/devices/register', function(req, res){
-    console.log('/devices/register POST Request');
+/**app.post('/devices/add', function(req, res){
+    console.log('/devices/add POST Request');
 
     var response;
+    var statusCode = 200;
     var missingParams = checkRequiredParams(req, [
         'id_token',
-        'device_id',
-        'gcm_id',
+        'cloud_msg_id',
         'device_name',
         'device_nickname',
         'platform_id',
         'platform_version'
         ]);
+
     if(missingParams.length > 0) {
         var missingStrings = '';
         for(var i = 0; i < missingParams.length; i++) {
@@ -174,24 +144,16 @@ app.post('/devices/register', function(req, res){
 
         response = {
             error: {
-                code: "required_param_missing",
-                msg: "/devices/register/ requires the "+missingStrings+" parameter to be included with the request"
+                code: ErrorCodes.required_param_missing,
+                msg: "/devices/add/ requires the "+missingStrings+" parameter to be included with the request"
             }
         };
+        statusCode = 400;
     } else {
-        var idToken = req.body.id_token;
-        var deviceId = parseInt(req.body.device_id);
-        var gcmId = req.body.gcm_id;
-        var deviceName = req.body.device_name;
-        var deviceNickname = req.body.device_nickname;
-        var platformId = req.body.platform_id;
-        var platformVersion = req.body.platform_version;
-
-        // TODO: Sort out how
-        var userId = 'Temp'; //;gplusController.getUserId();
+        
 
         //if(gplusController.isValidUserId(userId)) {
-        if(true) {
+        /**if(true) {
             var device = {
                 deviceId: deviceId,
                 gcmId: gcmId,
@@ -217,47 +179,18 @@ app.post('/devices/register', function(req, res){
                         msg: "Failed to register device"
                     }
                 };
+                statusCode = 500;
             }
         } else {
             // Invalid ID_TOKEN
-            response = {
-                error: {
-                    code: "invalid_id_token",
-                    msg: "The supplied id_token is invalid"
-                }
-            };
-        }
-    }
+            
+        }**/
+/**    }
 
-    var body = JSON.stringify(response);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Content-Length', Buffer.byteLength(body));
-    res.end(body);
-});
+    
+});**/
 
-function checkRequiredParams(req, requiredParams) {
-    var missingFields = [];
-    for(var i = 0; i < requiredParams.length; i++) {
-        var isSupplied = isValidParam(req.body[requiredParams[i]]);
-        if(!isSupplied) {
-            missingFields.push(requiredParams[i]);
-        }
-    }
-    return missingFields;
-}
 
-function isValidParam(param) {
-    console.log('isValidParam = '+param);
-    if(typeof param === 'undefined') {
-        return false;
-    } else if(param === null) {
-        return false;
-    } else if (param.length === 0){
-        return false;
-    }
-    return true;
-}
 
 app.listen(PORT);
 console.log('Listening on port '+PORT);

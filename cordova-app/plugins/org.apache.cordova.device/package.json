@@ -1,9 +1,11 @@
 {
-    "version": "0.2.7",
+    "version": "0.2.8",
     "name": "org.apache.cordova.device",
     "cordova_name": "Device",
     "description": "Cordova Device Plugin",
     "license": "Apache 2.0",
+    "repo": "https://git-wip-us.apache.org/repos/asf/cordova-plugin-device.git",
+    "issue": "https://issues.apache.org/jira/browse/CB/component/12320648",
     "keywords": [
         "cordova",
         "device"

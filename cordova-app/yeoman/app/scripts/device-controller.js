@@ -81,7 +81,11 @@ function DeviceController() {
             return window.device.model;
         }
 
-        return localStorage.getItem('device-nickname');
+        var nickname = localStorage.getItem('device-nickname');
+        if(typeof nickname === 'undefined' || nickname === null) {
+            nickname = window.device.model;
+        }
+        return nickname;
     }
 
     function hasLocalStorage() {
