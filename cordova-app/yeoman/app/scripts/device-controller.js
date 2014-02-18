@@ -23,7 +23,7 @@ function DeviceController() {
             return;
         }
 
-        localStorage.setItem('device-id', device.deviceId);
+        localStorage.setItem('device_id', device.device_id);
     };
 
     this.getDevice = function(successCb, errorCb) {
@@ -73,7 +73,7 @@ function DeviceController() {
             return;
         }
 
-        return localStorage.getItem('device-id');
+        return localStorage.getItem('device_id');
     }
 
     function getDeviceNickname() {

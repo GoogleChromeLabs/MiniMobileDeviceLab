@@ -16,44 +16,96 @@ limitations under the License.
 'use strict';
 
 /* jshint unused: false */
-function DeviceListController() {
-
+function DeviceListController(token) {
+    var gcmController = new GCMController(token);
+    var devicesModel = new DevicesModel(token);
     var config = new Config();
+    var filteredPlatforms = null;
 
-    this.getDevices = function(idToken, successCb, errorCb) {
-        performDeviceListRequest(idToken, successCb, errorCb);
+    this.setFilteredPlatforms = function(platforms) {
+        filteredPlatforms = platforms;
     };
 
+    this.getFilteredPlatforms = function() {
+        return filteredPlatforms;
+    };
 
-    function performDeviceListRequest(idToken, successCb, errorCb) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', config.getRootUrl()+'/devices/get/', true);
-        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    this.getDevicesModel = function() {
+        return devicesModel;
+    };
 
-        xhr.onreadystatechange = function() {
-            if (this.readyState === 4) {
-                if(this.status !== 200) {
-                    errorCb();
-                    return;
-                } else {
-                    var response = JSON.parse(xhr.responseText);
-                    successCb(response.data);
-                }
-            }
-        };
+    this.getGCMController = function() {
+        return gcmController;
+    };
+}
 
-        var paramString = 'id_token='+encodeURIComponent(idToken);
-        xhr.send(paramString);
+DeviceListController.prototype.getPlatformLists = function(successCb, errorCb) {
+    var platforms = this.getFilteredPlatforms();
+    if(platforms !== null) {
+        successCb(platforms);
+        return;
     }
 
-    this.removeDevice = function(deviceId, idToken, successCb, errorCb) {
-        /* jshint unused: false */
-        window.alert('device-list-controller.js: removeDevice() needs implementing');
-    };
+    this.getDevicesModel().getPlatforms(function(platformLists) {
+        var filteredPlatformLists = [];
+        for(var i = 0; i < platformLists.length; i++) {
+            filteredPlatformLists[i] = {
+                platformId: i,
+                deviceIds: platformLists[i],
+                enabled: this.isPlatformEnabled(i)
+            };
+        }
+        this.setFilteredPlatforms(filteredPlatformLists);
+        successCb(filteredPlatformLists);
+    }.bind(this), errorCb);
+};
 
-    this.changeDeviceName = function(deviceId, idToken, successCb, errorCb) {
-        /* jshint unused: false */
-        window.alert('device-list-controller.js: changeDeviceName() needs implementing');
-    };
+DeviceListController.prototype.getDeviceById = function(id) {
+    return this.getDevicesModel().getDeviceById(id);
+};
 
-}
+DeviceListController.prototype.isPlatformEnabled = function(platformId) {
+    if(Modernizr && Modernizr.localstorage) {
+        var enabled = localStorage.getItem('platform-enabled-'+platformId);
+        if(enabled !== null) {
+            return enabled === 'true' ? true : false;
+        }
+    }
+
+    return true;
+};
+
+DeviceListController.prototype.onPlatformEnabledChange = function(platformId, enabled) {
+    if(Modernizr && Modernizr.localstorage) {
+        console.log('onPlatformEnabledChange '+platformId+' enabled = '+enabled);
+        localStorage.setItem('platform-enabled-'+platformId, enabled);
+    }
+
+    var platforms = this.getFilteredPlatforms();
+    platforms[platformId].enabled = enabled;
+    this.setFilteredPlatforms(platforms);
+};
+
+DeviceListController.prototype.sendUrlPushMessage = function(url, errorCb) {
+    var gcmController = this.getGCMController();
+
+    var filteredPlatforms = this.getFilteredPlatforms();
+    var pushDeviceData = [];
+    for(var i = 0; i < filteredPlatforms.length; i++) {
+        if(!filteredPlatforms[i].enabled) {
+            continue;
+        }
+
+        var deviceIds = filteredPlatforms[i].deviceIds;
+        for(var j = 0; j < deviceIds.length; j++) {
+            // TODO Check if device is enabled
+
+            pushDeviceData.push({
+                id: deviceIds[j],
+                pkg: 'com.android.chrome'
+            });
+        }
+    }
+
+    gcmController.sendUrlPushMessage(url, pushDeviceData, errorCb);
+};
