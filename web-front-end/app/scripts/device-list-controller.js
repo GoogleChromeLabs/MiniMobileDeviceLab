@@ -27,7 +27,7 @@ function DeviceListController() {
 
     function performDeviceListRequest(idToken, successCb, errorCb) {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', config.getRootUrl()+'/devicelab/devices/get/', true);
+        xhr.open('POST', config.getRootUrl()+'/devices/get/', true);
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
         xhr.onreadystatechange = function() {
@@ -36,8 +36,8 @@ function DeviceListController() {
                     errorCb();
                     return;
                 } else {
-                    var data = JSON.parse(xhr.responseText);
-                    successCb({ android: data.devices });
+                    var response = JSON.parse(xhr.responseText);
+                    successCb(response.data);
                 }
             }
         };

@@ -17,12 +17,12 @@ limitations under the License.
 
 /* jshint unused: false */
 function Config() {
-	var localhost = 'http://localhost:8888';
+	var localhost = 'http://localhost:3000';
 	var localIP = 'http://192.168.0.2:8888';
 	var production = 'http://device-lab.appspot.com';
 
 	this.getRootUrl = function() {
-		return production;
+		return localhost;
 	};
 
 }

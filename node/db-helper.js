@@ -5,18 +5,12 @@ var tables = [
     'CREATE TABLE IF NOT EXISTS devices ('
     + 'id INT NOT NULL AUTO_INCREMENT,'
     + 'PRIMARY KEY(id),'
+    + 'user_id TEXT NOT NULL,'
     + 'device_name TEXT NOT NULL,'
     + 'device_nickname TEXT NOT NULL,'
     + 'platform_id INT NOT NULL,'
     + 'platform_version TEXT NOT NULL,'
     + 'cloud_msg_id TEXT NOT NULL'
-    +  ')',
-
-    'CREATE TABLE IF NOT EXISTS userdevicepairs ('
-    + 'id INT NOT NULL AUTO_INCREMENT,'
-    + 'PRIMARY KEY(id),'
-    + 'device_id INT NOT NULL,'
-    + 'user_id INT NOT NULL'
     +  ')'
 ];
 
