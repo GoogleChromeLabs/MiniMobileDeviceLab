@@ -41,7 +41,6 @@ exports.respondWithData = function(data, res) {
 
 function sendRequest(response, statusCode, res) {
     var body = JSON.stringify(response);
-    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Content-Length', Buffer.byteLength(body));
     res.statusCode = statusCode;
