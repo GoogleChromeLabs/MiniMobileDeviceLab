@@ -2,6 +2,7 @@ var PORT = 3000;
 
 var express = require('express');
 var deviceHandler = require('./device-handler.js');
+var pushHandler = require('./push-handler.js');
 
 var app = express();
 
@@ -12,7 +13,8 @@ app.use(express.urlencoded());
 // Add headers
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
-
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    
     // Pass to next layer of middleware
     next();
 });
@@ -42,6 +44,8 @@ app.use(function (req, res, next) {
 app.post('/devices/get', deviceHandler.get);
 
 app.post('/devices/add', deviceHandler.add);
+
+app.post('/push/url', pushHandler.pushUrl);
 
 app.listen(PORT);
 console.log('Listening on port '+PORT);

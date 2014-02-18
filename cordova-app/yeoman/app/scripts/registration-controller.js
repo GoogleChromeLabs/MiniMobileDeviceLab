@@ -86,7 +86,7 @@ function RegistrationController() {
                 if(this.status !== 200) {
                     errorCb(response.error.msg);
                 } else {
-                    device.deviceId = response.data.deviceId;
+                    device.device_id = response.data.device_id;
                     successCb(device);
                 }
             }
