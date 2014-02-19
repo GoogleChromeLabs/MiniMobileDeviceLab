@@ -5,6 +5,7 @@
   "dependencies": {
     "express": "3.x",
     "jwt-simple": "0.1.x",
-    "mysql": "2.0.x"
+    "mysql": "2.0.x",
+    "node-gcm": "0.9.x"
   }
 }

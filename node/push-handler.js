@@ -2,10 +2,13 @@ var dbHelper = require('./db-helper');
 var RequestUtils = require('./request-utils.js');
 var gplusController = require('./gplus-controller.js');
 var ErrorCodes = require('./error_codes.js');
+var gcm = require('node-gcm');
 
 var PLATFORM_ID_ANDROID = 0;
 
 exports.pushUrl = function(req, res) {
+    'use strict';
+
     var requiredParams = [
         'id_token',
         'url',
@@ -20,16 +23,18 @@ exports.pushUrl = function(req, res) {
 
         var deviceParams = req.body.device_params;
         var deviceIds = '';
+        var packages = {};
         for(var i = 0; i < deviceParams.length; i++) {
             var params = deviceParams[i];
             deviceIds += params.id;
+            packages[params.id] = params.pkg;
             if(i+1 != deviceParams.length) {
                 deviceIds += ',';
             }
         }
 
         dbHelper.openDb(function(dbConnection) {
-            dbConnection.query('SELECT cloud_msg_id, platform_id FROM devices WHERE user_id = ? AND id IN ('+deviceIds+')', [userId], 
+            dbConnection.query('SELECT cloud_msg_id, platform_id, id FROM devices WHERE user_id = ? AND id IN ('+deviceIds+')', [userId],
                 function (err, result) {
                         if (err) {
                             RequestUtils.respondWithError(
@@ -40,17 +45,38 @@ exports.pushUrl = function(req, res) {
                             );
                             return;
                         }
-                        
+
                         console.log('result = ', JSON.stringify(result));
 
+
+
                         for(var i = 0; i < result.length; i++) {
+                            var deviceId = result[i].id;
                             var cloudMsgId = result[i].cloud_msg_id;
                             var platformId = result[i].platform_id;
 
                             switch(parseInt(platformId)) {
                                 case PLATFORM_ID_ANDROID:
+                                    console.log('');
 
-                                break;
+                                    // Figure out what to do for batching messages
+                                    // create a message with default values
+                                    var message = new gcm.Message();
+                                    message.addDataWithKeyValue('url', req.body.url);
+                                    message.addDataWithKeyValue('pkg', packages[deviceId]);
+
+                                    console.log('Sending url: '+req.body.url);
+                                    console.log('Sending pkg: '+packages[deviceId]);
+
+                                    var sender = new gcm.Sender('AIzaSyBxM3sKIWYokvaWfgWNSHWlsM8IInHfowM');
+                                    var registrationIds = [];
+                                    registrationIds.push(cloudMsgId);
+
+                                    sender.send(message, registrationIds, 5, function (err, result) {
+                                        console.log(result);
+                                    });
+
+                                    break;
                             }
                         }
 

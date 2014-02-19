@@ -20,7 +20,7 @@ limitations under the License.
 function DeviceLabConfig() {
     var localhost = 'http://localhost:8888';
     var androidEmu = 'http://10.0.2.2:8888';
-    var localIP = 'http://198.51.100.227:3000';
+    var localIP = 'http://198.51.100.106:3000';
     var production = 'http://device-lab.appspot.com';
 
     this.url = localIP;
