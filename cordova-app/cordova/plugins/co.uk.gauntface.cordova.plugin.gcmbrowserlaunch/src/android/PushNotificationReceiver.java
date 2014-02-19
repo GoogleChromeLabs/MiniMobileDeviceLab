@@ -52,6 +52,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
             Bundle data = intent.getExtras();
             if(data != null) {
                 String dataString = data.getString("data");
+                Log.v(C.TAG, "PushNotificationReceiver: dataString = "+dataString);
                 try {
                     JSONObject dataObject = new JSONObject(dataString);
                     String url = validateUrl(dataObject.optString("url"));

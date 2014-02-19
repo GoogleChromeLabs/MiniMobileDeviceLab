@@ -24,6 +24,15 @@
             </feature>
         </config-file>
 
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <receiver android:name="co.uk.gauntface.cordova.plugin.gcmbrowserlaunch.PushNotificationReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
+                <intent-filter>
+                    <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                    <category android:name="co.uk.gauntface.mobile.devicelab" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+
         <source-file src="src/android/C.java" target-dir="src/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch" />
         <source-file src="src/android/GCMBrowserLaunch.java" target-dir="src/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch" />
         <source-file src="src/android/PushNotificationReceiver.java" target-dir="src/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch" />
