@@ -53,18 +53,6 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         } else {
             Bundle data = intent.getExtras();
             if(data != null) {
-                /**String dataString = data.getString("data");
-                Log.v(C.TAG, "PushNotificationReceiver: dataString = "+dataString);
-                try {
-                    JSONObject dataObject = new JSONObject(dataString);
-                    String url = validateUrl(dataObject.optString("url"));
-                    String packageName = dataObject.optString("pkg");
-                    if(url != null) {
-                        launchBrowserTask(context, url, packageName);
-                    }
-                } catch (JSONException e) {
-                    Log.e(C.TAG, "PushNotificationReceiver: JSONException ", e);
-                }**/
                 String url = validateUrl(data.getString("url"));
                 String packageName = data.getString("pkg");
                 if(url != null) {

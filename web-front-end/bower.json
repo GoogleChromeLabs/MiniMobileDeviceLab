@@ -3,7 +3,8 @@
   "private": true,
   "dependencies": {
     "modernizr": "~2.6.2",
-    "requirejs": "~2.1.10"
+    "requirejs": "~2.1.10",
+    "mustache": "~0.8.1"
   },
   "devDependencies": {}
 }
