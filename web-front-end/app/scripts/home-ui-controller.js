@@ -25,7 +25,7 @@ var SIGN_OUT = 2;
 /* jshint unused: false, sub:true */
 function HomeController() {
     var deviceListController = null;
-    
+
     var currentState;
     var platforms = [];
     var idToken;
@@ -67,60 +67,6 @@ function HomeController() {
     this.getPlatforms = function() {
         return platforms;
     };
-
-    /**function createBrowserOptions() {
-        var sectionElement = document.createElement('section');
-        sectionElement.classList.add('device-heading');
-
-        var titleElement = document.createElement('h1');
-        titleElement.appendChild(document.createTextNode('Android'));
-        sectionElement.appendChild(titleElement);
-
-        var ulElement = document.createElement('ul');
-        ulElement.classList.add('browser-options');
-        
-        var androidBrowsers = androidBrowserModel.getSupportedBrowsers();
-        var selectedBrowser = androidBrowserModel.getSelectedBrowser();
-
-        for(var i = 0; i < androidBrowsers.length; i++) {
-            var liElement = document.createElement('li');
-            
-            var icon = document.createElement('img');
-            icon.src = androidBrowsers[i].icon;
-            
-            var name = document.createElement('p');
-            name.appendChild(document.createTextNode(androidBrowsers[i].name));
-
-            liElement.appendChild(icon);
-            liElement.appendChild(name);
-
-            if(i === selectedBrowser) {
-                liElement.classList.add('selected-browser');
-            }
-
-            liElement.onclick = onBrowserClickHandler(i);
-
-            ulElement.appendChild(liElement);
-        }
-
-        sectionElement.appendChild(ulElement);
-
-        return sectionElement;
-    }**/
-
-    /**function onBrowserClickHandler(index) {
-        return function(){
-            var browserList = document.querySelector('.browser-options');
-            var selectedItems = browserList.querySelectorAll('.selected-browser');
-            for(var i = 0; i < selectedItems.length; i++) {
-                selectedItems[i].classList.remove('selected-browser');
-            }
-
-            browserList.children[index].classList.add('selected-browser');
-
-            androidBrowserModel.setSelectedBrowser(index);
-        };
-    }*/
 }
 
 HomeController.prototype.init = function(token, autoSignIn) {
@@ -157,37 +103,38 @@ HomeController.prototype.setUIState = function(newState) {
     var appScreens = document.querySelector('.app-screens');
 
     switch(newState) {
-        case LOADING:
-            loading.classList.remove('hide');
-            emptyLabScreen.classList.add('hide');
-            devicelistScreen.classList.add('hide');
+    case LOADING:
+        loading.classList.remove('hide');
+        emptyLabScreen.classList.add('hide');
+        devicelistScreen.classList.add('hide');
+        navbar.classList.add('hide');
+        appScreens.classList.add('hide');
+        break;
+    case DEVICE_LIST:
+        appScreens.classList.remove('hide');
+        loading.classList.add('hide');
+
+        var platforms = this.getPlatforms();
+        if(platforms.length === 0) {
             navbar.classList.add('hide');
-            appScreens.classList.add('hide');
-            break;
-        case DEVICE_LIST:
+            emptyLabScreen.classList.remove('hide');
+            devicelistScreen.classList.add('hide');
+        } else {
             navbar.classList.remove('hide');
-            appScreens.classList.remove('hide');
-            loading.classList.add('hide');
-            
-            var platforms = this.getPlatforms();
-            if(platforms.length === 0) {
-                emptyLabScreen.classList.remove('hide');
-                devicelistScreen.classList.add('hide');
-            } else {
-                emptyLabScreen.classList.add('hide');
-                devicelistScreen.classList.remove('hide');
-
-                this.renderDevicesList();
-            }
-                           
-            break;
-        case SIGN_OUT:
-            loading.classList.remove('hide');
             emptyLabScreen.classList.add('hide');
+            devicelistScreen.classList.remove('hide');
 
-            gapi.auth.signOut();
-            
-            break;
+            this.renderDevicesList();
+        }
+
+        break;
+    case SIGN_OUT:
+        loading.classList.remove('hide');
+        emptyLabScreen.classList.add('hide');
+
+        gapi.auth.signOut();
+
+        break;
     }
     this.setCurrentState(newState);
 };
@@ -198,11 +145,15 @@ HomeController.prototype.initDeviceList = function() {
         // Success
         this.setPlatforms(platforms);
         this.setUIState(DEVICE_LIST);
-    }.bind(this), function() {
+    }.bind(this), function(err) {
+        console.log('Error = '+err);
         // Error
-        this.setDeviceGroups([]);
-        this.setUIState(DEVICE_LIST);
-        window.alert('Unable to get a list of devices.');
+        this.setPlatforms([]);
+        this.setUIState(SIGN_OUT);
+        if(!err) {
+            err = 'Unable to connect to the Device Lab Server.';
+        }
+        window.alert(err);
     }.bind(this));
 };
 
@@ -212,7 +163,7 @@ HomeController.prototype.setupPlatformDevices = function(className, platform) {
 
     var deviceHeader = document.querySelector('.device-list > .os-header.'+className);
     var devicelistElem = document.querySelector('.device-list > .list-elem.'+className);
-    
+
     if(typeof deviceIds === 'undefined' || deviceIds === null || deviceIds.length === 0) {
         deviceHeader.classList.add('hide');
         devicelistElem.classList.add('hide');
@@ -224,72 +175,36 @@ HomeController.prototype.setupPlatformDevices = function(className, platform) {
 
     var device;
     var deviceListController = this.getDeviceListController();
+    var template = document.querySelector('#device-li-template').innerHTML;
     for(var i = 0; i < deviceIds.length; i++) {
         device = deviceListController.getDeviceById(deviceIds[i]);
 
+        var output = Mustache.render(template, device);
+
         var liElement = document.createElement('li');
-        liElement.id = 'device-list-item-'+device['device_id'];
-
-        var nameInputContainer = document.createElement('div');
-        nameInputContainer.id = 'device-name-input-container-'+device['device_id'];
-        nameInputContainer.classList.add('device-name-input-container');
-
-        var nameInput = document.createElement('input');
-        nameInput.classList.add('device-name-input');
-        nameInput.id = 'device-name-input-'+device['device_id'];
-        nameInput.value = device['device_nickname'];
-        nameInput.disabled = true;
-        nameInputContainer.appendChild(nameInput);
-
-        var completeButton = document.createElement('button');
-        completeButton.id = 'complete-button-'+device['device_id'];
-        completeButton.classList.add('image-btn');
-        completeButton.classList.add('complete-button');
-        completeButton.classList.add('hide');
-        nameInputContainer.appendChild(completeButton);
-
-        liElement.appendChild(nameInputContainer);
-
-        var enableSpan = document.createElement('span');
-        enableSpan.classList.add('toggle-switch');
-
-        var checkbox = document.createElement('input');
-        checkbox.id = 'enabled-checkbox-'+device['device_id'];
-        checkbox.classList.add('checkbox');
-        checkbox.type = 'checkbox';
-        checkbox.checked = true;
-        enableSpan.appendChild(checkbox);
-
-        var label = document.createElement('label');
-        label.htmlFor = checkbox['device_id'];
-        label.classList.add('checkbox-label');
-        enableSpan.appendChild(label);
-
-        liElement.appendChild(enableSpan);
-
-        var editButton = document.createElement('button');
-        editButton.appendChild(document.createTextNode('Edit'));
-        editButton.id = 'edit-button-'+device['device_id'];
-        editButton.classList.add('image-btn');
-        editButton.classList.add('edit-button');
-        liElement.appendChild(editButton);
-
-        var deleteButton = document.createElement('button');
-        deleteButton.appendChild(document.createTextNode('Delete'));
-        deleteButton.id = 'delete-button-'+device['device_id'];
-        deleteButton.classList.add('image-btn');
-        deleteButton.classList.add('delete-button');
-        liElement.appendChild(deleteButton);
+        liElement.id = 'device-list-item-'+device.id;
+        liElement.innerHTML = output;
 
         devicelistElem.appendChild(liElement);
 
-        this.addListElementEvents(liElement, device['device_id']);
+        var checkbox = liElement.querySelector('#enabled-checkbox-'+device.id);
+        checkbox.checked = device.enabled;
+
+        var deviceList = liElement.querySelector('#device-browser-'+device.id);
+        var selectedIndex = device.selectedBrowserIndex;
+        if(selectedIndex >= deviceList.childNodes.length) {
+            selectedIndex = 0;
+        }
+        deviceList.childNodes[selectedIndex].classList.remove('deselected');
+        deviceList.childNodes[selectedIndex].classList.add('selected');
+
+        this.addListElementEvents(liElement, device.id);
     }
 
     if(platform !== null) {
         var groupEnableCheckbox = document.querySelector('.os-header.'+className+' > .toggle-switch > .checkbox');
         groupEnableCheckbox.checked = platformEnabled;
-        
+
         if(platformEnabled) {
             devicelistElem.classList.remove('disabled');
         } else {
@@ -312,6 +227,20 @@ HomeController.prototype.setupPlatformDevices = function(className, platform) {
 };
 
 HomeController.prototype.addListElementEvents = function(liElement, deviceId) {
+    var deviceList = liElement.querySelector('#device-browser-'+deviceId);
+    var browserListItemClickCallback = function(deviceId, index) {
+        return function(e) {
+            e.preventDefault();
+
+            this.onBrowserSelectionChange(deviceId, index);
+        }.bind(this);
+    }.bind(this);
+    for(var i = 0; i < deviceList.childNodes.length; i++) {
+        var browserListItem = deviceList.childNodes[i];
+        var index = i;
+        browserListItem.addEventListener('click', browserListItemClickCallback(deviceId, index));
+    }
+
     var editButton = document.querySelector('#edit-button-'+deviceId);
     editButton.addEventListener('click', function() {
         var inputField = document.querySelector('#device-name-input-'+deviceId);
@@ -337,8 +266,6 @@ HomeController.prototype.addListElementEvents = function(liElement, deviceId) {
         deviceListController.removeDevice(deviceId, idToken, function(){
             // Success Callback
             window.alert('home-ui-controller.js: Delete Device does nothing');
-            //var liElement = document.querySelector('#device-list-item-'+deviceId);
-            //liElement.parentNode.remove(liElement);
         }, function() {
             // Error Callback
             window.alert('home-ui-controller.js: Handle delete failure error');
@@ -362,7 +289,7 @@ HomeController.prototype.addListElementEvents = function(liElement, deviceId) {
         checkbox.disabled = false;
 
         var deviceListController = this.getDeviceListController();
-        deviceListController.changeDeviceName(deviceId, this.getIdToken(), function(){
+        deviceListController.changeDeviceNickName(deviceId, inputField.value, function(){
             // Success Callback
             window.alert('home-ui-controller.js: Change device name - does anything need doing?');
         }, function() {
@@ -370,6 +297,18 @@ HomeController.prototype.addListElementEvents = function(liElement, deviceId) {
             window.alert('home-ui-controller.js: Handle device name change error');
         });
     }.bind(this), true);
+};
+
+HomeController.prototype.onBrowserSelectionChange = function(deviceId, browserIndex) {
+    this.getDeviceListController().setSelectedBrowserIndex(deviceId, browserIndex);
+
+    var browserList = document.querySelector('#device-browser-'+deviceId);
+    var currentItem = browserList.querySelector('.selected');
+    currentItem.classList.remove('selected');
+    currentItem.classList.add('deselected');
+
+    browserList.childNodes[browserIndex].classList.add('selected');
+    browserList.childNodes[browserIndex].classList.remove('deselected');
 };
 
 HomeController.prototype.initialiseSendInput = function() {

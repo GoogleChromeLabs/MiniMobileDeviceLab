@@ -109,3 +109,13 @@ DeviceListController.prototype.sendUrlPushMessage = function(url, errorCb) {
 
     gcmController.sendUrlPushMessage(url, pushDeviceData, errorCb);
 };
+
+DeviceListController.prototype.changeDeviceNickName = function(deviceId, nickname, successCb, errorCb) {
+    console.log('Change the nickname to '+nickname);
+
+    errorCb();
+};
+
+DeviceListController.prototype.setSelectedBrowserIndex = function(deviceId, browserIndex) {
+    this.getDevicesModel().setSelectedBrowserIndex(deviceId, browserIndex);
+};

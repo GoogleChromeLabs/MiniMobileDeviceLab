@@ -51,7 +51,9 @@ $switch-size: $switch-height - ($switch-inset * 2);
     left: 0;
 
     background-color: $toggle-switch-track-color-off;
-    
+
+    border-radius: 3px;
+
     transition: all 100ms ease-in;
 }
 
@@ -62,6 +64,8 @@ $switch-size: $switch-height - ($switch-inset * 2);
     margin: $switch-inset;
 
     background-color: $toggle-switch-control-color;
+
+    border-radius: 3px;
 }
 
 .toggle-switch input:checked ~ label:before {

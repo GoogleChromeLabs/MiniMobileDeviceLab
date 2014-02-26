@@ -40,31 +40,30 @@ function LoginController() {
         navbar.classList.add('hide');
 
         switch(newState) {
-            case SIGN_IN:
-                loading.classList.add('hide');
-                signIn.classList.remove('hide');
+        case SIGN_IN:
+            loading.classList.add('hide');
+            signIn.classList.remove('hide');
 
-                break;
-            case LOADING:
-                loading.classList.remove('hide');
-                signIn.classList.add('hide');
+            break;
+        case LOADING:
+            loading.classList.remove('hide');
+            signIn.classList.add('hide');
 
-                break;
-            case HOME:
-                if(typeof(idToken) === 'undefined' || idToken === null) {
-                    setUIState(SIGN_IN);
-                    return;
-                }
+            break;
+        case HOME:
+            if(typeof(idToken) === 'undefined' || idToken === null) {
+                setUIState(SIGN_IN);
+                return;
+            }
 
-                loading.classList.remove('hide');
-                signIn.classList.add('hide');
+            loading.classList.remove('hide');
+            signIn.classList.add('hide');
 
-                window.location.hash = '#home';
-                //require(['home-ui-controller'], function(homeController){
-                var homeController = new HomeController();
-                homeController.init(idToken, isAutoSignIn);
-                //});
-                break;
+            window.location.hash = '#home';
+
+            var homeController = new HomeController();
+            homeController.init(idToken, isAutoSignIn);
+            break;
         }
 
         currentState = newState;
@@ -82,7 +81,7 @@ function LoginController() {
             setUIState(HOME);
         }, function(errorMsg) {
             /* jshint unused: false */
-            
+
             // Error
             setUIState(SIGN_IN);
         }, function() {

@@ -14,7 +14,7 @@
         opacity: 0.5;
     }
 
-    li {
+    & > li {
         display: flex;
 
         flex-direction: row;
@@ -24,7 +24,7 @@
     .device-name-input-container {
         display: block;
         position: relative;
-        
+
         flex: 1;
     }
 
@@ -59,10 +59,10 @@
         background-color: lighten($input-bg-color, 15%);
     }
 
-    li:nth-child(2n+1) {
+    & > li:nth-child(2n+1) {
         background-color: rgba(255, 255, 255, 0.2);
     }
-    
+
 
     .delete-button {
         background-image: url(./../images/button_bin.svg);
@@ -94,5 +94,59 @@
 
     .toggle-switch {
         margin-right: 120px;
+    }
+}
+
+$opacity-timing: 0.2s;
+$width-timing: 0.4s;
+$icon-width: 40px;
+$max-browser-width: 200px + $icon-width;
+
+.device-browser-selection-container {
+    display: flex;
+
+    flex-direction: row;
+
+
+    margin: 0;
+    padding: 0;
+
+    list-style-type: none;
+
+    li {
+        display: flex;
+
+        flex-direction: row;
+        align-items: center;
+    }
+
+    li > img {
+        width: 60px;
+        height: 60px;
+
+        padding: ($padding / 2);
+
+        box-sizing: border-box;
+    }
+
+    li > span {
+        width: 0;
+        opacity: 0;
+        transition: opacity $opacity-timing, width $width-timing $opacity-timing;
+    }
+
+    li.deselected > img {
+        filter: grayscale(100%);
+    }
+
+    li.deselected:hover > img {
+        filter: grayscale(40%);
+    }
+
+    li.deselected:hover > span {
+        width: $max-browser-width - $icon-width;
+        opacity: 1;
+
+        transition: opacity $opacity-timing ($width-timing + ($width-timing / 2)), width $width-timing ($width-timing / 2);
     }
 }

@@ -36,6 +36,7 @@ function DevicesModel(token) {
         var device;
         for(var i = 0; i < d.length; i++) {
             device = d[i];
+            device = this.initialiseDeviceState(device);
             if(typeof platforms[device['platform_id']] === 'undefined') {
                 platforms[device['platform_id']] = [];
             }
@@ -47,6 +48,10 @@ function DevicesModel(token) {
 
     this.getPlaforms = function() {
         return platforms;
+    };
+
+    this.setCacheDeviceBrowserIndex = function(deviceId, browserIndex) {
+        devices[deviceId].selectedBrowserIndex = browserIndex;
     };
 }
 
@@ -100,8 +105,31 @@ DevicesModel.prototype.updateCachedDevices = function(successCb, errorCb) {
         }
     }.bind(this);
 
+    xhr.timeout = 10000;
+    xhr.ontimeout = function() {
+        errorCb('The attempt to update your device list timed out.');
+    };
+
     var paramString = 'id_token='+encodeURIComponent(idToken);
     xhr.send(paramString);
+};
+
+DevicesModel.prototype.initialiseDeviceState = function(device) {
+    var deviceEnabled = true;
+    var selectedBrowserIndex = 0;
+    if(Modernizr && Modernizr.localstorage) {
+        var enabled = localStorage.getItem('device-enabled-'+device.id);
+        if(enabled !== null) {
+            deviceEnabled  = enabled === 'true' ? true : false;
+        }
+
+        selectedBrowserIndex = this.getSelectedBrowserIndex(device.id);
+    }
+
+    device.enabled = deviceEnabled;
+    device.selectedBrowserIndex = selectedBrowserIndex;
+
+    return device;
 };
 
 DevicesModel.prototype.getDeviceById = function(deviceId) {
@@ -121,4 +149,21 @@ DevicesModel.prototype.changeDeviceName = function(deviceId, successCb, errorCb)
 DevicesModel.prototype.changeDeviceBrowser = function(deviceId, successCb, errorCb) {
     /* jshint unused: false */
     window.alert('device-list-controller.js: changeDeviceBrowser() needs implementing');
+};
+
+DevicesModel.prototype.getSelectedBrowserIndex = function(deviceId) {
+    var index = localStorage.getItem('device-browser-index-'+deviceId);
+    if(index !== null) {
+        return parseInt(index, 10);
+    }
+
+    return 0;
+};
+
+DevicesModel.prototype.setSelectedBrowserIndex = function(deviceId, selectedBrowserIndex) {
+    if(Modernizr && Modernizr.localstorage) {
+        localStorage.setItem('device-browser-index-'+deviceId, selectedBrowserIndex);
+    }
+
+    this.setCacheDeviceBrowserIndex(deviceId, selectedBrowserIndex);
 };

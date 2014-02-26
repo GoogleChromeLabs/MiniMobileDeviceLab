@@ -14,7 +14,7 @@ app.use(express.urlencoded());
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
-    
+
     // Pass to next layer of middleware
     next();
 });
@@ -22,7 +22,7 @@ app.use(function (req, res, next) {
 // TODO: Return a valid JSON error for error handling
 /**app.use(function(err, req, res, next){
     console.error(err.stack);
-    
+
     var response = {
         error: {
             code: "unknown_error",
