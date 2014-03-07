@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+  http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,58 +17,74 @@ limitations under the License.
 
 /* jshint unused: false */
 function GPlusIdentity() {
-    var clientId = '148156526883-75soacsqseft7npagv6226t9pg0vtbel.apps.googleusercontent.com';
-    var autoSignIn = true;
+  var clientId = '148156526883-75soacsqseft7npagv6226t9pg0vtbel.apps.googleusercontent.com';
+  var autoSignIn = true;
 
-    this.getUserInfo = function(successCb, errorCb) {
-        this.performUserInfoRequest(false, successCb, errorCb);
-    };
+  this.getUserInfo = function(successCb, errorCb) {
+    this.performUserInfoRequest(false, successCb, errorCb);
+  };
 
-    this.performUserInfoRequest = function(isInteractive, successCb) {
-        console.log('MockIdentity.prototype.performUserInfoRequest ');
-        populateUserInfo({userId: -1}, successCb);
-    };
+  this.performUserInfoRequest = function(isInteractive, successCb) {
+    console.log('MockIdentity.prototype.performUserInfoRequest ');
+    populateUserInfo({userId: -1}, successCb);
+  };
 
-    this.isLoggedIn = function() {
-        return false;
-    };
+  this.isLoggedIn = function() {
+    return false;
+  };
 
-    this.initSignInButton = function(signInButton, successCb, errorCb, requiresLoginCb) {
-        window.gapi.signin.render(
-            signInButton,
-            {
-                clientid: clientId,
-                cookiepolicy: 'single_host_origin',
-                scope: 'https://www.googleapis.com/auth/plus.login',
-                callback: getLoginCallback(successCb, errorCb, requiresLoginCb)
-            }
-        );
-    };
-
-    function getLoginCallback(successCb, errorCb, requiresLoginCb) {
-        return function(authResult) {
-            ongplusLogin(authResult, successCb, errorCb, requiresLoginCb);
-        };
+  this.initSignInButton = function(signInButton, autoSignIn,
+    successCb, errorCb, requiresLoginCb, loadingCb) {
+    if(!autoSignIn) {
+      requiresLoginCb();
+      signInButton.addEventListener('click', function(e) {
+        loadingCb();
+        startSignIn(e.target, successCb, errorCb, requiresLoginCb);
+      }, true);
+    } else {
+      loadingCb();
+      startSignIn(signInButton, successCb, errorCb, requiresLoginCb);
     }
 
-    function ongplusLogin(authResult, successCb, errorCb, requiresLoginCb) {
-        /*jshint camelcase: false */
-        if (authResult.access_token) {
-            // Successfully authorized
-            successCb(authResult.id_token, autoSignIn);
-        } else if (authResult.error === 'immediate_failed') {
-            autoSignIn = false;
-            requiresLoginCb();
-        } else if (authResult.error) {
-            // There was an error.
-            // Possible error codes:
-            //   "access_denied" - User denied access to your app
-            autoSignIn = false;
-            errorCb(authResult.error);
-        }
-    }
 
-    function populateUserInfo(userData, successCb) {
-        successCb(userData);
+  };
+
+  function startSignIn(signInButton, successCb, errorCb, requiresLoginCb) {
+    window.gapi.signin.render(
+      signInButton,
+      {
+        clientid: clientId,
+        cookiepolicy: 'single_host_origin',
+        scope: 'https://www.googleapis.com/auth/plus.login',
+        callback: getLoginCallback(successCb, errorCb, requiresLoginCb)
+      }
+    );
+  }
+
+  function getLoginCallback(successCb, errorCb, requiresLoginCb) {
+    return function(authResult) {
+      ongplusLogin(authResult, successCb, errorCb, requiresLoginCb);
+    };
+  }
+
+  function ongplusLogin(authResult, successCb, errorCb, requiresLoginCb) {
+    /*jshint camelcase: false */
+    if (authResult.access_token) {
+      // Successfully authorized
+      successCb(authResult.id_token, autoSignIn);
+    } else if (authResult.error === 'immediate_failed') {
+      autoSignIn = false;
+      requiresLoginCb();
+    } else if (authResult.error) {
+      // There was an error.
+      // Possible error codes:
+      //   "access_denied" - User denied access to your app
+      autoSignIn = false;
+      errorCb(authResult.error);
     }
+  }
+
+  function populateUserInfo(userData, successCb) {
+    successCb(userData);
+  }
 }

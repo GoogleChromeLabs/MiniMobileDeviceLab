@@ -1,5 +1,5 @@
 /**
-Copyright 2013 Google Inc. All Rights Reserved.
+Copyright 2014 Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,26 @@ limitations under the License.
 **/
 'use strict';
 
-window.onGPlusLoadCallback = function() {
-  var loginController = new LoginController();
-  loginController.init();
+/*jshint sub:true*/
+function IOSBrowserModel() {
+  var iconDir = './images/browser-icons/ios/';
+  var browsers = [
+    {
+      name: 'Safari',
+      icon: iconDir+'safari-icon.png',
+      pkg: ''
+    }, {
+      name: 'Chrome',
+      icon: iconDir+'chrome-icon.png',
+      pkg: ''
+    }
+  ];
+
+  this.getStaticBrowserModel = function() {
+    return browsers;
+  };
+}
+
+IOSBrowserModel.prototype.getBrowsers = function() {
+  return this.getStaticBrowserModel();
 };
