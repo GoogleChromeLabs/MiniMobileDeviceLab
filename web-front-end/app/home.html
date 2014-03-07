@@ -1,0 +1,141 @@
+<!--
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!doctype html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Mini Mobile Device Lab</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild -->
+        <script src="bower_components/modernizr/modernizr.js"></script>
+
+    </head>
+    <body>
+        <section class="loading">
+            <div class="spinner"></div>
+        </section>
+
+        <section class="app-screens">
+            <section class="nav-bar hide">
+                <header>
+                    <h1>Device Lab</h1>
+                </header>
+
+                <input class="url-to-send" type="email" />
+                <button class="image-btn send-url">Send URL</button>
+                <button class="image-btn logout">Logout</button>
+            </section>
+
+            <section class="device-list hide">
+                <!-- Android Header -->
+                <header class="os-header android">
+                    <h1>Android</h1>
+
+                    <span class="toggle-switch">
+                        <input id="android-header-checkbox" class="checkbox" type="checkbox" checked>
+                        <label for="android-header-checkbox" class="checkbox-label"></label>
+                    </span>
+                </header>
+                <ul class="list-elem android">
+
+                </ul>
+
+                <!-- iOS Header -->
+                <header class="os-header ios">
+                    <h1>iOS</h1>
+
+                    <span class="toggle-switch">
+                        <input id="ios-header-checkbox" class="checkbox" type="checkbox" checked>
+                        <label for="ios-header-checkbox" class="checkbox-label"></label>
+                    </span>
+                </header>
+                <ul class="list-elem ios">
+
+                </ul>
+            </section>
+
+            <!-- Empty Lab -->
+            <section class="empty-lab hide">
+                <section class="nav-bar">
+                    <header>
+                        <h1>Device Lab</h1>
+                    </header>
+                </section>
+
+                <div class="wrapper">
+                    <p>Oops, no devices in this lab.</p>
+                    <p>Install the Device Lab app on your Andorid and iPhone, sign in with the same Google account as this page and check back :)</p>
+                </div>
+            </section>
+        </section>
+
+        <!-- build:js scripts/home.js -->
+        <script src="bower_components/mustache/mustache.js"></script>
+        <script src="scripts/gplus-identity.js"></script>
+        <script src="scripts/config.js"></script>
+        <script src="scripts/android-browser-model.js"></script>
+        <script src="scripts/ios-browser-model.js"></script>
+        <script src="scripts/devices-model.js"></script>
+        <script src="scripts/device-list-controller.js"></script>
+        <script src="scripts/gcm-controller.js"></script>
+        <script src="scripts/home-ui-controller.js"></script>
+        <!-- endbuild -->
+
+        <!-- G+ Sign In-->
+        <script type="text/javascript">
+          (function() {
+           window.___gcfg = { isSignedOut: true, parsetags: "explicit" };
+           var po = document.createElement('script');
+           po.type = 'text/javascript';
+           po.async = true;
+           po.src = 'https://apis.google.com/js/client:plusone.js';
+           var s = document.getElementsByTagName('script')[0];
+           s.parentNode.insertBefore(po, s);
+         })();
+        </script>
+
+        <!-- Device List Item Template -->
+        <script id="device-li-template" type="text/html">
+            <ul id="device-browser-{{id}}" class="device-browser-selection-container"></ul>
+
+            <div id="device-name-input-container-{{id}}" class="device-name-input-container">
+                <input class="device-name-input" id="device-name-input-{{id}}" disabled="" value="{{device_nickname}}">
+                <button id="complete-button-{{id}}" class="image-btn complete-button hide"></button>
+            </div>
+
+            <span class="toggle-switch">
+                <input id="enabled-checkbox-{{id}}" class="checkbox" type="checkbox">
+                <label for="enabled-checkbox-{{id}}" class="checkbox-label"></label>
+            </span>
+
+            <button id="edit-button-{{id}}" class="image-btn edit-button">Edit</button>
+            <button id="delete-button-{{id}}" class="image-btn delete-button">Delete</button>
+        </script>
+
+        <!-- Browser Item Template -->
+        <script id="browser-li-template" type="text/html">
+            <img src="{{icon}}" />
+            <span>{{name}}</span>
+        </script>
+</body>
+</html>

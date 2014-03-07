@@ -45,6 +45,10 @@ app.post('/devices/get', deviceHandler.get);
 
 app.post('/devices/add', deviceHandler.add);
 
+app.post('/device/delete', deviceHandler.remove);
+
+app.post('/device/edit', deviceHandler.edit);
+
 app.post('/push/url', pushHandler.pushUrl);
 
 app.listen(PORT);

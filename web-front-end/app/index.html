@@ -15,10 +15,7 @@ limitations under the License.
 -->
 
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html class="no-js">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,10 +23,7 @@ limitations under the License.
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <!-- build:css styles/vendor.css -->
-        <!-- bower:css -->
-        <!-- endbower -->
-        <!-- endbuild -->
+
         <!-- build:css(.tmp) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
         <!-- endbuild -->
@@ -37,10 +31,6 @@ limitations under the License.
 
     </head>
     <body>
-        <!--[if lt IE 10]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
         <section class="loading">
             <div class="spinner"></div>
         </section>
@@ -57,83 +47,10 @@ limitations under the License.
             </div>
         </section>
 
-
-        <section class="app-screens hide">
-            <section class="nav-bar hide">
-                <header>
-                    <h1>Device Lab</h1>
-                </header>
-
-                <input class="url-to-send" type="email" />
-                <button class="image-btn send-url">Send URL</button>
-                <button class="image-btn logout">Logout</button>
-            </section>
-
-            <section class="device-list hide">
-                <header class="os-header android">
-                    <h1>Android</h1>
-
-                    <span class="toggle-switch">
-                        <input id="android-header-checkbox" class="checkbox" type="checkbox" checked>
-                        <label for="android-header-checkbox" class="checkbox-label"></label>
-                    </span>
-                </header>
-                <ul class="list-elem android">
-
-                </ul>
-
-                <header class="os-header ios">
-                    <h1>iOS</h1>
-
-                    <span class="toggle-switch">
-                        <input id="ios-header-checkbox" class="checkbox" type="checkbox" checked>
-                        <label for="ios-header-checkbox" class="checkbox-label"></label>
-                    </span>
-                </header>
-                <ul class="list-elem ios">
-
-                </ul>
-            </section>
-
-            <section class="empty-lab hide">
-                <section class="nav-bar">
-                    <header>
-                        <h1>Device Lab</h1>
-                    </header>
-                </section>
-
-                <div class="wrapper">
-                    <p>Oops, no devices in this lab.</p>
-                    <p>Install the Device Lab app on your Andorid and iPhone, sign in with the same Google account as this page and check back :)</p>
-                </div>
-            </section>
-
-            <!--<li id="device-list-item-undefined">
-                <div id="device-name-input-container-undefined" class="device-name-input-container">
-                    <input class="device-name-input" id="device-name-input-undefined" disabled="">
-                    <button id="complete-button-undefined" class="image-btn complete-button hide"></button>
-                </div>
-
-                <span class="toggle-switch">
-                    <input id="enabled-checkbox-undefined" class="checkbox" type="checkbox">
-                    <label for="undefined" class="checkbox-label"></label>
-                </span>
-
-                <button id="edit-button-undefined" class="image-btn edit-button">Edit</button>
-                <button id="delete-button-undefined" class="image-btn delete-button">Delete</button>
-            </li>-->
-
-        </section>
-
-        <!--<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>-->
-        <!-- build:js scripts/main.js -->
+        <!-- build:js scripts/index.js -->
         <script src="bower_components/mustache/mustache.js"></script>
         <script src="scripts/gplus-identity.js"></script>
         <script src="scripts/config.js"></script>
-        <script src="scripts/devices-model.js"></script>
-        <script src="scripts/device-list-controller.js"></script>
-        <script src="scripts/gcm-controller.js"></script>
-        <script src="scripts/home-ui-controller.js"></script>
         <script src="scripts/login-ui-controller.js"></script>
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
@@ -149,47 +66,6 @@ limitations under the License.
            var s = document.getElementsByTagName('script')[0];
            s.parentNode.insertBefore(po, s);
          })();
-        </script>
-
-        <script id="device-li-template" type="text/html">
-            <ul id="device-browser-{{id}}" class="device-browser-selection-container"><li class="deselected">
-                    <img src="./images/browser-icons/android/chrome-icon.png" />
-                    <span>Chrome</span>
-                </li><li class="deselected">
-                    <img src="./images/browser-icons/android/chrome-beta-icon.png" />
-                    <span>Chrome Beta</span>
-                </li><li class="deselected">
-                    <img src="./images/browser-icons/android/firefox-icon.png" />
-                    <span>Firefox</span>
-                </li><li class="deselected">
-                    <img src="./images/browser-icons/android/firefox-beta-icon.png" />
-                    <span>Firefox Beta</span>
-                </li><li class="deselected">
-                    <img src="./images/browser-icons/android/opera-icon.png" />
-                    <span>Opera</span>
-                </li><li class="deselected">
-                    <img src="./images/browser-icons/android/opera-beta-icon.png" />
-                    <span>Opera Beta</span>
-                </li><li class="deselected">
-                    <img src="./images/browser-icons/android/opera-mini-icon.png" />
-                    <span>Opera Mini</span>
-                </li><li class="deselected">
-                    <img src="./images/browser-icons/android/opera-classic-icon.png" />
-                    <span>Opera Classic</span>
-                </li></ul>
-
-            <div id="device-name-input-container-{{id}}" class="device-name-input-container">
-                <input class="device-name-input" id="device-name-input-{{id}}" disabled="" value="{{device_nickname}}">
-                <button id="complete-button-{{id}}" class="image-btn complete-button hide"></button>
-            </div>
-
-            <span class="toggle-switch">
-                <input id="enabled-checkbox-{{id}}" class="checkbox" type="checkbox">
-                <label for="enabled-checkbox-{{id}}" class="checkbox-label"></label>
-            </span>
-
-            <button id="edit-button-{{id}}" class="image-btn edit-button">Edit</button>
-            <button id="delete-button-{{id}}" class="image-btn delete-button">Delete</button>
         </script>
 </body>
 </html>

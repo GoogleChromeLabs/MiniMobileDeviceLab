@@ -14,20 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 **/
 define([], function () {
-    'use strict';
+  'use strict';
 
-	var strings = {};
+  var strings = {};
 
-	strings.welcomeTitle = 'Welcome to Your<br />Device Lab';
-	strings.welcomeMsgs = ['Ever wanted to launch a url on a number of devices?', 'Well set-up your device lab and you\'ll be good to go.'];
-	strings.signIn = 'Sign In';
+  strings.welcomeTitle = 'Welcome to Your<br />Device Lab';
+  strings.welcomeMsgs = ['Ever wanted to launch a url on a number of devices?', 'Well set-up your device lab and you\'ll be good to go.'];
+  strings.signIn = 'Sign In';
 
-	strings.deviceListLoadingTitle = 'Just getting the devices in your lab..';
-	strings.deviceListTitle = 'Device Lab';
-	strings.noDeviceMsgs = ['Oops, no devices in this lab.', 'Install the device lab on your Android and iPhone apps, sign in with the same Google account as this Chrome App and check back :)'];
-	strings.playStore = 'Google Play';
-	strings.appStore = 'App Store';
-	strings.launchBtn = 'Launch';
+  strings.deviceListLoadingTitle = 'Just getting the devices in your lab..';
+  strings.deviceListTitle = 'Device Lab';
+  strings.noDeviceMsgs = ['Oops, no devices in this lab.', 'Install the device lab on your Android and iPhone apps, sign in with the same Google account as this Chrome App and check back :)'];
+  strings.playStore = 'Google Play';
+  strings.appStore = 'App Store';
+  strings.launchBtn = 'Launch';
 
-    return strings;
+  return strings;
 });
