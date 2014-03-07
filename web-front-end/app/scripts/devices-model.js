@@ -215,11 +215,6 @@ DevicesModel.prototype.changeDeviceNickName = function(deviceId, nickname, succe
   xhr.send(paramString);
 };
 
-DevicesModel.prototype.changeDeviceBrowser = function(deviceId, successCb, errorCb) {
-  /* jshint unused: false */
-  window.alert('device-list-controller.js: changeDeviceBrowser() needs implementing');
-};
-
 DevicesModel.prototype.getSelectedBrowserIndex = function(deviceId) {
   var index = localStorage.getItem('device-browser-index-'+deviceId);
   if(index !== null) {

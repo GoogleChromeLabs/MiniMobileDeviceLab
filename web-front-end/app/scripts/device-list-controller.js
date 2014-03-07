@@ -91,8 +91,20 @@ DeviceListController.prototype.sendUrlPushMessage = function(url, errorCb) {
 
   var filteredPlatforms = this.getFilteredPlatforms();
   var pushDeviceData = [];
+
   for(var i = 0; i < filteredPlatforms.length; i++) {
     if(!filteredPlatforms[i].enabled) {
+      continue;
+    }
+
+    var browserModel = null;
+    switch(filteredPlatforms[i].platformId) {
+    case 0:
+      browserModel = new AndroidBrowserModel();
+      break;
+    }
+
+    if(browserModel === null || browserModel.getBrowsers().length === 0) {
       continue;
     }
 
@@ -100,9 +112,15 @@ DeviceListController.prototype.sendUrlPushMessage = function(url, errorCb) {
     for(var j = 0; j < deviceIds.length; j++) {
       // TODO Check if device is enabled
 
+      var device = this.getDeviceById(deviceIds[j]);
+      var browsers = browserModel.getBrowsers();
+      var pkg = browsers[0];
+      if(device.selectedBrowserIndex < browsers.length) {
+        pkg = browsers[device.selectedBrowserIndex].pkg;
+      }
       pushDeviceData.push({
         id: deviceIds[j],
-        pkg: 'com.android.chrome'
+        pkg: pkg
       });
     }
   }
