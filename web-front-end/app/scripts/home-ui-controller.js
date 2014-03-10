@@ -184,9 +184,11 @@ HomeController.prototype.initialiseStaticElements = function() {
 
   // On log out set the UI state accordingly
   var logoutBtn = document.querySelector('.nav-bar > .logout');
-  logoutBtn.addEventListener('click', function() {
-    this.setUIState(SIGN_OUT);
-  }.bind(this), true);
+  if(logoutBtn) {
+    logoutBtn.addEventListener('click', function() {
+      this.setUIState(SIGN_OUT);
+    }.bind(this), true);
+  }
 };
 
 /**

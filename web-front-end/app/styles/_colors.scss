@@ -13,18 +13,27 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-$bg-color: rgb(74, 74, 76);
-$primary-color: rgb(208, 208, 208);
-$secondary-color: rgb(103, 174, 180);
+$bg-color: rgb(34, 34, 34);
+$highlight-color: rgb(255, 128, 0);
+$font-color: rgb(187, 187, 187);
 
-$button-color: $primary-color;
-$button-text-color: $bg-color;
-$spinner-color: $secondary-color;
+$button-color: rgb(68,68,68);
+$button-text-color: $font-color;
+$spinner-color: $highlight-color;
 $spinner-track-color: rgba(103, 174, 180, .15);
 
-$toggle-switch-track-color-off: $bg-color;
-$toggle-switch-track-color-on: $secondary-color;
-$toggle-switch-control-color: $primary-color;
+$toggle-switch-track-color-off: rgb(153, 153, 153);
+$toggle-switch-track-color-on: $highlight-color;
+$toggle-switch-control-color-on: rgb(255, 255, 255);
+$toggle-switch-control-color-off: rgb(238, 238, 238);
+$toggle-switch-control-color-off-shadow: rgb(137, 137, 137);
 
-$input-bg-color: $primary-color;
-$input-text-color: $bg-color;
+$input-bg-color: rgb(68,68,68);
+$input-text-color: $font-color;
+
+$platform-name-heading-bg: rgb(68,68,68);
+$platform-name-heading-font-color: $font-color;
+
+$device-list-border-color: rgb(68,68,68);
+$device-name-enabled-color: $highlight-color;
+$device-name-disabled-color: rgb(68,68,68);
