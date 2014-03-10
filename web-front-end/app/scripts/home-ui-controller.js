@@ -78,64 +78,49 @@ function HomeController() {
 HomeController.prototype.init = function() {
   var cookie = this.getFriendlyCookie();
   var token = cookie.token;
-
   if(typeof token === 'undefined') {
     this.setUIState(SIGN_OUT);
     return;
   }
-
-  this.initialiseSendInput();
-
   this.setIdToken(token);
 
-  var logoutBtn = document.querySelector('.nav-bar > .logout');
-  logoutBtn.addEventListener('click', function() {
-    this.setUIState(SIGN_OUT);
-  }.bind(this), true);
+  this.initialiseStaticElements();
 
   this.setUIState(LOADING);
 
-  this.initDeviceList();
+  this.getDeviceList();
 };
 
+/**
+ * Set the UI state for the page
+ */
 HomeController.prototype.setUIState = function(newState) {
   var currentState = this.getCurrentState();
   if(currentState === newState) {
     return;
   }
 
-  var loading = document.querySelector('.loading');
-  var emptyLabScreen = document.querySelector('.empty-lab');
-  var devicelistScreen = document.querySelector('.device-list');
-  var navbar = document.querySelector('.nav-bar');
+  // Iterate over the dom elements and show / hide depending on the state
+  var classList = ['loading', 'empty-lab', 'device-list', 'nav-bar'];
+  var visible = {};
+
   switch(newState) {
   case LOADING:
-    loading.classList.remove('hide');
-    emptyLabScreen.classList.add('hide');
-    devicelistScreen.classList.add('hide');
-    navbar.classList.add('hide');
+    visible['loading'] = true;
     break;
   case DEVICE_LIST:
-    loading.classList.add('hide');
-
     var platforms = this.getPlatforms();
     if(platforms.length === 0) {
-      navbar.classList.add('hide');
-      emptyLabScreen.classList.remove('hide');
-      devicelistScreen.classList.add('hide');
+      visible['empty-lab'] = true;
     } else {
-      navbar.classList.remove('hide');
-      emptyLabScreen.classList.add('hide');
-      devicelistScreen.classList.remove('hide');
+      visible['nav-bar'] = true;
+      visible['device-list'] = true;
 
       this.renderDevicesList();
     }
 
     break;
   case SIGN_OUT:
-    loading.classList.remove('hide');
-    emptyLabScreen.classList.add('hide');
-
     gapi.auth.signOut();
 
     document.cookie = 'token=; autosignin=false; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
@@ -145,42 +130,140 @@ HomeController.prototype.setUIState = function(newState) {
 
     break;
   }
+
+  this.alterVisibleViews(visible, classList);
+
   this.setCurrentState(newState);
 };
 
-HomeController.prototype.initDeviceList = function() {
+/**
+ * This method goes through the class names in the classList array and if
+ * the visible object has a key of the className with value true, it will
+ * have the 'hide' className removed, otherwise it's added
+ */
+HomeController.prototype.alterVisibleViews = function(visible, classList) {
+  for(var i = 0; i < classList.length; i++) {
+    var className = classList[i];
+    var element = document.querySelector('.'+className);
+    if(!element) {
+      continue;
+    }
+
+    if(visible[className]) {
+      element.classList.remove('hide');
+    } else {
+      element.classList.add('hide');
+    }
+  }
+};
+
+/**
+ * Initialise any elements on the page which aren't going to change
+ * during the use of the page
+ */
+HomeController.prototype.initialiseStaticElements = function() {
+  var inputField = document.querySelector('.url-to-send');
+
+  // Stash the value on keyup
+  inputField.onkeyup = function(e) {
+    if(Modernizr && Modernizr.localstorage) {
+      localStorage.setItem('url-input-field', inputField.value);
+    }
+  };
+
+  // Set the input value to our stashed value
+  if(Modernizr && Modernizr.localstorage) {
+    inputField.value = localStorage.getItem('url-input-field');
+  }
+
+  // On send button press, send the push message
+  var sendButton = document.querySelector('.send-url');
+  sendButton.addEventListener('click', function() {
+    this.sendURLToDevices(document.querySelector('.url-to-send').value);
+  }.bind(this), false);
+
+  // On log out set the UI state accordingly
+  var logoutBtn = document.querySelector('.nav-bar > .logout');
+  logoutBtn.addEventListener('click', function() {
+    this.setUIState(SIGN_OUT);
+  }.bind(this), true);
+};
+
+/**
+ * Get the device list from the model
+ */
+HomeController.prototype.getDeviceList = function() {
   var deviceListController = this.getDeviceListController();
-  deviceListController.getPlatformLists(function(platforms) {
-    // Success
+  deviceListController.getPlatformLists(function(err, platforms) {
+    if(err !== null) {
+      window.alert(err);
+
+      this.setUIState(SIGN_OUT);
+      return;
+    }
+
     this.setPlatforms(platforms);
     this.setUIState(DEVICE_LIST);
-  }.bind(this), function(err) {
-    // Error
-    this.setPlatforms([]);
-    this.setUIState(SIGN_OUT);
-    if(!err) {
-      err = 'Unable to connect to the Device Lab Server.';
-    }
-    window.alert(err);
   }.bind(this));
 };
 
+/**
+ * This method will send the url to all devices
+ */
+HomeController.prototype.sendURLToDevices = function(url) {
+  if(typeof url === undefined || url.length === 0) {
+    return;
+  }
+
+  var deviceController = this.getDeviceListController();
+  deviceController.sendUrlPushMessage(url, function(err) {
+    window.alert('Couldn\'t push the URL to devices: '+err);
+  });
+};
+
+/**
+ * Given we have the devices, group them into platforms and
+ * query accordingly
+ */
+HomeController.prototype.renderDevicesList = function() {
+  var platforms = this.getPlatforms();
+
+  var androidDeviceIds = platforms.length > PLATFORM_ID_ANDROID ? platforms[PLATFORM_ID_ANDROID] : null;
+  var iosDeviceIds = platforms.length > PLATFORM_ID_IOS ? platforms[PLATFORM_ID_IOS] : null;
+
+  this.setupPlatformDevices('android', androidDeviceIds, new AndroidBrowserModel());
+  this.setupPlatformDevices('ios', iosDeviceIds, new IOSBrowserModel());
+};
+
+/**
+ * Set up a specific platforms device list
+ */
 HomeController.prototype.setupPlatformDevices = function(className, platform, browserModel) {
   var deviceIds = platform === null ? [] : platform.deviceIds;
   var platformEnabled = platform === null ? false : platform.enabled;
 
+  // Hide or show the platform sections
   var deviceHeader = document.querySelector('.device-list > .os-header.'+className);
   var devicelistElem = document.querySelector('.device-list > .list-elem.'+className);
-
   if(typeof deviceIds === 'undefined' || deviceIds === null || deviceIds.length === 0) {
     deviceHeader.classList.add('hide');
     devicelistElem.classList.add('hide');
     return;
-  } else {
-    deviceHeader.classList.remove('hide');
-    devicelistElem.classList.remove('hide');
   }
 
+  deviceHeader.classList.remove('hide');
+  devicelistElem.classList.remove('hide');
+
+  this.prepareDeviceList(devicelistElem, deviceIds, browserModel);
+  this.prepareDeviceGroupState(className, platform.platformId, platformEnabled);
+
+};
+
+/**
+ * Get the device list populated with relevant browser options
+ */
+HomeController.prototype.prepareDeviceList = function(devicelistElem,
+  deviceIds, browserModel) {
   var device;
   var deviceListController = this.getDeviceListController();
   var deviceRowTemplate = document.querySelector('#device-li-template').innerHTML;
@@ -197,8 +280,14 @@ HomeController.prototype.setupPlatformDevices = function(className, platform, br
     liElement.innerHTML = output;
     devicelistElem.appendChild(liElement);
 
+    // Create browser list element
     var browserContainer = liElement.querySelector('.device-browser-selection-container');
     var selectedIndex = device.selectedBrowserIndex;
+    if(selectedIndex >= browserArray.length) {
+      selectedIndex = 0;
+    }
+
+    // Add each browser element
     for(var j = 0; j < browserArray.length; j++) {
       output = Mustache.render(browserSelectTemplate, browserArray[j]);
       var browserLiElement = document.createElement('li');
@@ -212,63 +301,90 @@ HomeController.prototype.setupPlatformDevices = function(className, platform, br
       }
     }
 
+    // If the element is enabled or not
     var checkbox = liElement.querySelector('#enabled-checkbox-'+device.id);
     checkbox.checked = device.enabled;
 
-    var browserList = liElement.querySelector('#device-browser-'+device.id);
-    var browserElements = browserList.querySelectorAll('li');
-
-    if(selectedIndex >= browserElements.length) {
-      selectedIndex = 0;
-    }
-    browserElements[selectedIndex].classList.remove('deselected');
-    browserElements[selectedIndex].classList.add('selected');
-
     this.addListElementEvents(liElement, device.id);
   }
+};
 
-  if(platform !== null) {
-    var groupEnableCheckbox = document.querySelector('.os-header.'+className+' > .toggle-switch > .checkbox');
-    groupEnableCheckbox.checked = platformEnabled;
+/**
+ * Prepare the device group to handle toggling of the enabled checkbox and
+ * also set it to the previous state is known
+ */
+HomeController.prototype.prepareDeviceGroupState = function(className,
+  platformId, enabled) {
 
-    if(platformEnabled) {
+  // Set the checkbox state
+  var groupEnableCheckbox = document.querySelector('.os-header.'+className+' > .toggle-switch > .checkbox');
+  groupEnableCheckbox.checked = enabled;
+
+  // Add change listener to the checkbox to handle disabling / enabling
+  groupEnableCheckbox.addEventListener('change', function(e){
+    var devicelistElem = document.querySelector('.device-list > .list-elem.'+className);
+    this.getDeviceListController().onPlatformEnabledChange(platformId, e.target.checked);
+
+    if(e.target.checked) {
       devicelistElem.classList.remove('disabled');
     } else {
       devicelistElem.classList.add('disabled');
     }
+  }.bind(this), false);
 
-    var platformId = platform.platformId;
-    groupEnableCheckbox.addEventListener('change', function(e){
-      var devicelistElem = document.querySelector('.device-list > .list-elem.'+className);
-      this.getDeviceListController().onPlatformEnabledChange(platformId, e.target.checked);
-
-      if(e.target.checked) {
-        // Android Devices Enabled
-        devicelistElem.classList.remove('disabled');
-      } else {
-        devicelistElem.classList.add('disabled');
-      }
-    }.bind(this), false);
+  // Set the device list to be disabled or not
+  var devicelistElem = document.querySelector('.device-list > .list-elem.'+className);
+  if(enabled) {
+    devicelistElem.classList.remove('disabled');
+  } else {
+    devicelistElem.classList.add('disabled');
   }
 };
 
 HomeController.prototype.addListElementEvents = function(liElement, deviceId) {
   var deviceList = liElement.querySelector('#device-browser-'+deviceId);
-  var browserListItemClickCallback = function(deviceId, index) {
-    return function(e) {
-      e.preventDefault();
 
-      this.onBrowserSelectionChange(deviceId, index);
-    }.bind(this);
-  }.bind(this);
+  // For each mobile device, add a click listener to each browser option
   for(var i = 0; i < deviceList.childNodes.length; i++) {
     var browserListItem = deviceList.childNodes[i];
     var index = i;
-    browserListItem.addEventListener('click', browserListItemClickCallback(deviceId, index));
+
+    browserListItem.addEventListener('click',
+      this.getBrowserSelectionCb(deviceId, index), true);
   }
 
+  // Handle the edit text element
   var editButton = document.querySelector('#edit-button-'+deviceId);
-  editButton.addEventListener('click', function() {
+  editButton.addEventListener('click',
+    this.getEditDeviceCallback(deviceId), true);
+
+  // Handle the complete text element
+  var completeButton = document.querySelector('#complete-button-'+deviceId);
+  completeButton.addEventListener('click',
+    this.getCompleteEditCallback(deviceId), true);
+
+  // Handle the delete device action
+  var deleteButton = document.querySelector('#delete-button-'+deviceId);
+  deleteButton.addEventListener('click',
+    this.getDeleteDeviceCallback(deviceId), true);
+};
+
+/**
+ * Get a callback to handle a browser selection
+ */
+HomeController.prototype.getBrowserSelectionCb = function(deviceId, index) {
+  return function(e) {
+    e.preventDefault();
+
+    this.onBrowserSelectionChange(deviceId, index);
+  }.bind(this);
+};
+
+/**
+ * A callback to edit a device (at the moment only handles nickname changes)
+ */
+HomeController.prototype.getEditDeviceCallback = function(deviceId) {
+  return function() {
     var inputField = document.querySelector('#device-name-input-'+deviceId);
     inputField.disabled = false;
     inputField.focus();
@@ -276,6 +392,7 @@ HomeController.prototype.addListElementEvents = function(liElement, deviceId) {
     var completeButton = document.querySelector('#complete-button-'+deviceId);
     completeButton.classList.remove('hide');
 
+    var editButton = document.querySelector('#edit-button-'+deviceId);
     editButton.disabled = true;
 
     var deleteButton = document.querySelector('#delete-button-'+deviceId);
@@ -283,10 +400,14 @@ HomeController.prototype.addListElementEvents = function(liElement, deviceId) {
 
     var checkbox = document.querySelector('#enabled-checkbox-'+deviceId);
     checkbox.disabled = true;
-  }, true);
+  };
+};
 
-  var deleteButton = document.querySelector('#delete-button-'+deviceId);
-  deleteButton.addEventListener('click', function() {
+/**
+ * A callback to handle deleting a device
+ */
+HomeController.prototype.getDeleteDeviceCallback = function(deviceId) {
+  return function() {
     var deviceListController = this.getDeviceListController();
     var idToken = this.getIdToken();
     deviceListController.removeDevice(deviceId, function(){
@@ -297,16 +418,21 @@ HomeController.prototype.addListElementEvents = function(liElement, deviceId) {
       // Error Callback
       window.alert('This device could not be deleted: '+err);
     });
-  }.bind(this), true);
+  };
+};
 
-  var completeButton = document.querySelector('#complete-button-'+deviceId);
-  completeButton.addEventListener('click', function() {
+/**
+ * A callback to handle completion of device editing
+ */
+HomeController.prototype.getCompleteEditCallback = function(deviceId) {
+  return function() {
     var inputField = document.querySelector('#device-name-input-'+deviceId);
     inputField.disabled = true;
 
     var completeButton = document.querySelector('#complete-button-'+deviceId);
     completeButton.classList.add('hide');
 
+    var editButton = document.querySelector('#edit-button-'+deviceId);
     editButton.disabled = false;
 
     var deleteButton = document.querySelector('#delete-button-'+deviceId);
@@ -327,9 +453,12 @@ HomeController.prototype.addListElementEvents = function(liElement, deviceId) {
 
       window.alert('home-ui-controller.js: Handle device name change error');
     });
-  }.bind(this), true);
+  };
 };
 
+/**
+ * Handle a browser selection (set / save state) and
+ */
 HomeController.prototype.onBrowserSelectionChange = function(deviceId, browserIndex) {
   this.getDeviceListController().setSelectedBrowserIndex(deviceId, browserIndex);
 
@@ -340,46 +469,6 @@ HomeController.prototype.onBrowserSelectionChange = function(deviceId, browserIn
 
   browserList.childNodes[browserIndex].classList.add('selected');
   browserList.childNodes[browserIndex].classList.remove('deselected');
-};
-
-HomeController.prototype.initialiseSendInput = function() {
-  var inputField = document.querySelector('.url-to-send');
-  inputField.onkeyup = function(e) {
-    if(Modernizr && Modernizr.localstorage) {
-      localStorage.setItem('url-input-field', inputField.value);
-    }
-  };
-
-  if(Modernizr && Modernizr.localstorage) {
-    inputField.value = localStorage.getItem('url-input-field');
-  }
-
-  var sendButton = document.querySelector('.send-url');
-  sendButton.addEventListener('click', function() {
-    var inputField = document.querySelector('.url-to-send');
-    this.sendURLToDevices(inputField.value);
-  }.bind(this), false);
-};
-
-HomeController.prototype.renderDevicesList = function() {
-  var platforms = this.getPlatforms();
-
-  var androidDeviceIds = platforms.length > PLATFORM_ID_ANDROID ? platforms[PLATFORM_ID_ANDROID] : null;
-  var iosDeviceIds = platforms.length > PLATFORM_ID_IOS ? platforms[PLATFORM_ID_IOS] : null;
-
-  this.setupPlatformDevices('android', androidDeviceIds, new AndroidBrowserModel());
-  this.setupPlatformDevices('ios', iosDeviceIds, new IOSBrowserModel());
-};
-
-HomeController.prototype.sendURLToDevices = function(url) {
-  if(typeof url === undefined || url.length === 0) {
-    return;
-  }
-
-  var deviceController = this.getDeviceListController();
-  deviceController.sendUrlPushMessage(url, function(err) {
-    window.alert('Couldn\'t push the URL to devices: '+err);
-  });
 };
 
 window.onload = function() {

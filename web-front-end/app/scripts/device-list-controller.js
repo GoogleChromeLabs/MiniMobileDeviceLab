@@ -39,10 +39,10 @@ function DeviceListController(token) {
   };
 }
 
-DeviceListController.prototype.getPlatformLists = function(successCb, errorCb) {
+DeviceListController.prototype.getPlatformLists = function(callback) {
   var platforms = this.getFilteredPlatforms();
   if(platforms !== null) {
-    successCb(platforms);
+    callback(null, platforms);
     return;
   }
 
@@ -56,8 +56,13 @@ DeviceListController.prototype.getPlatformLists = function(successCb, errorCb) {
       };
     }
     this.setFilteredPlatforms(filteredPlatformLists);
-    successCb(filteredPlatformLists);
-  }.bind(this), errorCb);
+    callback(null, filteredPlatformLists);
+  }.bind(this), function(err) {
+    if(!err) {
+      err = 'Unable to connect to the Device Lab Server.';
+    }
+    callback(err);
+  });
 };
 
 DeviceListController.prototype.getDeviceById = function(id) {
