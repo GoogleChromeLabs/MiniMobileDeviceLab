@@ -20,15 +20,6 @@ function GPlusIdentity() {
   var clientId = '148156526883-75soacsqseft7npagv6226t9pg0vtbel.apps.googleusercontent.com';
   var autoSignIn = true;
 
-  this.getUserInfo = function(successCb, errorCb) {
-    this.performUserInfoRequest(false, successCb, errorCb);
-  };
-
-  this.performUserInfoRequest = function(isInteractive, successCb) {
-    console.log('MockIdentity.prototype.performUserInfoRequest ');
-    populateUserInfo({userId: -1}, successCb);
-  };
-
   this.isLoggedIn = function() {
     return false;
   };

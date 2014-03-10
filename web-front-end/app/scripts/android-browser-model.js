@@ -15,6 +15,9 @@ limitations under the License.
 **/
 'use strict';
 
+/**
+ * A simple model to display the available browsers for the Android platform
+ */
 /*jshint sub:true*/
 function AndroidBrowserModel() {
   var iconDir = './images/browser-icons/android/';
@@ -58,11 +61,16 @@ function AndroidBrowserModel() {
     }
   ];
 
+  // Get the static browser array
   this.getStaticBrowserModel = function() {
     return browsers;
   };
 }
 
+/**
+ * Helper method to get browsers - enables people to extend the class and
+ * add additional browsers if required.
+ */
 AndroidBrowserModel.prototype.getBrowsers = function() {
   return this.getStaticBrowserModel();
 };
