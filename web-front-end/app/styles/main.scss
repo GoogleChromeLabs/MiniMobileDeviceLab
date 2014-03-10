@@ -1,3 +1,4 @@
+@import "fonts";
 @import "colors";
 @import "dimens";
 @import "buttons";
@@ -23,8 +24,8 @@ body {
     position: relative;
 
     background-color: $bg-color;
-    color: $primary-color;
-    font-family: 'Roboto', sans-serif;
+    color: $font-color;
+    font-family: 'Roboto Light', sans-serif;
     font-weight: 300;
     font-size: 20px;
 }
@@ -45,12 +46,12 @@ body > section {
 
 h1, h2, h3, h4, h5, h6 {
     text-align: left;
-    color: $secondary-color;
+    color: $highlight-color;
     font-weight: 300;
 }
 
 h1 {
-    font-size: 1.6rem;
+    font-size: 2rem;
 }
 
 img {

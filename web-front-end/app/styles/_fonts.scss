@@ -14,20 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 **/
 @font-face {
-  font-family: 'Roboto';
+  font-family: 'Roboto Light';
   font-style: normal;
   font-weight: 300;
-  src: local('Roboto Light'), local('Roboto-Light'), url(../styles/fonts/Roboto-Light.ttf) format('ttf');
+  src: local('Roboto Light'), local('Roboto-Light'), url(../styles/fonts/Roboto-Light.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Roboto';
+  font-family: 'Roboto Regular';
   font-style: normal;
   font-weight: 400;
-  src: local('Roboto Regular'), local('Roboto-Regular'), url(../styles/fonts/Roboto-Regular.ttf) format('ttf');
+  src: local('Roboto Regular'), local('Roboto-Regular'), url(../styles/fonts/Roboto-Regular.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Roboto';
+  font-family: 'Roboto Bold';
   font-style: normal;
   font-weight: 700;
-  src: local('Roboto Bold'), local('Roboto-Bold'), url(../styles/fonts/Roboto-Bold.ttf) format('ttf');
+  src: local('Roboto Bold'), local('Roboto-Bold'), url(../styles/fonts/Roboto-Bold.ttf) format('truetype');
 }

@@ -43,12 +43,13 @@ limitations under the License.
 
                 <input class="url-to-send" type="email" />
                 <button class="image-btn send-url">Send URL</button>
-                <button class="image-btn logout">Logout</button>
+                <!--<button class="image-btn logout">Logout</button>-->
             </section>
 
             <section class="device-list hide">
                 <!-- Android Header -->
                 <header class="os-header android">
+                    <img src="./images/android.svg" />
                     <h1>Android</h1>
 
                     <span class="toggle-switch">
@@ -116,26 +117,26 @@ limitations under the License.
 
         <!-- Device List Item Template -->
         <script id="device-li-template" type="text/html">
-            <ul id="device-browser-{{id}}" class="device-browser-selection-container"></ul>
-
             <div id="device-name-input-container-{{id}}" class="device-name-input-container">
                 <input class="device-name-input" id="device-name-input-{{id}}" disabled="" value="{{device_nickname}}">
                 <button id="complete-button-{{id}}" class="image-btn complete-button hide"></button>
             </div>
 
+            <ul id="device-browser-{{id}}" class="device-browser-selection-container"></ul>
+
+            <button id="edit-button-{{id}}" class="image-btn edit-button">Edit</button>
+            <button id="delete-button-{{id}}" class="image-btn delete-button">Delete</button>
+
             <span class="toggle-switch">
                 <input id="enabled-checkbox-{{id}}" class="checkbox" type="checkbox">
                 <label for="enabled-checkbox-{{id}}" class="checkbox-label"></label>
             </span>
-
-            <button id="edit-button-{{id}}" class="image-btn edit-button">Edit</button>
-            <button id="delete-button-{{id}}" class="image-btn delete-button">Delete</button>
         </script>
 
         <!-- Browser Item Template -->
         <script id="browser-li-template" type="text/html">
             <img src="{{icon}}" />
-            <span>{{name}}</span>
+            <!--<span>{{name}}</span>-->
         </script>
 </body>
 </html>
