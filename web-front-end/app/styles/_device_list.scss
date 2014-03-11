@@ -24,6 +24,8 @@
     padding: 0 $padding;
     margin: 0;
 
+    font-size: 1.6rem;
+
     color: $platform-name-heading-font-color;
   }
 }
@@ -44,6 +46,8 @@
 
     flex-direction: row;
     align-items: center;
+
+    overflow: hidden;
 
     padding: 0 $horizontal-padding;
 
@@ -71,6 +75,9 @@
       padding-right: $btn-size;
 
       transition: all 100ms ease-in;
+
+      color: $device-name-enabled-font-color;
+      background-color: $device-name-active-input;
     }
 
     input[disabled] {
@@ -105,6 +112,18 @@
     box-sizing: border-box;
 
     background-image: url(./../images/button_tick.svg);
+  }
+
+  .complete-button:hover {
+    background-color: $device-name-enabled-bg-color-focus;
+  }
+
+  .complete-button:focus {
+    background-color: $device-name-enabled-bg-color-focus;
+  }
+
+  .complete-button:active {
+    background-color: $device-name-enabled-bg-color-active;
   }
 }
 

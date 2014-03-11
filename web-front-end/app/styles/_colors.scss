@@ -40,3 +40,8 @@ $platform-name-heading-font-color: $font-color;
 $device-list-border-color: $secondary-color;
 $device-name-enabled-color: $highlight-color;
 $device-name-disabled-color: $secondary-color;
+
+$device-name-active-input: $highlight-color;
+$device-name-enabled-font-color: $bg-color;
+$device-name-enabled-bg-color-focus: rgba(255, 255, 255, 0.4);
+$device-name-enabled-bg-color-active: rgba(255, 255, 255, 0.2);
