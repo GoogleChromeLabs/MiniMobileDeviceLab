@@ -14,14 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 **/
 .loading {
-	display: flex;
-	flex-direction: column;
-	flex: 1;
+  display: flex;
 
-	justify-content: center;
-   	align-items: center;
+  flex-direction: column;
+  flex: 1;
 
-	.spinner {
-		align-items: center;
-	}
+  justify-content: center;
+  align-items: center;
+
+  .spinner {
+    align-items: center;
+  }
 }

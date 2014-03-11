@@ -1,2 +1,15 @@
-$padding: 1rem;
+$horizontal-padding: 32px;
+$padding: 16px;
+
 $border-radius: 3px;
+
+$spinner-size: 60px;
+$spinner-track-size: 6px;
+
+$btn-size: $padding * 4;
+$btn-padding: ($padding / 2);
+
+$switch-width: 110px;
+$switch-height: 40px;
+$switch-inset: 5px;
+$switch-size: $switch-height - ($switch-inset * 2);

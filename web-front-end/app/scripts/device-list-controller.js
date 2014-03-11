@@ -91,6 +91,11 @@ DeviceListController.prototype.onPlatformEnabledChange = function(platformId, en
   this.setFilteredPlatforms(platforms);
 };
 
+DeviceListController.prototype.onDeviceEnabledChange = function(deviceId, enabled) {
+  var devicesModel = this.getDevicesModel();
+  devicesModel.changeDeviceEnabled(deviceId, enabled);
+};
+
 DeviceListController.prototype.sendUrlPushMessage = function(url, errorCb) {
   var gcmController = this.getGCMController();
 
@@ -115,9 +120,12 @@ DeviceListController.prototype.sendUrlPushMessage = function(url, errorCb) {
 
     var deviceIds = filteredPlatforms[i].deviceIds;
     for(var j = 0; j < deviceIds.length; j++) {
-      // TODO Check if device is enabled
-
       var device = this.getDeviceById(deviceIds[j]);
+      if(!device.enabled) {
+        continue;
+      }
+
+
       var browsers = browserModel.getBrowsers();
       var pkg = browsers[0];
       if(device.selectedBrowserIndex < browsers.length) {
@@ -128,6 +136,11 @@ DeviceListController.prototype.sendUrlPushMessage = function(url, errorCb) {
         pkg: pkg
       });
     }
+  }
+
+  if(pushDeviceData.length === 0) {
+    errorCb('No enabled devices to push to.');
+    return;
   }
 
   gcmController.sendUrlPushMessage(url, pushDeviceData, errorCb);

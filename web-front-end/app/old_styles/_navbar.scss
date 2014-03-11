@@ -1,0 +1,36 @@
+.nav-bar {
+    display: flex;
+
+    flex-direction: row;
+    align-items: center;
+
+    width:100%;
+    height: auto;
+
+    margin: ($padding * 2) 0;
+}
+
+.nav-bar > header {
+    flex: 1;
+
+    h1 {
+        font-size: 3rem;
+        margin: 0 $padding;
+    }
+}
+
+.nav-bar > input {
+    flex: 1;
+
+    font-size: 1.8rem;
+}
+
+.nav-bar > button {
+    &.logout {
+        background-image: url(./../images/button_logout.svg);
+    }
+
+    &.send-url {
+        background-image: url(./../images/button_send.svg);
+    }
+}

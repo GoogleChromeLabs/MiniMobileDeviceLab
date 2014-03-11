@@ -369,6 +369,11 @@ HomeController.prototype.addListElementEvents = function(liElement, deviceId) {
   var deleteButton = document.querySelector('#delete-button-'+deviceId);
   deleteButton.addEventListener('click',
     this.getDeleteDeviceCallback(deviceId), true);
+
+  // Handle the delete device action
+  var enabledCheckbox = document.querySelector('#enabled-checkbox-'+deviceId);
+  enabledCheckbox.addEventListener('change',
+    this.getEnableDeviceCallback(deviceId), true);
 };
 
 /**
@@ -420,7 +425,7 @@ HomeController.prototype.getDeleteDeviceCallback = function(deviceId) {
       // Error Callback
       window.alert('This device could not be deleted: '+err);
     });
-  };
+  }.bind(this);
 };
 
 /**
@@ -456,6 +461,23 @@ HomeController.prototype.getCompleteEditCallback = function(deviceId) {
       window.alert('home-ui-controller.js: Handle device name change error');
     });
   };
+};
+
+/**
+ * A callback to handle completion of device editing
+ */
+HomeController.prototype.getEnableDeviceCallback = function(deviceId) {
+  return function(e) {
+    var deviceListItem = document.querySelector('#device-list-item-'+deviceId);
+
+    this.getDeviceListController().onDeviceEnabledChange(deviceId, e.target.checked);
+
+    if(e.target.checked) {
+      deviceListItem.classList.remove('disabled');
+    } else {
+      deviceListItem.classList.add('disabled');
+    }
+  }.bind(this);
 };
 
 /**

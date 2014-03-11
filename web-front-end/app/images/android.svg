@@ -8,9 +8,9 @@
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
    version="1.1"
-   width="42.330002"
-   height="50"
-   viewBox="0 0 42.330001 49.999997"
+   width="33.860001"
+   height="40"
+   viewBox="0 0 33.86 39.999998"
    id="Layer_1"
    xml:space="preserve"><metadata
    id="metadata19"><rdf:RDF><cc:Work
@@ -18,7 +18,7 @@
          rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
    id="defs17" />
 <g
-   transform="matrix(0.27142994,0,0,0.27142994,-71.882248,-80.870504)"
+   transform="matrix(0.21714395,0,0,0.21714395,-57.505799,-64.696407)"
    id="g3">
 	<path
    d="m 276.19637,357.52697 c -6.27848,-0.003 -11.36687,5.09539 -11.36837,11.36837 l 0.009,47.61014 c 0.002,6.29448 5.09939,11.37437 11.36987,11.38037 6.28398,-0.007 11.37337,-5.08939 11.36687,-11.37987 l 5e-4,-47.61714 c -0.002,-6.27048 -5.09789,-11.36587 -11.37737,-11.36187"

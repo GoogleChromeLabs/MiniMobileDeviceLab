@@ -47,13 +47,13 @@ function RegistrationController() {
         console.log('registration-controller: registerWithBackEnd()');
         deviceController.getDevice(function(device) {
             // Success Callback
-            
+
             // Use the auth token to do an XHR to get the user information.
             var xhr = new XMLHttpRequest();
             xhr.open('POST', config.url+'/devices/add/', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-            
+
             xhr.onreadystatechange = getXHRHandler(device, successCb, errorCb);
 
             var paramString = 'id_token='+encodeURIComponent(idToken)+
@@ -70,25 +70,30 @@ function RegistrationController() {
         }, function(err){
             /*jshint unused:false*/
             // Error  Callback
-            console.log('registration-controller: registerWithBackEnd() Error = '+JSON.stringify(device));
+            console.log('registration-controller: registerWithBackEnd() Error = '+JSON.stringify(err));
             errorCb(err);
         });
 
-        
+
     }
 
     function getXHRHandler(device, successCb, errorCb) {
-        console.log('getXHRHandler');
+        console.log('getXHRHandler', device);
         return function(e) {
             /*jshint sub:true, unused:false*/
             if (this.readyState === 4) {
+                console.log('readystate = 4');
                 var response = JSON.parse(this.responseText);
+                console.log('response = '+this.responseText);
                 if(this.status !== 200) {
+                    console.log('response.error.msg = '+response.error.msg);
                     errorCb(response.error.msg);
                 } else {
-                    device.device_id = response.data.device_id;
+                    device['device_id'] = response.data['device_id'];
                     successCb(device);
                 }
+            } else {
+                console.log('readystate = '+this.readystate);
             }
         };
     }

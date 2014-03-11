@@ -1,7 +1,19 @@
-$switch-width: 70px;
-$switch-height: 30px;
-$switch-inset: 4px;
-$switch-size: $switch-height - ($switch-inset * 2);
+@mixin right-angle-toggle($height) {
+    $offset: 0;
+    $property: '';
+    @while $offset <= $height {
+        $property: $property + $offset + 'px ' + $offset + 'px ' + $toggle-switch-control-color-off-shadow;
+        @if $offset != $height {
+            $property: $property + ', ';
+        }
+        @else {
+            $property: $property + ';';
+        }
+        $offset: $offset + 1;
+    }
+
+    box-shadow: unquote($property);
+}
 
 .toggle-switch {
     display: inline-block;
@@ -56,7 +68,7 @@ $switch-size: $switch-height - ($switch-inset * 2);
 
     background-color: $toggle-switch-track-color-off;
 
-    border-radius: 3px;
+    border-radius: $border-radius;
 
     transition: all 100ms ease-in;
 }
@@ -70,32 +82,8 @@ $switch-size: $switch-height - ($switch-inset * 2);
     background-color: $toggle-switch-control-color-off;
 
     border-radius: $border-radius;
-    box-shadow: 1px 1px $toggle-switch-control-color-off-shadow,
-        2px 2px $toggle-switch-control-color-off-shadow,
-        3px 3px $toggle-switch-control-color-off-shadow,
-        4px 4px $toggle-switch-control-color-off-shadow,
-        5px 5px $toggle-switch-control-color-off-shadow,
-        6px 6px $toggle-switch-control-color-off-shadow,
-        7px 7px $toggle-switch-control-color-off-shadow,
-        8px 8px $toggle-switch-control-color-off-shadow,
-        9px 9px $toggle-switch-control-color-off-shadow,
-        10px 10px $toggle-switch-control-color-off-shadow,
-        11px 11px $toggle-switch-control-color-off-shadow,
-        12px 12px $toggle-switch-control-color-off-shadow,
-        13px 13px $toggle-switch-control-color-off-shadow,
-        14px 14px $toggle-switch-control-color-off-shadow,
-        15px 15px $toggle-switch-control-color-off-shadow,
-        16px 16px $toggle-switch-control-color-off-shadow,
-        17px 17px $toggle-switch-control-color-off-shadow,
-        18px 18px $toggle-switch-control-color-off-shadow,
-        19px 19px $toggle-switch-control-color-off-shadow,
-        20px 20px $toggle-switch-control-color-off-shadow,
-        21px 21px $toggle-switch-control-color-off-shadow,
-        22px 22px $toggle-switch-control-color-off-shadow,
-        23px 23px $toggle-switch-control-color-off-shadow,
-        24px 24px $toggle-switch-control-color-off-shadow,
-        25px 25px $toggle-switch-control-color-off-shadow,
-        26px 26px $toggle-switch-control-color-off-shadow;
+
+    @include right-angle-toggle(($switch-height - $switch-inset));
 }
 
 .toggle-switch input:checked ~ label:before {

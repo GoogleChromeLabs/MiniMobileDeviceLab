@@ -1,157 +1,5 @@
-.app-screens {
-  margin: 0;
-  padding: 0;
-}
 
-.os-header {
-  display: flex;
-
-  width: 100%;
-  height: $padding * 5;
-
-  flex-direction: row;
-  align-items: center;
-
-  padding: 0 $horizontal-padding;
-
-  box-sizing: border-box;
-
-  background-color: $platform-name-heading-bg;
-
-  h1 {
-    flex: 1;
-
-    padding: 0 $padding;
-    margin: 0;
-
-    color: $platform-name-heading-font-color;
-  }
-}
-
-.device-list .list-elem {
-  margin: 0;
-  padding: 0;
-
-  list-style-type: none;
-
-  transition: opacity 100ms ease-in;
-
-  & > li {
-    display: flex;
-
-    width: 100%;
-    height: $padding * 4;
-
-    flex-direction: row;
-    align-items: center;
-
-    padding: 0 $horizontal-padding;
-
-    box-sizing: border-box;
-
-    border-bottom-style: solid;
-    border-width: 1px;
-    border-color: $device-list-border-color;
-  }
-
-  .device-name-input-container {
-    display: block;
-    position: relative;
-
-    flex: 1;
-
-    margin-left: -$padding;
-
-    input {
-      width: 100%;
-      height: $btn-size;
-
-      font-size: 1.4rem;
-
-      padding-right: $btn-size;
-
-      transition: all 100ms ease-in;
-    }
-
-    input[disabled] {
-      padding-right: 0;
-
-      background-color:transparent;
-
-      color: $device-name-enabled-color;
-    }
-  }
-
-  & > li.disabled {
-    input[disabled] {
-      color: $device-name-disabled-color;
-    }
-  }
-
-  .delete-button {
-    background-image: url(./../images/button_bin.svg);
-  }
-
-  .edit-button {
-    background-image: url(./../images/button_edit.svg);
-  }
-
-  .complete-button {
-    position: absolute;
-
-    top: 0;
-    right: 0;
-
-    box-sizing: border-box;
-
-    background-image: url(./../images/button_tick.svg);
-  }
-}
-
-.device-list .list-elem.disabled {
-  opacity: 0.5;
-}
-
-.device-browser-selection-container {
-  display: flex;
-
-  flex-direction: row;
-
-  flex: 2;
-
-  margin: 0;
-  padding: 0 $padding;
-
-  list-style-type: none;
-
-  li {
-    margin: 0;
-    padding: 0;
-  }
-
-  li > img {
-    transition: all 100ms ease-in;
-  }
-
-  li.deselected > img {
-    //filter: grayscale(100%);
-    opacity: 0.3;
-  }
-
-  li.deselected:hover > img {
-    //filter: grayscale(40%);
-    opacity: 1.0;
-  }
-}
-
-li.disabled > .device-browser-selection-container {
-  li > img {
-    filter: grayscale(100%);
-    opacity: 0.3;
-  }
-}
-
-/**.device-list > .list-elem {
+.device-list > .list-elem {
     margin: 0;
     padding: 0;
 
@@ -293,6 +141,48 @@ $tooltip-height: 1rem + (2*$padding);
         transition: opacity $opacity-timing, width $width-timing $opacity-timing;
     }
 
+    /**li > span {
+        position: absolute;
+        display: none;
+
+        width: $tooltip-width;
+        height: $tooltip-height;
+
+        left: -(($tooltip-width - $icon-size) / 2);
+        top: 0;
+
+        //padding: $padding;
+        box-sizing: border-box;
+
+        line-height: $tooltip-height - (2 * $padding);
+
+
+        font-size: 1rem;
+        text-align: center;
+        color: rgb(113, 157, 171);
+        background: rgb(255, 255, 255);
+        border: 4px solid rgb(255, 255, 255);
+        border-radius: 5px;
+        text-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 1px;
+        box-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 2px 0px;
+    }
+
+    li:first-of-type > span {
+        display: block;
+    }
+
+    li > span:after {
+        content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-width: 10px;
+      border-style: solid;
+      border-color: #FFFFFF transparent transparent transparent;
+      top: 44px;
+      left: 50px;
+    }**/
+
     li.deselected > img {
         //filter: grayscale(100%);
         opacity: 0.3;
@@ -303,4 +193,5 @@ $tooltip-height: 1rem + (2*$padding);
         opacity: 1.0;
     }
 
-}**/
+
+}

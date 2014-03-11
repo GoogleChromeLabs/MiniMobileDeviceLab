@@ -231,3 +231,13 @@ DevicesModel.prototype.setSelectedBrowserIndex = function(deviceId, selectedBrow
 
   this.setCacheDeviceBrowserIndex(deviceId, selectedBrowserIndex);
 };
+
+DevicesModel.prototype.changeDeviceEnabled = function(deviceId, enabled) {
+  if(Modernizr && Modernizr.localstorage) {
+    console.log('onDeviceEnabledChange '+deviceId+' enabled = '+enabled);
+    localStorage.setItem('device-enabled-'+deviceId, enabled);
+  }
+
+  var device = this.getDeviceById(deviceId);
+  device.enabled = enabled;
+};
