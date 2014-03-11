@@ -460,7 +460,7 @@ HomeController.prototype.getCompleteEditCallback = function(deviceId) {
 
       window.alert('home-ui-controller.js: Handle device name change error');
     });
-  };
+  }.bind(this);
 };
 
 /**
