@@ -4,7 +4,7 @@ button {
 
     width: 100%;
 
-    padding: $btn-padding;
+    padding: 0.5rem;
     margin: $padding 0;
 
     background-color: $button-color;
@@ -15,7 +15,6 @@ button {
     text-decoration: none;
 
     border: none;
-    border-radius: $border-radius;
 
     transition: all .1s ease;
 
@@ -46,8 +45,8 @@ button > img {
 }
 
 button.image-btn {
-    width: $btn-size;
-    height: $btn-size;
+    width: 60px;
+    height: 60px;
 
     margin: 0;
     padding: $padding;

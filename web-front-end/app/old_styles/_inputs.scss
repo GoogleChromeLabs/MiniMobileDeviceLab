@@ -1,0 +1,22 @@
+input {
+    display: block;
+
+    padding: $padding;
+
+    box-sizing: border-box;
+
+    color: $input-text-color;
+    font-size: 1rem;
+    font-weight: inherit;
+    font-family: inherit;
+
+    background-color: $input-bg-color;
+
+    border: 0;
+    border-radius: $border-radius;
+}
+
+input:focus {
+    outline: none;
+    background-color: lighten($input-bg-color, 5%);
+}

@@ -1,28 +1,53 @@
 .nav-bar {
     display: flex;
 
-    flex-direction: row;
-    align-items: center;
-
     width:100%;
     height: auto;
 
-    margin: ($padding * 2) 0;
+    flex-direction: row;
+    align-items: center;
+
+    padding: $horizontal-padding;
+    box-sizing: border-box;
 }
 
 .nav-bar > header {
     flex: 1;
 
     h1 {
-        font-size: 3rem;
-        margin: 0 $padding;
+        margin: 0;
+
+        font-size: 4rem;
     }
 }
 
-.nav-bar > input {
+.nav-bar .url-send-container {
+    position: relative;
+
+    display: block;
+
     flex: 1;
 
-    font-size: 1.8rem;
+    input {
+        width: 100%;
+        height: $btn-size;
+
+        padding-right: $btn-size;
+
+        font-size: 2rem;
+    }
+
+    button {
+        position: absolute;
+
+        top: 0;
+        right: 0;
+
+        box-sizing: border-box;
+
+        background-image: url(./../images/button_send.svg);
+    }
+
 }
 
 .nav-bar > button {

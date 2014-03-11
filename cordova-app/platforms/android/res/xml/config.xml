@@ -5,14 +5,14 @@
     <feature name="App">
         <param name="android-package" value="org.apache.cordova.App" />
     </feature>
-    <feature name="GCMBrowserLaunch">
-        <param name="android-package" value="co.uk.gauntface.cordova.plugin.gcmbrowserlaunch.GCMBrowserLaunch" />
+    <feature name="Device">
+        <param name="android-package" value="org.apache.cordova.device.Device" />
     </feature>
     <feature name="CordovaGPlusOauthPlugin">
         <param name="android-package" value="co.uk.gauntface.cordova.plugin.nativegplussignin.CordovaGPlusOauthPlugin" />
     </feature>
-    <feature name="Device">
-        <param name="android-package" value="org.apache.cordova.device.Device" />
+    <feature name="GCMBrowserLaunch">
+        <param name="android-package" value="co.uk.gauntface.cordova.plugin.gcmbrowserlaunch.GCMBrowserLaunch" />
     </feature>
     <name>Device Lab</name>
     <description>

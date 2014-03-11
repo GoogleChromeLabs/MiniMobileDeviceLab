@@ -14,16 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 **/
 $bg-color: rgb(34, 34, 34);
+$highlight-color: rgb(255, 128, 0);
 $font-color: rgb(187, 187, 187);
 
-$highlight-color: rgb(255, 128, 0);
-$secondary-color: rgb(68, 68, 68);
-
-$button-color: $secondary-color;
+$button-color: rgb(68,68,68);
 $button-text-color: $font-color;
-
 $spinner-color: $highlight-color;
-$spinner-track-color: darken($highlight-color, 38%);
+$spinner-track-color: rgba(103, 174, 180, .15);
 
 $toggle-switch-track-color-off: rgb(153, 153, 153);
 $toggle-switch-track-color-on: $highlight-color;
@@ -31,12 +28,12 @@ $toggle-switch-control-color-on: rgb(255, 255, 255);
 $toggle-switch-control-color-off: rgb(238, 238, 238);
 $toggle-switch-control-color-off-shadow: rgb(137, 137, 137);
 
-$input-bg-color: $secondary-color;
+$input-bg-color: rgb(68,68,68);
 $input-text-color: $font-color;
 
-$platform-name-heading-bg: $secondary-color;
+$platform-name-heading-bg: rgb(68,68,68);
 $platform-name-heading-font-color: $font-color;
 
-$device-list-border-color: $secondary-color;
+$device-list-border-color: rgb(68,68,68);
 $device-name-enabled-color: $highlight-color;
-$device-name-disabled-color: $secondary-color;
+$device-name-disabled-color: rgb(68,68,68);

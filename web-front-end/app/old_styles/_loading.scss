@@ -13,15 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
+.loading {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
 
-/* jshint unused: false */
-'use strict';
+	justify-content: center;
+   	align-items: center;
 
-function DeviceLabConfig() {
-    var localhost = 'http://localhost:8888';
-    var androidEmu = 'http://10.0.2.2:8888';
-    var localIP = 'http://198.51.100.123:3000';
-    var production = 'http://device-lab.appspot.com';
-
-    this.url = localIP;
+	.spinner {
+		align-items: center;
+	}
 }

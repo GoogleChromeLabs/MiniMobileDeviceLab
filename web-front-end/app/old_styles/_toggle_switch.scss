@@ -1,0 +1,115 @@
+$switch-width: 70px;
+$switch-height: 30px;
+$switch-inset: 4px;
+$switch-size: $switch-height - ($switch-inset * 2);
+
+.toggle-switch {
+    display: inline-block;
+    position: relative;
+
+    width: $switch-width;
+    height: $switch-height;
+
+    padding: 0 $padding;
+}
+
+.toggle-switch input {
+    position: absolute;
+    display: block;
+
+    width: $switch-width;
+    height: $switch-height;
+
+    top: 0;
+    left: $padding;
+
+    margin: 0;
+    padding: 0;
+
+    opacity: 0;
+}
+
+.toggle-switch label {
+    position: relative;
+
+    width: $switch-width;
+    height: $switch-height;
+
+    float: left;
+
+    user-select: none;
+    overflow: hidden;
+}
+
+.toggle-switch label:before,
+.toggle-switch label:after {
+    content: ' ';
+
+    position: absolute;
+    display: block;
+
+    width: $switch-width;
+    height: $switch-height;
+
+    top: 0;
+    left: 0;
+
+    background-color: $toggle-switch-track-color-off;
+
+    border-radius: 3px;
+
+    transition: all 100ms ease-in;
+}
+
+.toggle-switch label:after {
+    width: $switch-size;
+    height: $switch-size;
+
+    margin: $switch-inset;
+
+    background-color: $toggle-switch-control-color-off;
+
+    border-radius: $border-radius;
+    box-shadow: 1px 1px $toggle-switch-control-color-off-shadow,
+        2px 2px $toggle-switch-control-color-off-shadow,
+        3px 3px $toggle-switch-control-color-off-shadow,
+        4px 4px $toggle-switch-control-color-off-shadow,
+        5px 5px $toggle-switch-control-color-off-shadow,
+        6px 6px $toggle-switch-control-color-off-shadow,
+        7px 7px $toggle-switch-control-color-off-shadow,
+        8px 8px $toggle-switch-control-color-off-shadow,
+        9px 9px $toggle-switch-control-color-off-shadow,
+        10px 10px $toggle-switch-control-color-off-shadow,
+        11px 11px $toggle-switch-control-color-off-shadow,
+        12px 12px $toggle-switch-control-color-off-shadow,
+        13px 13px $toggle-switch-control-color-off-shadow,
+        14px 14px $toggle-switch-control-color-off-shadow,
+        15px 15px $toggle-switch-control-color-off-shadow,
+        16px 16px $toggle-switch-control-color-off-shadow,
+        17px 17px $toggle-switch-control-color-off-shadow,
+        18px 18px $toggle-switch-control-color-off-shadow,
+        19px 19px $toggle-switch-control-color-off-shadow,
+        20px 20px $toggle-switch-control-color-off-shadow,
+        21px 21px $toggle-switch-control-color-off-shadow,
+        22px 22px $toggle-switch-control-color-off-shadow,
+        23px 23px $toggle-switch-control-color-off-shadow,
+        24px 24px $toggle-switch-control-color-off-shadow,
+        25px 25px $toggle-switch-control-color-off-shadow,
+        26px 26px $toggle-switch-control-color-off-shadow;
+}
+
+.toggle-switch input:checked ~ label:before {
+    background-color: $toggle-switch-track-color-on;
+}
+
+.toggle-switch input:checked ~ label:after {
+    left: $switch-width - $switch-size - ($switch-inset * 2);
+
+    background-color: $toggle-switch-control-color-on;
+
+    box-shadow: none;
+}
+
+.toggle-switch input[disabled] ~ label:before, .toggle-switch input[disabled] ~ label:after {
+    opacity: 0.5;
+}
