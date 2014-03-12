@@ -40,5 +40,5 @@
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/fonts/33748252.Roboto-Regular.ttf \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/fonts/aa53ce30.Roboto-Bold.ttf \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/fonts/6489978e.Roboto-Light.ttf \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/scripts/24e74542.main.js \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/scripts/736ffb17.main.js \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/AndroidManifest.xml \

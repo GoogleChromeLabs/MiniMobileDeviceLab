@@ -181,7 +181,11 @@ function RegistrationController() {
                 if(e.target.responseText.length > 0) {
                     var response = JSON.parse(e.target.responseText);
                     if(e.target.status !== 200) {
-                        errorCb(response.error.msg);
+                        if(response.error.code === 'already_added') {
+                            successCb(device);
+                        } else {
+                            errorCb(response.error.msg);
+                        }
                     } else {
                         device['device_id'] = response.data['device_id'];
                         successCb(device);
