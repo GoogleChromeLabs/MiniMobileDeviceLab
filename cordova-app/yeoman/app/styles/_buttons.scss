@@ -10,6 +10,7 @@ button {
     background-color: $button-color;
 
     color: $button-text-color;
+    font-family: inherit;
     font-size: 1.4em;
     text-align: center;
     text-decoration: none;
@@ -27,11 +28,11 @@ button[disabled] {
 }
 
 button:hover {
-    background-color: lighten($button-color, 4%);
+    background-color: $btn-hover-color;
 }
 
 button:active {
-    background-color: lighten($button-color, 2%);
+    background-color: $btn-active-color;
 }
 
 button:focus {
@@ -62,9 +63,9 @@ button.image-btn {
 }
 
 button.image-btn:hover {
-    background-color: lighten($bg-color, 5%);
+    background-color: $imgbtn-hover-color;
 }
 
 button.image-btn:active {
-    background-color: lighten($bg-color, 10%);
+    background-color: $imgbtn-active-color;
 }

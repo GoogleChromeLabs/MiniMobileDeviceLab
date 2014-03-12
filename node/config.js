@@ -1,4 +1,5 @@
 exports.dbHost = 'localhost';
 exports.dbUsername = 'root';
-exports.dbPassword = 'root';
-exports.dbPort = 8891;
+exports.dbPassword = 'firelin';
+exports.dbPort = 3306;
+//exports.dbPort = 8891;

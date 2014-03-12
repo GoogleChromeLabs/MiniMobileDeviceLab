@@ -26,7 +26,8 @@
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/bower_components/modernizr \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/bower_components/modernizr/modernizr.js \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/images/37af2cd7.g-plus-logo.png \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/images/cream_pixels.png \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/images/g-plus-logo.png \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/plugins/co.uk.gauntface.cordova.plugin.gcmbrowserlaunch \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/plugins/org.apache.cordova.device \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/plugins/co.uk.gauntface.cordova.plugin.nativegplussignin \
@@ -36,8 +37,8 @@
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/plugins/org.apache.cordova.device/www/device.js \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/plugins/co.uk.gauntface.cordova.plugin.nativegplussignin/www \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/plugins/co.uk.gauntface.cordova.plugin.nativegplussignin/www/nativegplussignin.js \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/97970553.main.css \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/fonts \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/02c84f8d.main.css \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/fonts/33748252.Roboto-Regular.ttf \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/fonts/aa53ce30.Roboto-Bold.ttf \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/fonts/6489978e.Roboto-Light.ttf \

@@ -311,6 +311,10 @@ HomeController.prototype.prepareDeviceList = function(devicelistElem,
     var checkbox = liElement.querySelector('#enabled-checkbox-'+device.id);
     checkbox.checked = device.enabled;
 
+    if(!device.enabled) {
+      liElement.classList.add('disabled');
+    }
+
     this.addListElementEvents(liElement, device.id);
   }
 };
