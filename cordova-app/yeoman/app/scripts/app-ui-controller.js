@@ -26,6 +26,7 @@ function AppController() {
     var regController = new RegistrationController();
     var deviceController = new DeviceController();
 
+    var idToken;
     var currentState;
 
     function setUIState(newState) {
@@ -61,7 +62,12 @@ function AppController() {
     function registerPushAccount(idToken) {
         regController.registerDeviceWithLab(idToken, function(device) {
             // Success
-            deviceController.saveDevice(device);
+
+            // If the device is already registered, we won't receive a new device ID
+            // i.e. no device id means we've just signed in
+            if(device['device_id']) {
+                deviceController.saveDevice(device);
+            }
             setUIState(HOME);
         }, function(errorMsg){
             // Error
@@ -74,7 +80,7 @@ function AppController() {
         setUIState(LOADING);
         signInController.loginInToGPlus(function(args) {
             /*jshint sub:true*/
-            var idToken = args['id_token'];
+            idToken = args['id_token'];
             registerPushAccount(idToken);
         }, function(err) {
             setUIState(SIGN_IN);
@@ -82,8 +88,18 @@ function AppController() {
         });
     };
 
-    this.logout = function() {
-        setUIState(LOGIN);
+    this.deregisterDevice = function() {
+        setUIState(LOADING);
+        regController.deregisterDevice(idToken, deviceController.getDeviceId(), 
+            function(err) {
+                if(err) {
+                    window.alert(err);
+                    setUIState(HOME);
+                    return;
+                }
+
+                setUIState(SIGN_IN);
+            });
     };
 
     this.init = function() {
@@ -93,10 +109,10 @@ function AppController() {
             this.login();
         }.bind(this), false);
 
-        var logoutBtn = document.querySelector('.home > .wrapper > button');
-        logoutBtn.addEventListener('click', function(e) {
+        var deregisterDeviceBtn = document.querySelector('.home > .wrapper > button');
+        deregisterDeviceBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            this.logout();
+            this.deregisterDevice();
         }.bind(this), false);
 
         setUIState(SIGN_IN);
