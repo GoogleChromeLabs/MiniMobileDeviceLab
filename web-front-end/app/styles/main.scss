@@ -18,12 +18,15 @@ html, body {
     padding: 0;
 }
 
+
+// Background image from the awesome subtlepatterns.com
 body {
     display: block;
 
     position: relative;
 
     background-color: $bg-color;
+    background-image: url('../images/cream_pixels.png');
     color: $font-color;
     font-family: 'Roboto Light', sans-serif;
     font-weight: 300;

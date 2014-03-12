@@ -9,6 +9,8 @@
 
     padding: $horizontal-padding;
     box-sizing: border-box;
+
+    background-color: $navbar-bg;
 }
 
 .nav-bar > header {
@@ -16,7 +18,8 @@
 
     h1 {
         margin: 0;
-
+        
+        color: $navbar-title-color;
         font-size: 4rem;
     }
 }
