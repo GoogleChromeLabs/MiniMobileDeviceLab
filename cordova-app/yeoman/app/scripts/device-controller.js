@@ -19,25 +19,56 @@ limitations under the License.
 function DeviceController() {
 
     this.saveDevice = function(device) {
+        console.log('hasLocalStorage() = ', hasLocalStorage());
         if(!hasLocalStorage()) {
             return;
         }
 
+        console.log('device = '+device.device_id);
+
         localStorage.setItem('device_id', device.device_id);
+        console.log('localStorage.getItem(\'device_id\') = ', localStorage.getItem('device_id'));
     };
 
     this.getDevice = function(successCb, errorCb) {
         if(typeof window.device !== 'undefined') {
-            getFilteredDevice(successCb, errorCb);
+            console.log('Number 1');
+            getFilteredDevice(function(device) {
+                var deviceId = this.getDeviceId();
+                if(typeof deviceId !== 'undefined' && deviceId !== null) {
+                    device.deviceId = deviceId;
+                }
+
+                successCb(device);
+            }.bind(this), errorCb);
         } else {
             document.addEventListener('deviceready', function() {
-                getFilteredDevice(successCb, errorCb);
+                console.log('Number 2');
+                getFilteredDevice(function(device) {
+                    var deviceId = this.getDeviceId();
+                    if(typeof deviceId !== 'undefined' && deviceId !== null) {
+                        device.deviceId = deviceId;
+                    }
+
+                    successCb(device);
+                }.bind(this), errorCb).bind(this);
             }, false);
         }
     };
 
+    this.getDeviceId = function() {
+        console.log('hasLocalStorage() = ', hasLocalStorage());
+        if(!hasLocalStorage()) {
+            return;
+        }
+
+        console.log('localStorage.getItem(\'device_id\') = ', localStorage.getItem('device_id'));
+        return localStorage.getItem('device_id');
+    }
+
     /* jshint unused: false */
     function getFilteredDevice(successCb, errorCb) {
+        console.log(this);
         var devicePlatform = window.device.platform;
 
         var platformId = -1;
@@ -60,20 +91,7 @@ function DeviceController() {
             uuid: window.device.uuid
         };
 
-        var deviceId = getDeviceId();
-        if(typeof deviceId !== 'undefined' && deviceId !== null) {
-            device.deviceId = deviceId;
-        }
-
         successCb(device);
-    }
-
-    function getDeviceId() {
-        if(!hasLocalStorage()) {
-            return;
-        }
-
-        return localStorage.getItem('device_id');
     }
 
     function getDeviceNickname() {
