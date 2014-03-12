@@ -23,9 +23,8 @@ exports.openDb = function(successCb, errorCb) {
     connection = mysql.createConnection({
         host     : 'localhost',
         user     : 'root',
-        password : 'firelin',
-        port: 3306
-        //port: 8891
+        password : 'root',
+        port: 8891
     });
 
     connection.connect();
