@@ -42,14 +42,14 @@
     display: flex;
 
     width: 100%;
-    height: $padding * 4;
+    height: ($padding * 4) + 1px;
 
     flex-direction: row;
     align-items: center;
 
     overflow: hidden;
 
-    padding: 0 $horizontal-padding;
+    padding: 0 $horizontal-padding 0 0;
 
     box-sizing: border-box;
 
@@ -64,14 +64,15 @@
 
     flex: 1;
 
-    margin-left: -$padding;
+    margin-left: ($padding / 4);
 
     input {
       width: 100%;
-      height: $btn-size;
+      height: $btn-size - ($padding / 4);
 
       font-size: 1.4rem;
-
+  
+      padding-left: $horizontal-padding - ($padding / 4);
       padding-right: $btn-size;
 
       transition: all 100ms ease-in;
@@ -92,6 +93,11 @@
   & > li.disabled {
     input[disabled] {
       color: $device-name-disabled-color;
+    }
+
+    .device-name-input-container, .delete-button, .edit-button {
+      opacity: 0.5;
+
     }
   }
 

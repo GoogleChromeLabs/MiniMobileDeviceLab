@@ -13,23 +13,44 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 **/
-$bg-color: rgb(34, 34, 34);
-$font-color: rgb(187, 187, 187);
+$bg-color: rgb(52, 170, 218);
+$font-color: rgb(243, 242, 247);
 
-$highlight-color: rgb(255, 128, 0);
-$secondary-color: rgb(68, 68, 68);
+$highlight-color: rgb(243, 242, 247);
+$secondary-color: rgb(43, 135, 174);
+
+$navbar-bg: $highlight-color;
+$navbar-title-color: $bg-color;
+
+$input-bg-color: $bg-color;
+$input-text-color: $secondary-color;
+
+$platform-name-heading-bg: $highlight-color;
+$platform-name-heading-font-color: $bg-color;
+
+$button-color: $highlight-color;
+$button-text-color: $bg-color;
 
 $spinner-color: $highlight-color;
-$spinner-track-color: darken($highlight-color, 38%);
+$spinner-track-color: lighten($bg-color, 20%);
 
-$button-color: $secondary-color;
-$button-text-color: $font-color;
-
-$toggle-switch-track-color-off: rgb(153, 153, 153);
-$toggle-switch-track-color-on: $highlight-color;
+$toggle-switch-track-color-off: rgb(254, 114, 113);
+$toggle-switch-track-color-on: $secondary-color;
 $toggle-switch-control-color-on: rgb(255, 255, 255);
-$toggle-switch-control-color-off: rgb(238, 238, 238);
-$toggle-switch-control-color-off-shadow: rgb(137, 137, 137);
+$toggle-switch-control-color-off: $bg-color;
+$toggle-switch-control-color-off-shadow: rgb(189, 84, 84);
 
-$input-bg-color: $secondary-color;
-$input-text-color: $font-color;
+$device-list-border-color: rgba(52, 170, 218, 0.2);
+$device-name-enabled-color: $secondary-color;
+$device-name-disabled-color: $highlight-color;
+
+$device-name-active-input: $secondary-color;
+$device-name-enabled-font-color: $bg-color;
+$device-name-enabled-bg-color-focus: rgba(255, 255, 255, 0.4);
+$device-name-enabled-bg-color-active: rgba(255, 255, 255, 0.2);
+
+$btn-hover-color: darken($highlight-color, 4%);
+$btn-active-color: darken($highlight-color, 6%);
+
+$imgbtn-hover-color: rgba(100, 205, 209, 0.2);
+$imgbtn-active-color: rgba(100, 205, 209, 0.3);

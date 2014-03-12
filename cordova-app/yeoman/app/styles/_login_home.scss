@@ -36,7 +36,7 @@ limitations under the License.
 		margin: 0 0 $padding 0;
 	}
 
-	*:last-child {
+	& > *:last-child {
 		margin-bottom: 0;
 	}
 }
