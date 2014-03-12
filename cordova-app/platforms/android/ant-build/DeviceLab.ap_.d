@@ -41,7 +41,7 @@
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/fonts/33748252.Roboto-Regular.ttf \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/fonts/aa53ce30.Roboto-Bold.ttf \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/fonts/6489978e.Roboto-Light.ttf \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/scripts/5367d551.main.js \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/scripts/d194148f.main.js \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/ios \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/android \
