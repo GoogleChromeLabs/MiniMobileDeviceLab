@@ -42,25 +42,56 @@ limitations under the License.
 function DeviceController() {
 
     this.saveDevice = function(device) {
+        console.log('hasLocalStorage() = ', hasLocalStorage());
         if(!hasLocalStorage()) {
             return;
         }
 
+        console.log('device = '+device.device_id);
+
         localStorage.setItem('device_id', device.device_id);
+        console.log('localStorage.getItem(\'device_id\') = ', localStorage.getItem('device_id'));
     };
 
     this.getDevice = function(successCb, errorCb) {
         if(typeof window.device !== 'undefined') {
-            getFilteredDevice(successCb, errorCb);
+            console.log('Number 1');
+            getFilteredDevice(function(device) {
+                var deviceId = this.getDeviceId();
+                if(typeof deviceId !== 'undefined' && deviceId !== null) {
+                    device.deviceId = deviceId;
+                }
+
+                successCb(device);
+            }.bind(this), errorCb);
         } else {
             document.addEventListener('deviceready', function() {
-                getFilteredDevice(successCb, errorCb);
+                console.log('Number 2');
+                getFilteredDevice(function(device) {
+                    var deviceId = this.getDeviceId();
+                    if(typeof deviceId !== 'undefined' && deviceId !== null) {
+                        device.deviceId = deviceId;
+                    }
+
+                    successCb(device);
+                }.bind(this), errorCb).bind(this);
             }, false);
         }
     };
 
+    this.getDeviceId = function() {
+        console.log('hasLocalStorage() = ', hasLocalStorage());
+        if(!hasLocalStorage()) {
+            return;
+        }
+
+        console.log('localStorage.getItem(\'device_id\') = ', localStorage.getItem('device_id'));
+        return localStorage.getItem('device_id');
+    }
+
     /* jshint unused: false */
     function getFilteredDevice(successCb, errorCb) {
+        console.log(this);
         var devicePlatform = window.device.platform;
 
         var platformId = -1;
@@ -83,20 +114,7 @@ function DeviceController() {
             uuid: window.device.uuid
         };
 
-        var deviceId = getDeviceId();
-        if(typeof deviceId !== 'undefined' && deviceId !== null) {
-            device.deviceId = deviceId;
-        }
-
         successCb(device);
-    }
-
-    function getDeviceId() {
-        if(!hasLocalStorage()) {
-            return;
-        }
-
-        return localStorage.getItem('device_id');
     }
 
     function getDeviceNickname() {
@@ -157,6 +175,38 @@ function RegistrationController() {
         });
     };
 
+    this.deregisterDevice = function(idToken, deviceId, callback) {
+        console.log(idToken, deviceId);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', config.url+'/device/delete/', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        xhr.onreadystatechange = function(e) {
+            if (e.target.readyState === 4) {
+                if(e.target.responseText.length > 0) {
+                    var response = JSON.parse(e.target.responseText);
+                    if(e.target.status !== 200) {
+                        callback(response.error.msg);
+                    } else {
+                        callback();
+                    }
+                } else {
+                    callback('Sorry, we couldn\'t add your device to the lab, there appears to be a problem with the server.');
+                }
+            }
+        }.bind(this);
+
+        xhr.timeout = 10000;
+        xhr.ontimeout = function() {
+            callback('Sorry, we couldn\'t add your device to the lab, there appears to be a problem with the server.');
+        };
+
+        var paramString = 'id_token='+encodeURIComponent(idToken)+
+            '&device_id='+deviceId;
+
+        xhr.send(paramString);
+    };
+
     function registerWithBackEnd(idToken, regId, successCb, errorCb) {
         deviceController.getDevice(function(device) {
             // Success Callback
@@ -176,7 +226,6 @@ function RegistrationController() {
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
         xhr.onreadystatechange = function(e) {
-            console.log('onreadystatechange', e);
             if (e.target.readyState === 4) {
                 if(e.target.responseText.length > 0) {
                     var response = JSON.parse(e.target.responseText);
@@ -187,6 +236,7 @@ function RegistrationController() {
                             errorCb(response.error.msg);
                         }
                     } else {
+                        console.log('response = ', response);
                         device['device_id'] = response.data['device_id'];
                         successCb(device);
                     }
@@ -286,6 +336,7 @@ function AppController() {
     var regController = new RegistrationController();
     var deviceController = new DeviceController();
 
+    var idToken;
     var currentState;
 
     function setUIState(newState) {
@@ -321,7 +372,12 @@ function AppController() {
     function registerPushAccount(idToken) {
         regController.registerDeviceWithLab(idToken, function(device) {
             // Success
-            deviceController.saveDevice(device);
+
+            // If the device is already registered, we won't receive a new device ID
+            // i.e. no device id means we've just signed in
+            if(device['device_id']) {
+                deviceController.saveDevice(device);
+            }
             setUIState(HOME);
         }, function(errorMsg){
             // Error
@@ -334,7 +390,7 @@ function AppController() {
         setUIState(LOADING);
         signInController.loginInToGPlus(function(args) {
             /*jshint sub:true*/
-            var idToken = args['id_token'];
+            idToken = args['id_token'];
             registerPushAccount(idToken);
         }, function(err) {
             setUIState(SIGN_IN);
@@ -342,8 +398,18 @@ function AppController() {
         });
     };
 
-    this.logout = function() {
-        setUIState(LOGIN);
+    this.deregisterDevice = function() {
+        setUIState(LOADING);
+        regController.deregisterDevice(idToken, deviceController.getDeviceId(), 
+            function(err) {
+                if(err) {
+                    window.alert(err);
+                    setUIState(HOME);
+                    return;
+                }
+
+                setUIState(SIGN_IN);
+            });
     };
 
     this.init = function() {
@@ -353,10 +419,10 @@ function AppController() {
             this.login();
         }.bind(this), false);
 
-        var logoutBtn = document.querySelector('.home > .wrapper > button');
-        logoutBtn.addEventListener('click', function(e) {
+        var deregisterDeviceBtn = document.querySelector('.home > .wrapper > button');
+        deregisterDeviceBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            this.logout();
+            this.deregisterDevice();
         }.bind(this), false);
 
         setUIState(SIGN_IN);

@@ -39,6 +39,38 @@ function RegistrationController() {
         });
     };
 
+    this.deregisterDevice = function(idToken, deviceId, callback) {
+        console.log(idToken, deviceId);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', config.url+'/device/delete/', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        xhr.onreadystatechange = function(e) {
+            if (e.target.readyState === 4) {
+                if(e.target.responseText.length > 0) {
+                    var response = JSON.parse(e.target.responseText);
+                    if(e.target.status !== 200) {
+                        callback(response.error.msg);
+                    } else {
+                        callback();
+                    }
+                } else {
+                    callback('Sorry, we couldn\'t add your device to the lab, there appears to be a problem with the server.');
+                }
+            }
+        }.bind(this);
+
+        xhr.timeout = 10000;
+        xhr.ontimeout = function() {
+            callback('Sorry, we couldn\'t add your device to the lab, there appears to be a problem with the server.');
+        };
+
+        var paramString = 'id_token='+encodeURIComponent(idToken)+
+            '&device_id='+deviceId;
+
+        xhr.send(paramString);
+    };
+
     function registerWithBackEnd(idToken, regId, successCb, errorCb) {
         deviceController.getDevice(function(device) {
             // Success Callback
@@ -58,7 +90,6 @@ function RegistrationController() {
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
         xhr.onreadystatechange = function(e) {
-            console.log('onreadystatechange', e);
             if (e.target.readyState === 4) {
                 if(e.target.responseText.length > 0) {
                     var response = JSON.parse(e.target.responseText);
@@ -69,6 +100,7 @@ function RegistrationController() {
                             errorCb(response.error.msg);
                         }
                     } else {
+                        console.log('response = ', response);
                         device['device_id'] = response.data['device_id'];
                         successCb(device);
                     }
