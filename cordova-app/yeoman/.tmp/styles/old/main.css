@@ -1,0 +1,442 @@
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  src: local("Roboto Light"), local("Roboto-Light"), url(../fonts/Roboto-Light.ttf) format("ttf");
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local("Roboto Regular"), local("Roboto-Regular"), url(../fonts/Roboto-Regular.ttf) format("ttf");
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: local("Roboto Bold"), local("Roboto-Bold"), url(../fonts/Roboto-Bold.ttf) format("ttf");
+}
+
+/* line 35, ../../../app/styles/old/_base.scss */
+
+* {
+  outline: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* line 40, ../../../app/styles/old/_base.scss */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #4a4a4c;
+  color: #d0d0d0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  font-size: 20px;
+}
+
+/* line 53, ../../../app/styles/old/_base.scss */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #67aeb4;
+  font-weight: 300;
+}
+
+/* line 58, ../../../app/styles/old/_base.scss */
+
+h1 {
+  font-size: 1.6rem;
+}
+
+/* line 1, ../../../app/styles/old/_buttons.scss */
+
+button {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  background-color: #d0d0d0;
+  color: #4a4a4c;
+  font-size: 1.4em;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  transition: all .1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* line 24, ../../../app/styles/old/_buttons.scss */
+
+button[disabled] {
+  opacity: 0.5;
+}
+
+/* line 28, ../../../app/styles/old/_buttons.scss */
+
+button:hover {
+  background-color: #c6c6c6;
+}
+
+/* line 32, ../../../app/styles/old/_buttons.scss */
+
+button:active {
+  background-color: #bcbcbc;
+}
+
+/* line 36, ../../../app/styles/old/_buttons.scss */
+
+button:focus {
+  outline: none;
+}
+
+/* line 40, ../../../app/styles/old/_buttons.scss */
+
+button > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-height: 100%;
+}
+
+/* line 47, ../../../app/styles/old/_buttons.scss */
+
+button.image-btn {
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  padding: 1rem;
+  background-color: transparent;
+  background-origin: content-box;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  text-indent: -9999px;
+}
+
+/* line 63, ../../../app/styles/old/_buttons.scss */
+
+button.image-btn:hover {
+  background-color: #575759;
+}
+
+/* line 67, ../../../app/styles/old/_buttons.scss */
+
+button.image-btn:active {
+  background-color: #636366;
+}
+
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+/* line 16, ../../../app/styles/old/_sign-in.scss */
+
+.sign-in,
+.home {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  height: 0;
+  -webkit-flex: 1;
+  flex: 1;
+  padding: 0 1rem;
+}
+
+/* line 25, ../../../app/styles/old/_sign-in.scss */
+
+.sign-in header,
+.home header {
+  position: relative;
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+/* line 30, ../../../app/styles/old/_sign-in.scss */
+
+.sign-in header h1,
+.home header h1 {
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* line 38, ../../../app/styles/old/_sign-in.scss */
+
+.sign-in p,
+.home p {
+  font-size: 1.4rem;
+  margin: 0 0 1rem 0;
+}
+
+/* line 48, ../../../app/styles/old/_sign-in.scss */
+
+.sign-in .sign-in-button,
+.sign-in .log-out-button,
+.home .sign-in-button,
+.home .log-out-button {
+  position: relative;
+  display: block;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  background-color: #d0d0d0;
+  color: #4a4a4c;
+  font-size: 1.4em;
+  text-align: center;
+  text-decoration: none;
+  transition: all .1s ease;
+}
+
+/* line 66, ../../../app/styles/old/_sign-in.scss */
+
+.sign-in .sign-in-button:hover,
+.sign-in .log-out-button:hover,
+.home .sign-in-button:hover,
+.home .log-out-button:hover {
+  background-color: #c6c6c6;
+}
+
+/* line 71, ../../../app/styles/old/_sign-in.scss */
+
+.sign-in .sign-in-button:active,
+.sign-in .log-out-button:active,
+.home .sign-in-button:active,
+.home .log-out-button:active {
+  background-color: #bcbcbc;
+}
+
+/* line 75, ../../../app/styles/old/_sign-in.scss */
+
+.sign-in .sign-in-button > img,
+.home .sign-in-button > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-height: 100%;
+}
+
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+/* line 16, ../../../app/styles/old/_loading.scss */
+
+.loading {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex: 1;
+  flex: 1;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+/* line 23, ../../../app/styles/old/_loading.scss */
+
+.loading .spinner {
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+/**
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
+/* line 17, ../../../app/styles/old/_select-account.scss */
+
+.select-account header {
+  padding: 0 1rem;
+}
+
+/* line 21, ../../../app/styles/old/_select-account.scss */
+
+.select-account ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* line 27, ../../../app/styles/old/_select-account.scss */
+
+.select-account a {
+  display: block;
+  padding: 1rem;
+}
+
+/* line 33, ../../../app/styles/old/_select-account.scss */
+
+.select-account li:nth-child(2n):active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* line 38, ../../../app/styles/old/_select-account.scss */
+
+.select-account li:nth-child(2n+1) {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* line 41, ../../../app/styles/old/_select-account.scss */
+
+.select-account li:nth-child(2n+1):active {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* line 24, ../../../app/styles/old/main.scss */
+
+body #main-content {
+  height: 100%;
+}
+
+/* line 29, ../../../app/styles/old/main.scss */
+
+.spinner {
+  height: 60px;
+  width: 60px;
+  position: relative;
+  -webkit-animation: rotation .8s infinite linear;
+  animation: rotation .8s infinite linear;
+  border: 6px solid rgba(103, 174, 180, 0.15);
+  border-radius: 100%;
+}
+
+/* line 38, ../../../app/styles/old/main.scss */
+
+.spinner:before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: -6px;
+  top: -6px;
+  height: 100%;
+  width: 100%;
+  border-top: 6px solid #67aeb4;
+  border-left: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-radius: 100%;
+}
+
+@-webkit-keyframes rotation {
+  /* line 54, ../../../app/styles/old/main.scss */
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  /* line 55, ../../../app/styles/old/main.scss */
+  to {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes rotation {
+  /* line 54, ../../../app/styles/old/main.scss */
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  /* line 55, ../../../app/styles/old/main.scss */
+  to {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}

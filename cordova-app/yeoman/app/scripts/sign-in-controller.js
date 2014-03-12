@@ -24,19 +24,16 @@ function SignInController() {
             return;
         }
 
-        if(typeof cordova === 'undefined') {
+        if(typeof nativegplussignin === 'undefined') {
             error('The NativeGPlusSignIn plugin isn\'t loaded into the page');
             return;
         }
 
-        console.log('sign-in-controller: Attempting G+ Sign In');
         nativegplussignin.login(function(args) {
             // Success
-            console.log('sign-in-controller: Success - '+JSON.stringify(args));
             success(args);
         }, function(errMsg) {
             // Error
-            console.log('sign-in-controller: Error - '+JSON.stringify(errMsg));
             error(errMsg);
         });
         

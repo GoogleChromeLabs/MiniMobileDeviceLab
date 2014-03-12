@@ -22,6 +22,10 @@
                 <param name="android-package" value="co.uk.gauntface.cordova.plugin.nativegplussignin.CordovaGPlusOauthPlugin"/>
             </feature>
         </config-file>
+    
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.GET_ACCOUNTS"></uses-permission>
+        </config-file>
 
         <source-file src="src/android/CordovaGPlusOauthPlugin.java" target-dir="src/co/uk/gauntface/cordova/plugin/nativegplussignin/" />
         <source-file src="src/android/C.java" target-dir="src/co/uk/gauntface/cordova/plugin/nativegplussignin/" />

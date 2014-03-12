@@ -15,14 +15,10 @@ limitations under the License.
 **/
 'use strict';
 
-function begin() {
-    var loginController = new LoginController();
-    loginController.init();
-}
-
 if(typeof cordova !== 'undefined') {
     document.addEventListener('deviceready', function() {
-        begin();
+        var appController = new AppController();
+    	appController.init();
     }, false);
 } else {
     console.log('Cordova is not loaded');

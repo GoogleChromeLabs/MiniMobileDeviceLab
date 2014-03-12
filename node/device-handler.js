@@ -38,8 +38,6 @@ exports.get = function(req, res) {
 };
 
 exports.add = function(req, res) {
-    console.log(JSON.stringify(req.body));
-
     var requiredParams = [
         'id_token',
         'cloud_msg_id',
@@ -51,8 +49,6 @@ exports.add = function(req, res) {
     if(!RequestUtils.ensureValidRequest(req, res, requiredParams)) {
         return;
     }
-
-    console.log(JSON.stringify(req.body));
 
     gplusController.getUserId(req.body.id_token, function (userId) {
         // Success Callback

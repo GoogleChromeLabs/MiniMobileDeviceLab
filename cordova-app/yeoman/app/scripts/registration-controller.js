@@ -22,20 +22,16 @@ function RegistrationController() {
     var config = new DeviceLabConfig();
 
     this.registerDeviceWithLab = function(idToken, success, error) {
-        console.log('registration-controller: registerDeviceWithLab() idToken = '+idToken);
         if(typeof gcmlaunchbrowser === 'undefined') {
             error('The GCM Launch Browser plugin hasn\'t been installed');
             return;
         }
 
-        console.log('registration-controller: Calling getRegistrationId()');
         gcmlaunchbrowser.getRegistrationId(function(args) {
             // Success Callback
-            console.log('registration-controller: getRegistrationId() Success = '+JSON.stringify(args));
             registerWithBackEnd(idToken, args.regId, success, error);
         }, function(errMsg) {
             // Error Callback
-            console.log('registration-controller: getRegistrationId() Success = '+JSON.stringify(errMsg));
             if(typeof errMsg === 'undefined' || !errMsg) {
                 errMsg = 'An unknown error occurred while setting up push notifications.';
             }
@@ -44,58 +40,56 @@ function RegistrationController() {
     };
 
     function registerWithBackEnd(idToken, regId, successCb, errorCb) {
-        console.log('registration-controller: registerWithBackEnd()');
         deviceController.getDevice(function(device) {
             // Success Callback
-
-            // Use the auth token to do an XHR to get the user information.
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', config.url+'/devices/add/', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-
-            xhr.onreadystatechange = getXHRHandler(device, successCb, errorCb);
-
-            var paramString = 'id_token='+encodeURIComponent(idToken)+
-                '&cloud_msg_id='+regId+
-                '&device_name='+encodeURIComponent(device.name)+
-                '&device_nickname='+encodeURIComponent(device.nickname)+
-                '&platform_id='+encodeURIComponent(device.platformId)+
-                '&platform_version='+encodeURIComponent(device.platformVersion);
-            if(typeof device.deviceId !== 'undefined' && device.deviceId !== null) {
-                paramString += '&device_id='+encodeURIComponent(device.deviceId);
-            }
-
-            xhr.send(paramString);
+            addDeviceToLab(idToken, regId, device, successCb, errorCb);
         }, function(err){
             /*jshint unused:false*/
             // Error  Callback
-            console.log('registration-controller: registerWithBackEnd() Error = '+JSON.stringify(err));
             errorCb(err);
         });
 
 
     }
 
-    function getXHRHandler(device, successCb, errorCb) {
-        console.log('getXHRHandler', device);
-        return function(e) {
-            /*jshint sub:true, unused:false*/
-            if (this.readyState === 4) {
-                console.log('readystate = 4');
-                var response = JSON.parse(this.responseText);
-                console.log('response = '+this.responseText);
-                if(this.status !== 200) {
-                    console.log('response.error.msg = '+response.error.msg);
-                    errorCb(response.error.msg);
+    function addDeviceToLab(idToken, regId, device, successCb, errorCb) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', config.url+'/devices/add/', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        xhr.onreadystatechange = function(e) {
+            console.log('onreadystatechange', e);
+            if (e.target.readyState === 4) {
+                if(e.target.responseText.length > 0) {
+                    var response = JSON.parse(e.target.responseText);
+                    if(e.target.status !== 200) {
+                        errorCb(response.error.msg);
+                    } else {
+                        device['device_id'] = response.data['device_id'];
+                        successCb(device);
+                    }
                 } else {
-                    device['device_id'] = response.data['device_id'];
-                    successCb(device);
+                    errorCb('Sorry, we couldn\'t add your device to the lab, there appears to be a problem with the server.');
                 }
-            } else {
-                console.log('readystate = '+this.readystate);
             }
+        }.bind(this);
+
+        xhr.timeout = 10000;
+        xhr.ontimeout = function() {
+            errorCb('Sorry, we couldn\'t add your device to the lab, there appears to be a problem with the server.');
         };
+
+        var paramString = 'id_token='+encodeURIComponent(idToken)+
+            '&cloud_msg_id='+regId+
+            '&device_name='+encodeURIComponent(device.name)+
+            '&device_nickname='+encodeURIComponent(device.nickname)+
+            '&platform_id='+encodeURIComponent(device.platformId)+
+            '&platform_version='+encodeURIComponent(device.platformVersion);
+        if(typeof device.deviceId !== 'undefined' && device.deviceId !== null) {
+            paramString += '&device_id='+encodeURIComponent(device.deviceId);
+        }
+
+        xhr.send(paramString);
     }
 
 }

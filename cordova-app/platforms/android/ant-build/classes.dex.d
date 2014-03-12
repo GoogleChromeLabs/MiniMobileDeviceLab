@@ -1,0 +1,27 @@
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes.dex : \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/org/apache/cordova/device/Device.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/mobile/devicelab/BuildConfig.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/mobile/devicelab/R$integer.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/mobile/devicelab/Manifest$permission.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/mobile/devicelab/Manifest.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/mobile/devicelab/R$string.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/mobile/devicelab/R$xml.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/mobile/devicelab/R$drawable.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/mobile/devicelab/DeviceLab.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/mobile/devicelab/R.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/mobile/devicelab/R$attr.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch/GCMBrowserLaunch.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch/PushNotificationReceiver.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch/GCMController.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch/GCMController$GCMControllerListener.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch/GCMController$1.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch/GCMBrowserLaunch$1.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch/C.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/nativegplussignin/CordovaGPlusOauthPlugin$OnTokenAcquired$1.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/nativegplussignin/CordovaGPlusOauthPlugin$OnTokenAcquired.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/nativegplussignin/CordovaGPlusOauthPlugin.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/nativegplussignin/CordovaGPlusOauthPlugin$IDTokenFetcher.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/nativegplussignin/CordovaGPlusOauthPlugin$1.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/classes/co/uk/gauntface/cordova/plugin/nativegplussignin/C.class \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/dexedLibs/classes-9a271f3bc69f5481738dd26ec4bff9ba.jar \
+/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/dexedLibs/google-play-services-654c2dde584a31b74097fe2e380b6258.jar \
