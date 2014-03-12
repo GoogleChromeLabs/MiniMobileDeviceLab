@@ -163,7 +163,7 @@ DeviceListController.prototype.setSelectedBrowserIndex = function(deviceId, brow
 
 DeviceListController.prototype.removeDevice = function(deviceId, successCb, errorCb) {
   this.getDevicesModel().removeDevice(deviceId, function() {
-    this.setFilteredPlatforms();
+    this.setFilteredPlatforms(null);
     successCb();
   }.bind(this), errorCb);
 };

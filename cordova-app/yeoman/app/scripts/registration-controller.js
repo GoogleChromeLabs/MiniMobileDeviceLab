@@ -50,7 +50,11 @@ function RegistrationController() {
                 if(e.target.responseText.length > 0) {
                     var response = JSON.parse(e.target.responseText);
                     if(e.target.status !== 200) {
-                        callback(response.error.msg);
+                        if(response.error.code === 'not_in_database') {
+                            callback();
+                        } else {
+                            callback(response.error.msg);
+                        }
                     } else {
                         callback();
                     }

@@ -88,7 +88,9 @@ HomeController.prototype.init = function() {
 
   this.setUIState(LOADING);
 
-  this.getDeviceList();
+  this.updateDeviceList(function() {
+    this.setUIState(DEVICE_LIST);
+  }.bind(this));
 };
 
 /**
@@ -96,9 +98,9 @@ HomeController.prototype.init = function() {
  */
 HomeController.prototype.setUIState = function(newState) {
   var currentState = this.getCurrentState();
-  if(currentState === newState) {
-    return;
-  }
+  //if(currentState === newState) {
+  //  return;
+  //}
 
   // Iterate over the dom elements and show / hide depending on the state
   var classList = ['loading', 'empty-lab', 'device-list', 'nav-bar'];
@@ -194,7 +196,7 @@ HomeController.prototype.initialiseStaticElements = function() {
 /**
  * Get the device list from the model
  */
-HomeController.prototype.getDeviceList = function() {
+HomeController.prototype.updateDeviceList = function(successCb) {
   var deviceListController = this.getDeviceListController();
   deviceListController.getPlatformLists(function(err, platforms) {
     if(err !== null) {
@@ -204,8 +206,10 @@ HomeController.prototype.getDeviceList = function() {
       return;
     }
 
+    console.log('platforms = ', platforms);
+
     this.setPlatforms(platforms);
-    this.setUIState(DEVICE_LIST);
+    successCb();
   }.bind(this));
 };
 
@@ -421,7 +425,14 @@ HomeController.prototype.getDeleteDeviceCallback = function(deviceId) {
       // Success Callback
       var listItem = document.querySelector('#device-list-item-'+deviceId);
       listItem.parentNode.removeChild(listItem);
-    }, function(err) {
+
+      this.updateDeviceList(function() {
+        var platforms = this.getPlatforms();
+        if(platforms.length === 0) {
+          this.setUIState(DEVICE_LIST);
+        }
+      }.bind(this));
+    }.bind(this), function(err) {
       // Error Callback
       window.alert('This device could not be deleted: '+err);
     });
