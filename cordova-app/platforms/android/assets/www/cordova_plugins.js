@@ -26,6 +26,7 @@ module.exports.metadata =
 // TOP OF METADATA
 {
     "org.apache.cordova.device": "0.2.8",
+    "com.google.playservices": "15.0.1",
     "co.uk.gauntface.cordova.plugin.nativegplussignin": "0.0.1",
     "co.uk.gauntface.cordova.plugin.gcmbrowserlaunch": "0.0.1"
 }

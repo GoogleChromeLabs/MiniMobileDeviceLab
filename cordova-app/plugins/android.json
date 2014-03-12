@@ -13,12 +13,22 @@
         },
         "AndroidManifest.xml": {
             "/manifest/application": {
+                "<meta-data android:name=\"com.google.android.gms.version\" android:value=\"@integer/google_play_services_version\" />": 1,
                 "<receiver android:name=\"co.uk.gauntface.cordova.plugin.gcmbrowserlaunch.PushNotificationReceiver\" android:permission=\"com.google.android.c2dm.permission.SEND\"><intent-filter><action android:name=\"com.google.android.c2dm.intent.RECEIVE\" /><category android:name=\"co.uk.gauntface.mobile.devicelab\" /></intent-filter></receiver>": 1
+            },
+            "/manifest": {
+                "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\" />": 1,
+                "<uses-permission android:name=\"com.google.android.c2dm.permission.RECEIVE\" />": 1,
+                "<permission android:name=\"co.uk.gauntface.mobile.devicelab.permission.C2D_MESSAGE\" android:protectionLevel=\"signature\" />": 1,
+                "<uses-permission android:name=\"co.uk.gauntface.mobile.devicelab.permission.C2D_MESSAGE\" />": 1
             }
         }
     },
     "installed_plugins": {
         "org.apache.cordova.device": {
+            "PACKAGE_NAME": "co.uk.gauntface.mobile.devicelab"
+        },
+        "com.google.playservices": {
             "PACKAGE_NAME": "co.uk.gauntface.mobile.devicelab"
         },
         "co.uk.gauntface.cordova.plugin.nativegplussignin": {

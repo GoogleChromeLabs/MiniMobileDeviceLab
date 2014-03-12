@@ -48,7 +48,7 @@ function DeviceController() {
         }
 
         if(platformId === -1) {
-            console.log('Tried to register a device which isn\'t android or iPhone!?!?');
+            errorCb('Tried to register a device which isn\'t Android or iOS');
             return;
         }
 

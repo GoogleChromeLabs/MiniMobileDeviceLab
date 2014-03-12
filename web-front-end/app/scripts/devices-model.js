@@ -152,7 +152,6 @@ DevicesModel.prototype.removeDevice = function(deviceId, successCb, errorCb) {
   xhr.onreadystatechange = function(e) {
     if (e.target.readyState === 4) {
       if(e.target.status !== 200) {
-        console.log('e.target.status = '+e.target.status);
         errorCb();
         return;
       } else {
@@ -234,7 +233,6 @@ DevicesModel.prototype.setSelectedBrowserIndex = function(deviceId, selectedBrow
 
 DevicesModel.prototype.changeDeviceEnabled = function(deviceId, enabled) {
   if(Modernizr && Modernizr.localstorage) {
-    console.log('onDeviceEnabledChange '+deviceId+' enabled = '+enabled);
     localStorage.setItem('device-enabled-'+deviceId, enabled);
   }
 

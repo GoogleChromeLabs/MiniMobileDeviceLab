@@ -33,6 +33,12 @@
             </receiver>
         </config-file>
 
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+            <permission android:name="co.uk.gauntface.mobile.devicelab.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+            <uses-permission android:name="co.uk.gauntface.mobile.devicelab.permission.C2D_MESSAGE" />
+        </config-file>
+
         <source-file src="src/android/C.java" target-dir="src/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch" />
         <source-file src="src/android/GCMBrowserLaunch.java" target-dir="src/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch" />
         <source-file src="src/android/PushNotificationReceiver.java" target-dir="src/co/uk/gauntface/cordova/plugin/gcmbrowserlaunch" />

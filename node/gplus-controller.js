@@ -1,4 +1,4 @@
-var googleapis = require('./../../google-api-nodejs-client');
+var googleapis = require('./googleapis');
 var OAuth2 = googleapis.auth.OAuth2;
 
 exports.getUserId = function(idToken, successCallback, errorCallback) {
