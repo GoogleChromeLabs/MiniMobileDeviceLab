@@ -18,7 +18,7 @@ exports.getDevices = function(userId, successCb, errorCb) {
     });
 };
 
-exports.addDevice = function(userId, params, successCb, errorCb) {
+exports.addDevice = function(res, userId, params, successCb, errorCb) {
     dbHelper.openDb(function(dbConnection) {
         var dbParams = {
             user_id: userId,
@@ -28,16 +28,39 @@ exports.addDevice = function(userId, params, successCb, errorCb) {
             platform_version: params.platform_version,
             cloud_msg_id: params.cloud_msg_id
         };
-        dbConnection.query('INSERT INTO devices SET ?', dbParams,
+
+        dbConnection.query('SELECT * FROM devices WHERE cloud_msg_id = ? AND platform_id = ?',
+            [params.cloud_msg_id, params.platform_id],
             function (err, result) {
                 if (err) {
                     errorCb(err);
                     return;
                 }
 
-                successCb(result.insertId);
-            }
-        );
+                if(result.length > 0) {
+                    var RequestUtils = require('./request-utils.js');
+                    var ErrorCodes = require('./error_codes.js');
+
+                    RequestUtils.respondWithError(
+                        ErrorCodes.already_added,
+                        "Device's cloud_msg_id already in use",
+                        500,
+                        res
+                    );
+                    return;
+                }
+
+                dbConnection.query('INSERT INTO devices SET ?', dbParams,
+                    function (err, result) {
+                        if (err) {
+                            errorCb(err);
+                            return;
+                        }
+
+                        successCb(result.insertId);
+                    }
+                );
+            });
     }, function(err) {
         errorCb(err);
     });

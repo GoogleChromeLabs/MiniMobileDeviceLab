@@ -68,7 +68,7 @@ exports.add = function(req, res) {
 };
 
 function addDevice(userId, params, res) {
-    devicesController.addDevice(userId, params, function(deviceId){
+    devicesController.addDevice(res, userId, params, function(deviceId){
         // Device registered
         RequestUtils.respondWithData(
             { device_id: deviceId },
