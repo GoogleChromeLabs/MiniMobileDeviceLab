@@ -23,10 +23,8 @@
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/scripts \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/cordova_plugins.js \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/favicon.ico \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/bower_components/modernizr \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/bower_components/modernizr/modernizr.js \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/images/cream_pixels.png \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/images/g-plus-logo.png \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/plugins/co.uk.gauntface.cordova.plugin.gcmbrowserlaunch \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/plugins/org.apache.cordova.device \
@@ -43,16 +41,4 @@
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/fonts/aa53ce30.Roboto-Bold.ttf \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/styles/fonts/6489978e.Roboto-Light.ttf \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/scripts/d194148f.main.js \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/ios \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/android \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/ios/icon-72.png \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/ios/icon-57-2x.png \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/ios/icon-72-2x.png \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/ios/icon-57.png \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/android/icon-192-xxxhdpi.png \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/android/icon-48-hdpi.png \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/android/icon-96-xhdpi.png \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/android/icon-72-hdpi.png \
-/home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/assets/www/res/icons/android/icon-144-xxhdpi.png \
 /home/matt/Programming/Workspace/MiniMobileDeviceLab/cordova-app/platforms/android/ant-build/AndroidManifest.xml \

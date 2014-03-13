@@ -207,7 +207,7 @@ body {
   font-size: 20px;
 }
 
-/* line 29, ../../app/styles/main.scss */
+/* line 28, ../../app/styles/main.scss */
 
 body > section {
   position: absolute;
@@ -221,7 +221,7 @@ body > section {
   padding: 16px;
 }
 
-/* line 44, ../../app/styles/main.scss */
+/* line 43, ../../app/styles/main.scss */
 
 h1,
 h2,
@@ -234,20 +234,20 @@ h6 {
   font-weight: 300;
 }
 
-/* line 50, ../../app/styles/main.scss */
+/* line 49, ../../app/styles/main.scss */
 
 img {
   max-width: 100%;
   height: auto;
 }
 
-/* line 55, ../../app/styles/main.scss */
+/* line 54, ../../app/styles/main.scss */
 
 .hide {
   display: none;
 }
 
-/* line 59, ../../app/styles/main.scss */
+/* line 58, ../../app/styles/main.scss */
 
 .spinner {
   height: 60px;
@@ -259,7 +259,7 @@ img {
   border-radius: 100%;
 }
 
-/* line 68, ../../app/styles/main.scss */
+/* line 67, ../../app/styles/main.scss */
 
 .spinner:before {
   content: "";
@@ -277,13 +277,13 @@ img {
 }
 
 @-webkit-keyframes rotation {
-  /* line 84, ../../app/styles/main.scss */
+  /* line 83, ../../app/styles/main.scss */
   from {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
 
-  /* line 85, ../../app/styles/main.scss */
+  /* line 84, ../../app/styles/main.scss */
   to {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg);
@@ -291,13 +291,13 @@ img {
 }
 
 @keyframes rotation {
-  /* line 84, ../../app/styles/main.scss */
+  /* line 83, ../../app/styles/main.scss */
   from {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
 
-  /* line 85, ../../app/styles/main.scss */
+  /* line 84, ../../app/styles/main.scss */
   to {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg);
