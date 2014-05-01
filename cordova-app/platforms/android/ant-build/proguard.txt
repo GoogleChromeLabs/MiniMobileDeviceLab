@@ -1,6 +1,0 @@
-# view AndroidManifest.xml #generated:13
--keep class co.uk.gauntface.cordova.plugin.gcmbrowserlaunch.PushNotificationReceiver { <init>(...); }
-
-# view AndroidManifest.xml #generated:6
--keep class co.uk.gauntface.mobile.devicelab.DeviceLab { <init>(...); }
-

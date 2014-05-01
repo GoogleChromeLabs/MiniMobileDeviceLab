@@ -1,0 +1,6 @@
+config.js
+cordova-app/platforms
+cordova-app/www
+cordova-app/yeoman/.sass-cache
+
+node_modules/
