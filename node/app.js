@@ -1,5 +1,6 @@
 var PORT = 3000;
 
+var pkg = require('./package.json');
 var express = require('express');
 var deviceHandler = require('./device-handler.js');
 var pushHandler = require('./push-handler.js');
@@ -50,6 +51,13 @@ app.post('/device/delete', deviceHandler.remove);
 app.post('/device/edit', deviceHandler.edit);
 
 app.post('/push/url', pushHandler.pushUrl);
+
+// A simple handler that returns backend version.
+// Used for health checks and such.
+app.get('/version', function(req, res) {
+    res.set('Content-Type', 'text/plain');
+    res.send(pkg.version);
+});
 
 app.listen(PORT);
 console.log('Listening on port '+PORT);
