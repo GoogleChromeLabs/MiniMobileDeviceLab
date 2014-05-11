@@ -1,7 +1,7 @@
 {
   "name": "mini-mobile-device-lab",
   "description": "A Mini Mobile Device Lab to help testing across multiple devices",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "express": "3.x",
     "jwt-simple": "0.1.x",

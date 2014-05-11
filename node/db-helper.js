@@ -21,21 +21,16 @@ exports.openDb = function(successCb, errorCb) {
         return;
     }
 
-    connection = mysql.createConnection({
-        host     : config.dbHost,
-        user     : config.dbUsername,
-        password : config.dbPassword,
-        port: config.dbPort
-    });
+    connection = mysql.createConnection(config.dbURL);
 
     connection.connect();
 
-    connection.query('CREATE DATABASE IF NOT EXISTS minimobiledevicelab', function (err) {
+    connection.query('CREATE DATABASE IF NOT EXISTS ' + config.dbName, function (err) {
         if (err) {
             throw err;
         }
 
-        connection.query('USE minimobiledevicelab', function (err) {
+        connection.query('USE ' + config.dbName, function (err) {
             if (err) {
                 throw err;
             }
