@@ -1,0 +1,83 @@
+{
+    "name": "mmdl",
+    "modules": {
+
+        "nodejs": {
+            "type": "REPLICA_POOL",
+            "replicaPoolModule": {
+                "numReplicas": 1,
+                "replicaPoolParams": {
+                    "v1beta1": {
+                        "machineType": "f1-micro",
+                        "zone": "europe-west1-b",
+                        "baseInstanceName": "nodejs",
+                        "disksToCreate": [
+                            {
+                                "boot": true,
+                                "mode": "READ_WRITE",
+                                "initializeParams": {
+                                    "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/backports-debian-7-wheezy-v20140415",
+                                    "diskSizeGb": 10
+                                }
+                            }
+                        ],
+                        "networkInterfaces": [
+                            {
+                                "network": "default",
+                                "accessConfigs": [{
+                                    "name": "External NAT",
+                                    "type": "ONE_TO_ONE_NAT"
+                                }]
+                            }
+                        ],
+                        "initAction": "setup-vm",
+                        "metadata": {
+                            "items": [
+                                {"key": "MMDL_DB_URL", "value": "mysql://root@localhost"},
+                                {"key": "MMDL_DB_NAME", "value": "minimobiledevicelab"}
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+
+        "firewall": {
+            "type": "FIREWALL",
+            "firewallModule": {
+                "name": "allow-nodejs-apps",
+                "network": "default",
+                "sourceRanges": [ "0.0.0.0/0" ],
+                "allowed": [{
+                    "IPProtocol": "tcp",
+                    "ports": [ "80", "9000", "3000" ]
+                }]
+            }
+        },
+
+        "balancer": {
+            "type": "LOAD_BALANCING",
+            "lbModule": {
+                "ipAddress": "get me with: gcloud compute addresses reserve --region europe-west1 mmdl",
+                "targetModules": ["nodejs"],
+                "portRange": "80-44380",
+                "ipProtocol": "tcp"
+            }
+        }
+    },
+
+    "actions": {
+        "setup-vm": {
+            "commands": [
+                "apt-get update && apt-get install -y nodejs ruby git mysql-client vim nginx fcgiwrap",
+                "ln -s /usr/bin/nodejs /usr/bin/node",
+                "cd /tmp && curl http://registry.npmjs.org/npm/-/npm-1.4.7.tgz | tar xzf -",
+                "cd /tmp/package && node cli.js install -g -f",
+                "npm install -g forever grunt-cli",
+                "gem install --no-ri --no-rdoc compass",
+                "mkdir -p /apps && useradd -d /apps -s /bin/bash apps && chown -R apps /apps",
+                "%file:mmdl-setup.sh"
+            ]
+        }
+    }
+}
