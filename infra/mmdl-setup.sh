@@ -9,7 +9,7 @@ mkdir -p /apps/bin
 cat <<EOF > /apps/bin/update.sh
 #!/bin/bash
 
-REPO_URL=https://github.com/crhym3/MiniMobileDeviceLab.git
+REPO_URL=https://github.com/GoogleChrome/MiniMobileDeviceLab.git
 APP_DIR=/apps/mmdl
 DB_URL=$(curl -f -s -H 'Metadata-Flavor: Google' http://metadata/computeMetadata/v1/instance/attributes/MMDL_DB_URL)
 DB_NAME=$(curl -f -s -H 'Metadata-Flavor: Google' http://metadata/computeMetadata/v1/instance/attributes/MMDL_DB_NAME)
