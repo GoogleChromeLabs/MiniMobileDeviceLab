@@ -19,10 +19,10 @@ limitations under the License.
 function Config() {
 	var localhost = 'http://localhost:3000';
 	var localIP = 'http://192.168.0.2:8888';
-	var production = 'http://device-lab.appspot.com';
+	var production = 'http://devicelab.gauntface.co.uk/';
 
 	this.getRootUrl = function() {
-		return localhost;
+		return production;
 	};
 
 }
