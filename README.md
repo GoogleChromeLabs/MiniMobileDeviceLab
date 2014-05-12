@@ -2,6 +2,8 @@
   <img src="http://i.imgur.com/mOthLyL.png" alt="Device Lab Logo"/>
 </p>
 
+
+
 Mini Mobile Device Lab
 ======================
 
@@ -48,6 +50,23 @@ You'll then want to configure the mobile app to use this server, so open config.
 
 Building the Cordova App
 ------------------------
+
+Start of with getting the yeoman project building.
+
+`cd cordova-app/yeoman`
+
+`npm install`
+
+`npm install -g grunt-cli`
+
+`grunt build`
+
+Then get the cordova side of things building. Make sure you have the Android tools, ant on your path (i.e. `$ android`).
+
+`npm install -g cordova`
+
+`cordova run android`
+
 
 This can be a little fiddly I'm afraid.
 
