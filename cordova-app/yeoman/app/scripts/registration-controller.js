@@ -22,6 +22,7 @@ function RegistrationController() {
     var config = new DeviceLabConfig();
 
     this.registerDeviceWithLab = function(idToken, success, error) {
+        console.log('registerDeviceWithLab()');
         if(typeof gcmlaunchbrowser === 'undefined') {
             error('The GCM Launch Browser plugin hasn\'t been installed');
             return;
@@ -40,7 +41,7 @@ function RegistrationController() {
     };
 
     this.deregisterDevice = function(idToken, deviceId, callback) {
-        console.log(idToken, deviceId);
+        console.log('deregisterDevice()');
         var xhr = new XMLHttpRequest();
         xhr.open('POST', config.url+'/device/delete/', true);
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -76,6 +77,7 @@ function RegistrationController() {
     };
 
     function registerWithBackEnd(idToken, regId, successCb, errorCb) {
+        console.log('registerWithBackEnd()');
         deviceController.getDevice(function(device) {
             // Success Callback
             addDeviceToLab(idToken, regId, device, successCb, errorCb);
@@ -89,6 +91,7 @@ function RegistrationController() {
     }
 
     function addDeviceToLab(idToken, regId, device, successCb, errorCb) {
+        console.log('addDeviceToLab()');
         var xhr = new XMLHttpRequest();
         xhr.open('POST', config.url+'/devices/add/', true);
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');

@@ -22,8 +22,8 @@ public class C {
     // Get these keys for G+ API, one for your debug certificate, one for Android release certificate
     // Both can be set up in the Google API Console https://code.google.com/apis/console/
 
-    public static final String PRODUCTION_CLIENT_ID = "<PRODUCTION_KEY>";
-    public static final String DEBUG_CLIENT_ID = "<DEBUG_KEY>";
+    public static final String PRODUCTION_CLIENT_ID = "148156526883-fdv03t3hdh82fg6dhe8a2e377nfa763a.apps.googleusercontent.com";
+    public static final String DEBUG_CLIENT_ID = "148156526883-qbdgeab4b08jdee5i7o3kkt7n8f8kqr5.apps.googleusercontent.com";
 
 
 }
