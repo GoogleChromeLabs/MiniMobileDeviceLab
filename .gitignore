@@ -11,4 +11,5 @@ cordova-app/platforms
 cordova-app/plugins
 cordova-app/www
 cordova-app/yeoman/dist
+cordova-app/yeoman/app/scripts/config.js
 .cache
