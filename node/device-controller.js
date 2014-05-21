@@ -5,6 +5,8 @@ exports.getDevices = function(userId, successCb, errorCb) {
 
         dbConnection.query('SELECT * FROM devices WHERE user_id = ? ORDER BY platform_id ASC', [userId],
             function (err, result) {
+                dbConnection.destroy();
+
                 if (err) {
                     errorCb(err);
                     return;
@@ -34,6 +36,7 @@ exports.addDevice = function(res, userId, params, successCb, errorCb) {
             function (err, result) {
                 if (err) {
                     errorCb(err);
+                    dbConnection.destroy();
                     return;
                 }
 
@@ -47,11 +50,14 @@ exports.addDevice = function(res, userId, params, successCb, errorCb) {
                         500,
                         res
                     );
+                    dbConnection.destroy();
                     return;
                 }
 
                 dbConnection.query('INSERT INTO devices SET ?', dbParams,
                     function (err, result) {
+                        dbConnection.destroy();
+
                         if (err) {
                             errorCb(err);
                             return;
@@ -75,6 +81,8 @@ exports.deleteDevice = function(userId, params, successCb, errorCb) {
         dbConnection.query('DELETE FROM devices WHERE user_id = ? AND id = ?',
             [dbParams.user_id, dbParams.id],
             function (err, result) {
+                dbConnection.destroy();
+
                 if (err) {
                     errorCb(err);
                     return;
@@ -107,6 +115,8 @@ exports.updateDevice = function(userId, params, successCb, errorCb) {
         dbConnection.query('UPDATE devices SET ? WHERE user_id = ? AND id = ?',
             [updateParams, dbParams.user_id, dbParams.id],
             function (err, result) {
+                dbConnection.destroy();
+                
                 if (err) {
                     errorCb(err);
                     return;

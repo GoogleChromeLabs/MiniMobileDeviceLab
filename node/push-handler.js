@@ -36,6 +36,8 @@ exports.pushUrl = function(req, res) {
         dbHelper.openDb(function(dbConnection) {
             dbConnection.query('SELECT cloud_msg_id, platform_id, id FROM devices WHERE user_id = ? AND id IN ('+deviceIds+')', [userId],
                 function (err, result) {
+                        dbConnection.destroy();
+                        
                         if (err) {
                             RequestUtils.respondWithError(
                                 ErrorCodes.database_error,

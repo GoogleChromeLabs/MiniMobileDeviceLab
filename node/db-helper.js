@@ -1,6 +1,5 @@
 var mysql = require('mysql');
 var config = require('./config.js');
-var connection = null;
 
 var tables = [
     'CREATE TABLE IF NOT EXISTS devices (' +
@@ -16,15 +15,8 @@ var tables = [
 ];
 
 exports.openDb = function(successCb, errorCb) {
-    if(connection !== null) {
-        successCb(connection);
-        return;
-    }
-
     connection = mysql.createConnection(config.dbURL);
-
-    connection.connect();
-
+    // a connection can also be implicitly established by invoking a query
     connection.query('CREATE DATABASE IF NOT EXISTS ' + config.dbName, function (err) {
         if (err) {
             throw err;
