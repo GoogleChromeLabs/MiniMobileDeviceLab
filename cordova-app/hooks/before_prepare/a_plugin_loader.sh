@@ -8,3 +8,4 @@ echo "Adding Plugins";
 cordova plugin add ./../cordova-plugins/nativegplussignin/
 cordova plugin add ./../cordova-plugins/gcmbrowserlaunchplugin/
 cordova plugin add org.apache.cordova.device
+cordova plugin add com.google.playservices

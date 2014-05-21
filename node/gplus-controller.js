@@ -1,13 +1,21 @@
 var googleapis = require('googleapis');
+var config = require('./config');
 var OAuth2 = googleapis.auth.OAuth2;
 
 exports.getUserId = function(idToken, successCallback, errorCallback) {
     try {
-        new OAuth2().verifyIdToken(idToken, '148156526883-75soacsqseft7npagv6226t9pg0vtbel.apps.googleusercontent.com',
+        new OAuth2().verifyIdToken(idToken, config.gplusClientId,
           function(err, loginToken) {
+          	if(err) {
+          		console.log('gplus-controller err = '+err);
+          		errorCallback(err);
+          		return;
+          	}
+
             successCallback(loginToken.getUserId());
-        }, errorCallback);
+        });
     } catch (err) {
+    	console.log('gplus-controller catch() err = '+err);
         errorCallback(err.msg);
     }
 };

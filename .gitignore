@@ -5,4 +5,11 @@ node_modules
 *.log
 infra/mmdl-template.json
 web-front-end/dist
-
+web-front-end/bower_components
+node/config.js
+cordova-app/platforms
+cordova-app/plugins
+cordova-app/www
+cordova-app/yeoman/dist
+cordova-app/yeoman/app/scripts/config.js
+.cache

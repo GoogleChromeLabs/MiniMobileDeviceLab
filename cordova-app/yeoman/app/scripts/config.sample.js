@@ -18,5 +18,5 @@ limitations under the License.
 'use strict';
 
 function DeviceLabConfig() {
-    this.url = 'http://192.168.1.40:3000';
+    this.url = 'http://<NodeJS URL>';
 }

@@ -19,6 +19,7 @@ limitations under the License.
 function SignInController() {
     
     this.loginInToGPlus = function(success, error) {
+        console.log('loginInToGPlus()');
         if(typeof cordova === 'undefined') {
             error('Cordova isn\'t available to the page');
             return;
@@ -31,9 +32,11 @@ function SignInController() {
 
         nativegplussignin.login(function(args) {
             // Success
+            console.log('loginInToGPlus success()');
             success(args);
         }, function(errMsg) {
             // Error
+            console.log('loginInToGPlus error()');
             error(errMsg);
         });
         
