@@ -33,8 +33,12 @@
                         "initAction": "setup-vm",
                         "metadata": {
                             "items": [
-                                {"key": "MMDL_DB_URL", "value": "mysql://root@localhost"},
-                                {"key": "MMDL_DB_NAME", "value": "minimobiledevicelab"}
+                                {"key": "MMDL_DB_HOST",         "value": "localhost"},
+                                {"key": "MMDL_DB_PORT",         "value": 3306},
+                                {"key": "MMDL_DB_NAME",         "value": "minimobiledevicelab"},
+                                {"key": "MMDL_DB_USER",         "value": "root"},
+                                {"key": "MMDL_DB_PASSWORD",     "value": "secret"},
+                                {"key": "MMDL_GPLUS_CLIENT_ID", "value": "get me from developers console"}
                             ]
                         }
                     }
@@ -73,7 +77,7 @@
                 "ln -s /usr/bin/nodejs /usr/bin/node",
                 "cd /tmp && curl http://registry.npmjs.org/npm/-/npm-1.4.7.tgz | tar xzf -",
                 "cd /tmp/package && node cli.js install -g -f",
-                "npm install -g forever grunt-cli",
+                "npm install -g forever grunt-cli bower",
                 "gem install --no-ri --no-rdoc compass",
                 "mkdir -p /apps && useradd -d /apps -s /bin/bash apps && chown -R apps /apps",
                 "%file:mmdl-setup.sh"
