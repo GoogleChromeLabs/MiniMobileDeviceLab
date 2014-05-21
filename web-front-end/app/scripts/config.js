@@ -19,7 +19,7 @@ limitations under the License.
 function Config() {
 	var localhost = 'http://localhost:3000';
 	var localIP = 'http://192.168.0.2:8888';
-	var production = 'http://devicelab.gauntface.co.uk';
+	var production = 'http://devicelab.gauntface.co.uk/api';
 
 	this.getRootUrl = function() {
 		return production;

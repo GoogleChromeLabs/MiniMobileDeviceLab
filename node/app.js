@@ -42,19 +42,19 @@ app.use(function (req, res, next) {
 
 // TODO: Include a catch all - no api fix up
 
-app.post('/devices/get', deviceHandler.get);
+app.post('/api/devices/get', deviceHandler.get);
 
-app.post('/devices/add', deviceHandler.add);
+app.post('/api/devices/add', deviceHandler.add);
 
-app.post('/device/delete', deviceHandler.remove);
+app.post('/api/device/delete', deviceHandler.remove);
 
-app.post('/device/edit', deviceHandler.edit);
+app.post('/api/device/edit', deviceHandler.edit);
 
-app.post('/push/url', pushHandler.pushUrl);
+app.post('/api/push/url', pushHandler.pushUrl);
 
 // A simple handler that returns backend version.
 // Used for health checks and such.
-app.get('/version', function(req, res) {
+app.get('/api/version', function(req, res) {
     res.set('Content-Type', 'text/plain');
     res.send(pkg.version);
 });
