@@ -69,7 +69,7 @@
     "actions": {
         "setup-vm": {
             "commands": [
-                "apt-get update && apt-get install -y nodejs ruby git mysql-client vim nginx fcgiwrap",
+                "apt-get update && apt-get install -y nodejs ruby git mysql-client vim bzip2 nginx fcgiwrap",
                 "ln -s /usr/bin/nodejs /usr/bin/node",
                 "cd /tmp && curl http://registry.npmjs.org/npm/-/npm-1.4.7.tgz | tar xzf -",
                 "cd /tmp/package && node cli.js install -g -f",

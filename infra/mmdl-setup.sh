@@ -19,7 +19,7 @@ if [ ! -d \$APP_DIR ]; then
 fi
 
 cd \$APP_DIR
-git reset --hard && git pull
+git reset --hard origin/master && git pull
 
 cd node && npm install
 forever stop --plain \$APP_DIR/node/app.js
