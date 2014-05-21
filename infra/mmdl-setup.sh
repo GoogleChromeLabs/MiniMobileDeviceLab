@@ -20,6 +20,16 @@ fi
 
 cd \$APP_DIR
 git reset --hard origin/master && git pull
+cat <<EOC > node/config.js
+exports.dbURL = {
+    host     : '173.194.80.236',
+    user     : 'root',
+    password : 'eutie2Ke',
+    port: 3306
+};
+exports.dbName = process.env.MMDL_DB_NAME || 'minimobiledevicelab';
+exports.gplusClientId = '148156526883-75soacsqseft7npagv6226t9pg0vtbel.apps.googleusercontent.com';
+EOC
 
 cd node && npm install
 forever stop --plain \$APP_DIR/node/app.js
