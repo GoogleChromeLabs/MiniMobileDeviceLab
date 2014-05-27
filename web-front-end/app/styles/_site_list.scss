@@ -1,0 +1,154 @@
+.app-screens {
+  margin: 0;
+  padding: 0;
+}
+
+.site-list .list-elem {
+  margin: 0;
+  padding: 0;
+
+  list-style-type: none;
+
+  transition: opacity 100ms ease-in;
+
+  & > li {
+    display: flex;
+
+    width: 100%;
+    height: ($padding * 4) + 1px;
+
+    flex-direction: row;
+    align-items: center;
+
+    overflow: hidden;
+
+    padding: 0 $horizontal-padding 0 0;
+
+    box-sizing: border-box;
+
+    border-bottom-style: solid;
+    border-width: 1px;
+    border-color: $device-list-border-color;
+  }
+
+  .site-name-input-container {
+    display: block;
+    position: relative;
+
+    flex: 1;
+
+    margin-left: ($padding / 4);
+
+    input {
+      width: 100%;
+      height: $btn-size - ($padding / 4);
+
+      font-size: 1.4rem;
+  
+      padding-left: $horizontal-padding - ($padding / 4);
+      padding-right: $btn-size;
+
+      transition: all 100ms ease-in;
+
+      color: $device-name-enabled-font-color;
+      background-color: $device-name-active-input;
+    }
+
+    input[disabled] {
+      padding-right: 0;
+
+      background-color:transparent;
+
+      color: $device-name-enabled-color;
+    }
+  }
+
+  & > li.disabled {
+    input[disabled] {
+      color: $device-name-disabled-color;
+    }
+
+    .device-name-input-container, .delete-button, .edit-button {
+      opacity: 0.5;
+
+    }
+  }
+
+  .delete-button {
+    background-image: url(./../images/button_bin.svg);
+  }
+
+  .edit-button {
+    background-image: url(./../images/button_edit.svg);
+  }
+
+  .complete-button {
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    box-sizing: border-box;
+
+    background-image: url(./../images/button_tick.svg);
+  }
+
+  .complete-button:hover {
+    background-color: $device-name-enabled-bg-color-focus;
+  }
+
+  .complete-button:focus {
+    background-color: $device-name-enabled-bg-color-focus;
+  }
+
+  .complete-button:active {
+    background-color: $device-name-enabled-bg-color-active;
+  }
+}
+
+.site-list .list-elem.disabled {
+  opacity: 0.5;
+}
+
+.site-browser-selection-container {
+  display: flex;
+
+  flex-direction: row;
+
+  flex: 2;
+
+  margin: 0;
+  padding: 0 $padding;
+
+  list-style-type: none;
+
+  li {
+    margin: 0;
+    padding: 0;
+  }
+
+  li > img {
+    transition: all 100ms ease-in;
+  }
+
+  li.deselected > img {
+    //filter: grayscale(100%);
+    opacity: 0.3;
+  }
+
+  li.deselected:hover > img {
+    //filter: grayscale(40%);
+    opacity: 1.0;
+  }
+}
+
+li.disabled > .site-browser-selection-container {
+  li > img {
+    filter: grayscale(100%);
+    opacity: 0.3;
+  }
+}
+
+.empty-lab .wrapper {
+  padding: $padding $horizontal-padding;
+}

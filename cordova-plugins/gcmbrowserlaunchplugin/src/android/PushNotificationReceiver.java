@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Browser;
 import android.util.Log;
 
 import co.uk.gauntface.cordova.plugin.gcmbrowserlaunch.C;
@@ -85,6 +86,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         List<ResolveInfo> activitiesList = context.getPackageManager().queryIntentActivities(
                 browserIntent, -1);
         if(activitiesList.size() > 0) {
+            browserIntent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
             context.startActivity(browserIntent);
         } else {
             Intent playStoreIntent = new Intent(Intent.ACTION_VIEW);

@@ -24,7 +24,7 @@
     }
 }
 
-.nav-bar .url-send-container {
+.nav-bar .url-send-container, .nav-bar .url-add-container {
     position: relative;
 
     display: block;
@@ -49,6 +49,10 @@
         box-sizing: border-box;
 
         background-image: url(./../images/button_send.svg);
+    }
+
+    button.add-url {
+        background-image: url(./../images/button_add.svg);
     }
 
 }

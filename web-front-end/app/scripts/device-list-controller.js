@@ -146,6 +146,12 @@ DeviceListController.prototype.sendUrlPushMessage = function(url, errorCb) {
   gcmController.sendUrlPushMessage(url, pushDeviceData, errorCb);
 };
 
+DeviceListController.prototype.sendUrlPushMessageToAll = function(url, errorCb) {
+  var gcmController = this.getGCMController();
+
+  gcmController.sendUrlPushMessageToAll(url, errorCb);
+};
+
 /* jshint sub:true */
 DeviceListController.prototype.changeDeviceNickName = function(deviceId, nickname, successCb, errorCb) {
   var device = this.getDevicesModel().getDeviceById(deviceId);

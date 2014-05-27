@@ -52,6 +52,8 @@ app.post('/api/device/edit', deviceHandler.edit);
 
 app.post('/api/push/url', pushHandler.pushUrl);
 
+app.post('/api/push/url/all', pushHandler.pushUrlAll);
+
 // A simple handler that returns backend version.
 // Used for health checks and such.
 app.get('/api/version', function(req, res) {

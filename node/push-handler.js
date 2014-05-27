@@ -95,3 +95,78 @@ exports.pushUrl = function(req, res) {
         );
     });
 };
+
+exports.pushUrlAll = function (req, res) {
+    'use strict';
+
+    var requiredParams = [
+        'id_token',
+        'url'
+    ];
+    if(!RequestUtils.ensureValidRequest(req, res, requiredParams)) {
+        return;
+    }
+
+    gplusController.getUserId(req.body.id_token, function (userId) {
+        // Success Callback
+
+        dbHelper.openDb(function(dbConnection) {
+            dbConnection.query('SELECT cloud_msg_id, platform_id, id FROM devices WHERE user_id = ?', [userId],
+                function (err, result) {
+                        if (err) {
+                            RequestUtils.respondWithError(
+                                ErrorCodes.database_error,
+                                "Unable to send push messages due to a database error",
+                                400,
+                                res
+                            );
+                            return;
+                        }
+
+                        console.log('result = ', JSON.stringify(result));
+
+                        for(var i = 0; i < result.length; i++) {
+                            var deviceId = result[i].id;
+                            var cloudMsgId = result[i].cloud_msg_id;
+                            var platformId = result[i].platform_id;
+
+                            switch(parseInt(platformId)) {
+                                case PLATFORM_ID_ANDROID:
+                                    console.log('');
+
+                                    // Figure out what to do for batching messages
+                                    // create a message with default values
+                                    var message = new gcm.Message();
+                                    message.addDataWithKeyValue('url', req.body.url);
+                                    message.addDataWithKeyValue('pkg', packages[deviceId]);
+
+                                    console.log('Sending url: '+req.body.url);
+                                    console.log('Sending pkg: '+packages[deviceId]);
+
+                                    var sender = new gcm.Sender('AIzaSyBxM3sKIWYokvaWfgWNSHWlsM8IInHfowM');
+                                    var registrationIds = [];
+                                    registrationIds.push(cloudMsgId);
+
+                                    sender.send(message, registrationIds, 5, function (err, result) {
+                                        console.log(result);
+                                    });
+
+                                    break;
+                            }
+                        }
+
+                        RequestUtils.respondWithData(null, res);
+                        //successCb(result);
+                    });
+        }, function(err) {
+            errorCb(err);
+        });
+    }, function() {
+        RequestUtils.respondWithError(
+            ErrorCodes.invalid_id_token,
+            "The supplied id_token is invalid",
+            400,
+            res
+        );
+    });
+};
