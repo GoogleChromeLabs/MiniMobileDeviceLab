@@ -30,6 +30,15 @@ function LoopController() {
   var deviceListController;
 
   var pushInterval = null;
+  var currentUrlIndex = 0;
+
+  this.getCurrentUrlIndex = function() {
+    return currentUrlIndex;
+  };
+
+  this.setCurrentUrlIndex = function(index) {
+    currentUrlIndex = index;
+  };
 
   this.getIntervalLoop = function() {
     return pushInterval;
@@ -569,7 +578,17 @@ LoopController.prototype.startPushLooper = function() {
     this.sendPush('http://gauntface.co.uk');
   }.bind(this), 5000);
   
-  this.sendPush('http://gauntface.co.uk');
+  var sitesArray = this.getSitesModel().getSitesList();
+  var currentIndex = this.getCurrentUrlIndex();
+  if(currentIndex >= sitesArray.length) {
+    currentIndex == 0;
+  }
+
+  var url = sitesArray[currentIndex];
+
+  this.setCurrentUrlIndex(currentIndex+1);
+
+  this.sendPush(url);
 
   this.setIntervalLoop(newInterval);
 };
