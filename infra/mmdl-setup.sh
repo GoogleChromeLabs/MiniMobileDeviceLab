@@ -11,8 +11,19 @@ cat <<EOF > /apps/bin/update.sh
 
 REPO_URL=https://github.com/GoogleChrome/MiniMobileDeviceLab.git
 APP_DIR=/apps/mmdl
-DB_URL=$(curl -f -s -H 'Metadata-Flavor: Google' http://metadata/computeMetadata/v1/instance/attributes/MMDL_DB_URL)
-DB_NAME=$(curl -f -s -H 'Metadata-Flavor: Google' http://metadata/computeMetadata/v1/instance/attributes/MMDL_DB_NAME)
+META_URL=http://metadata/computeMetadata/v1/instance/attributes
+
+function get_meta {
+    v=\$(curl -f -s -H 'Metadata-Flavor: Google' \$META_URL/\$1)
+    echo \$v
+}
+
+DB_HOST=\$(get_meta MMDL_DB_HOST)
+DB_PORT=\$(get_meta MMDL_DB_PORT)
+DB_NAME=\$(get_meta MMDL_DB_NAME)
+DB_USER=\$(get_meta MMDL_DB_USER)
+DB_PASSWORD=\$(get_meta MMDL_DB_PASSWORD)
+GPLUS_CLIENT_ID=\$(get_meta MMDL_GPLUS_CLIENT_ID)
 
 if [ ! -d \$APP_DIR ]; then
     git clone \$REPO_URL \$APP_DIR
@@ -22,20 +33,22 @@ cd \$APP_DIR
 git reset --hard origin/master && git pull
 cat <<EOC > node/config.js
 exports.dbURL = {
-    host     : 'localhost',
-    user     : 'root',
-    password : 'root',
-    port: 3306
+    host     : '\$DB_HOST',
+    user     : '\$DB_USER',
+    password : '\$DB_PASSWORD',
+    port     : \$DB_PORT
 };
-exports.dbName = process.env.MMDL_DB_NAME || 'minimobiledevicelab';
-exports.gplusClientId = 'get me from developers console';
+exports.dbName = '\$DB_NAME';
+exports.gplusClientId = '\$GPLUS_CLIENT_ID';
 EOC
 
 cd node && npm install
 forever stop --plain \$APP_DIR/node/app.js
-MMDL_DB_URL=\$DB_URL MMDL_DB_NAME=\$DB_URL forever start --plain \$APP_DIR/node/app.js
+forever start --plain \$APP_DIR/node/app.js
 
 cd \$APP_DIR/web-front-end && npm install
+bower install
+cp -r bower_components/* app/bower_components/
 grunt build --no-color
 EOF
 
@@ -81,6 +94,10 @@ server {
     location / {
         root /apps/mmdl/web-front-end/dist;
         try_files \$uri \$uri/ /index.html;
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:3000;
     }
 
     location /github {
