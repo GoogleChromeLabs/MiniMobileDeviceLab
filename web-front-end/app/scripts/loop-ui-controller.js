@@ -575,29 +575,42 @@ LoopController.prototype.startPushLooper = function() {
   }
 
   var newInterval = setInterval(function() {
-    this.sendPush('http://gauntface.co.uk');
+    this.handlePush();
   }.bind(this), 5000);
-  
-  var sitesArray = this.getSitesModel().getSitesList();
-  var currentIndex = this.getCurrentUrlIndex();
-  if(currentIndex >= sitesArray.length) {
-    currentIndex == 0;
-  }
 
-  var url = sitesArray[currentIndex];
-
-  this.setCurrentUrlIndex(currentIndex+1);
-
-  this.sendPush(url);
-
+  this.handlePush();
   this.setIntervalLoop(newInterval);
 };
+
+LoopController.prototype.handlePush = function() {
+  this.getSitesModel().getSitesList(function(err, sitesArray) {
+    if(err) {
+      window.alert('Unable to push message as couldn\'t any sites');
+      return;
+    }
+
+    var currentIndex = this.getCurrentUrlIndex();
+    if(currentIndex >= sitesArray.length) {
+      currentIndex == 0;
+    }
+
+    var url = sitesArray[currentIndex];
+
+    this.setCurrentUrlIndex(currentIndex+1);
+
+    this.sendPush(url);
+  }.bind(this));
+}
 
 LoopController.prototype.cancelPushLooper = function() {
   var currentInterval = this.getIntervalLoop();
   if(currentInterval) {
     clearInterval(currentInterval);
+    this.setIntervalLoop(null);
   }
+
+  var looperSwitch = document.querySelector('#sites-looper-checkbox');
+  looperSwitch.checked = false;
 };
 
 LoopController.prototype.sendPush = function(url) {
@@ -608,7 +621,9 @@ LoopController.prototype.sendPush = function(url) {
   var deviceController = this.getDeviceListController();
   deviceController.sendUrlPushMessageToAll(url, function(err) {
     window.alert('Couldn\'t push the URL to devices: '+err);
-  });
+    this.cancelPushLooper();
+    return;
+  }.bind(this));
 };
 
 /**
