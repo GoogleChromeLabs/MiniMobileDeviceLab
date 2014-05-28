@@ -625,7 +625,7 @@ LoopController.prototype.sendPush = function(url) {
   deviceController.sendUrlPushMessageToAll(url, function(err) {
     if(err) {
       if(err.code === 'invalid_id_token') {
-        identityController.initSignInButton(signInBtn, autoSignIn, function(token) {
+        identityController.initSignInButton(null, false, function(token) {
           // Success - Signed In
           document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
           document.cookie = 'token=' + idToken + '; path=/';
