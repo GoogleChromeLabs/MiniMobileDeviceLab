@@ -109,6 +109,8 @@ exports.pushUrlAll = function (req, res) {
         return;
     }
 
+    var browserPackage = "com.android.chrome";
+
     gplusController.getUserId(req.body.id_token, function (userId) {
         // Success Callback
 
@@ -140,10 +142,10 @@ exports.pushUrlAll = function (req, res) {
                                     // create a message with default values
                                     var message = new gcm.Message();
                                     message.addDataWithKeyValue('url', req.body.url);
-                                    message.addDataWithKeyValue('pkg', packages[deviceId]);
+                                    message.addDataWithKeyValue('pkg', browserPackage);
 
                                     console.log('Sending url: '+req.body.url);
-                                    console.log('Sending pkg: '+packages[deviceId]);
+                                    console.log('Sending pkg: '+browserPackage);
 
                                     var sender = new gcm.Sender('AIzaSyBxM3sKIWYokvaWfgWNSHWlsM8IInHfowM');
                                     var registrationIds = [];
