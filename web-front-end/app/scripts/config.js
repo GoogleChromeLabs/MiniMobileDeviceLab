@@ -22,7 +22,7 @@ function Config() {
 	var production = 'http://devicelab.gauntface.co.uk/api';
 
 	this.getRootUrl = function() {
-		return localhost;
+		return production;
 	};
 
 }
