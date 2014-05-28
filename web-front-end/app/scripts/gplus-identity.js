@@ -36,8 +36,29 @@ function GPlusIdentity() {
       loadingCb();
       startSignIn(signInButton, successCb, errorCb, requiresLoginCb);
     }
+  };
 
-
+  this.silentSignIn = function(callback) {
+    window.gapi.auth.signIn(
+      {
+        clientid: clientId,
+        cookiepolicy: 'single_host_origin',
+        scope: 'https://www.googleapis.com/auth/plus.login',
+        callback: function(authResult) {
+          if (authResult.access_token) {
+            // Successfully authorized
+            callback(null, authResult.id_token);
+          } else if (authResult.error) {
+            // There was an error.
+            // Possible error codes:
+            //   "access_denied" - User denied access to your app
+            callback(authResult.error);
+          } else {
+            callback('Unknown error occured');
+          }
+        }
+      }
+    );
   };
 
   function startSignIn(signInButton, successCb, errorCb, requiresLoginCb) {

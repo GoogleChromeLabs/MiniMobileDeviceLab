@@ -624,25 +624,28 @@ LoopController.prototype.sendPush = function(url) {
   var deviceController = this.getDeviceListController();
   deviceController.sendUrlPushMessageToAll(url, function(err) {
     if(err) {
+      console.log('loop-ui-controller: sendUrlPushMessageToAll: ', err);
       if(err.code === 'invalid_id_token') {
-        identityController.initSignInButton(null, false, function(token) {
+        console.log('Reattempting sign in');
+        var identityController = new GPlusIdentity();
+        console.log('Reattempting sign in ', identityController);
+        identityController.silentSignIn(function(err, token) {
+          if(err !== null) {
+            console.log('error');
+            
+            // Error
+            this.setUIState(SIGN_OUT);
+            return;
+          }
+
+          console.log('successful sign in');
           // Success - Signed In
           document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-          document.cookie = 'token=' + idToken + '; path=/';
+          document.cookie = 'token=' + token + '; path=/';
 
           this.setIdToken(token);
 
-          this.sendUrl(url);
-        }.bind(this), function(errorMsg) {
-          /* jshint unused: false */
-
-          // Error
-          this.setUIState(SIGN_OUT);
-        }.bind(this), function() {
-          // Requires Interactive Login
-          this.setUIState(SIGN_OUT);
-        }.bind(this), function() {
-          // Starting Sign In
+          this.startPushLooper();
         }.bind(this));
       } else if(err.msg) {
         window.alert('Couldn\'t push the URL to devices: '+err.msg);
@@ -672,6 +675,6 @@ LoopController.prototype.sendPush = function(url) {
 
 window.onload = function() {
   //localStorage.clear();
-  var loopController = new LoopController();
+  window.loopController = new LoopController();
   loopController.init();
 };
