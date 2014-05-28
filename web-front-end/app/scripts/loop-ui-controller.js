@@ -591,7 +591,7 @@ LoopController.prototype.handlePush = function() {
 
     var currentIndex = this.getCurrentUrlIndex();
     if(currentIndex >= sitesArray.length) {
-      currentIndex == 0;
+      currentIndex = 0;
     }
 
     var site = sitesArray[currentIndex];
