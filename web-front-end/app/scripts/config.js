@@ -17,12 +17,12 @@ limitations under the License.
 
 /* jshint unused: false */
 function Config() {
-	var localhost = 'http://localhost:3000';
+	var localhost = 'http://localhost:3000/api';
 	var localIP = 'http://192.168.0.2:8888';
 	var production = 'http://devicelab.gauntface.co.uk/api';
 
 	this.getRootUrl = function() {
-		return production;
+		return localhost;
 	};
 
 }

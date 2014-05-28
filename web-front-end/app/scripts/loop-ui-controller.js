@@ -594,11 +594,11 @@ LoopController.prototype.handlePush = function() {
       currentIndex == 0;
     }
 
-    var url = sitesArray[currentIndex];
+    var site = sitesArray[currentIndex];
 
     this.setCurrentUrlIndex(currentIndex+1);
 
-    this.sendPush(url);
+    this.sendPush(site.url);
   }.bind(this));
 }
 
@@ -614,7 +614,8 @@ LoopController.prototype.cancelPushLooper = function() {
 };
 
 LoopController.prototype.sendPush = function(url) {
-  if(typeof url === undefined || url.length === 0) {
+  console.log('sendPush: url = '+url);
+  if(typeof url === 'undefined' || url.length === 0) {
     return;
   }
 
