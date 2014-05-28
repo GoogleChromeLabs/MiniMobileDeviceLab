@@ -576,6 +576,9 @@ LoopController.prototype.startPushLooper = function() {
     return;
   }
 
+  var looperSwitch = document.querySelector('#sites-looper-checkbox');
+  looperSwitch.checked = true;
+
   var newInterval = setInterval(function() {
     this.handlePush();
   }.bind(this), TIMER_INTERVAL);
