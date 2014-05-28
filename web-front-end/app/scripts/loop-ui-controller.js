@@ -22,6 +22,8 @@ var LOADING = 0;
 var SITE_LIST = 1;
 var SIGN_OUT = 2;
 
+var TIMER_INTERVAL = 10000;
+
 /* jshint unused: false, sub:true */
 function LoopController() {
   var currentState;
@@ -576,7 +578,7 @@ LoopController.prototype.startPushLooper = function() {
 
   var newInterval = setInterval(function() {
     this.handlePush();
-  }.bind(this), 5000);
+  }.bind(this), TIMER_INTERVAL);
 
   this.handlePush();
   this.setIntervalLoop(newInterval);
