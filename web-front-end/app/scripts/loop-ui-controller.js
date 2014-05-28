@@ -623,7 +623,33 @@ LoopController.prototype.sendPush = function(url) {
 
   var deviceController = this.getDeviceListController();
   deviceController.sendUrlPushMessageToAll(url, function(err) {
-    window.alert('Couldn\'t push the URL to devices: '+err);
+    if(err) {
+      if(err.code === 'invalid_id_token') {
+        identityController.initSignInButton(signInBtn, autoSignIn, function(token) {
+          // Success - Signed In
+          document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+          document.cookie = 'token=' + idToken + '; path=/';
+
+          this.setIdToken(token);
+
+          this.sendUrl(url);
+        }.bind(this), function(errorMsg) {
+          /* jshint unused: false */
+
+          // Error
+          this.setUIState(SIGN_OUT);
+        }.bind(this), function() {
+          // Requires Interactive Login
+          this.setUIState(SIGN_OUT);
+        }.bind(this), function() {
+          // Starting Sign In
+        }.bind(this));
+      } else if(err.msg) {
+        window.alert('Couldn\'t push the URL to devices: '+err.msg);
+      } else {
+        window.alert('Couldn\'t push the URL to devices: '+err);
+      }
+    }
     this.cancelPushLooper();
     return;
   }.bind(this));

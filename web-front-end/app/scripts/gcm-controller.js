@@ -56,7 +56,15 @@ GCMController.prototype.sendUrlPushMessageToAll = function(url, errorCb) {
       console.log('gcm-controller: sendPushMessageUrl() readyState == 4');
       if(e.target.status !== 200) {
         console.log('gcm-controller: sendPushMessageUrl() error() '+xhr.responseText);
-        errorCb();
+        try {
+          var response = JSON.parse(xhr.responseText);
+          if(response.error) {
+            errorCb(response.error);
+          }
+        } catch (exception) {
+          errorCb();  
+        }
+        
         return;
       } else {
         // Success NOOP
