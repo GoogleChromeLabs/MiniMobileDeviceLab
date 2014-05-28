@@ -76,7 +76,7 @@ function LoginController() {
     }
 
     var signInBtn = document.querySelector('.sign-in > .wrapper > button');
-    identityController.initSignInButton(null, false, function(token) {
+    identityController.initSignInButton(signInBtn, false, function(token) {
       idToken = token;
       // Success - Signed In
       setUIState(HOME);
