@@ -39,6 +39,7 @@ function GPlusIdentity() {
   };
 
   this.silentSignIn = function(callback) {
+    console.log('in silentSignIn');
     window.gapi.auth.signIn(
       {
         clientid: clientId,
