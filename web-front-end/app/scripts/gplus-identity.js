@@ -45,6 +45,7 @@ function GPlusIdentity() {
         cookiepolicy: 'single_host_origin',
         scope: 'https://www.googleapis.com/auth/plus.login',
         callback: function(authResult) {
+          console.log('silentSignIn Callback', authResult);
           if (authResult.access_token) {
             // Successfully authorized
             callback(null, authResult.id_token);

@@ -619,7 +619,11 @@ LoopController.prototype.cancelPushLooper = function() {
 };
 
 LoopController.prototype.sendPush = function(url) {
-  console.log('sendPush: url = '+url);
+  var currentdate = new Date(); 
+  var timeString = currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+  console.log('loop-ui-controller: sendPush() @ '+timeString+' url = '+url);
   if(typeof url === 'undefined' || url.length === 0) {
     return;
   }
@@ -629,9 +633,8 @@ LoopController.prototype.sendPush = function(url) {
     if(err) {
       console.log('loop-ui-controller: sendUrlPushMessageToAll: ', err);
       if(err.code === 'invalid_id_token') {
-        console.log('Reattempting sign in');
+        console.log('loop-ui-controller: Reattempting sign in');
         var identityController = new GPlusIdentity();
-        console.log('Reattempting sign in ', identityController);
         identityController.silentSignIn(function(err, token) {
           if(err !== null) {
             console.log('error');
@@ -641,7 +644,8 @@ LoopController.prototype.sendPush = function(url) {
             return;
           }
 
-          console.log('successful sign in');
+          console.log('loop-ui-controller: Successful sign in');
+
           // Success - Signed In
           document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
           document.cookie = 'token=' + token + '; path=/';
