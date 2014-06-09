@@ -3,7 +3,9 @@ var PORT = 3000;
 var pkg = require('./package.json');
 var express = require('express');
 var deviceHandler = require('./device-handler.js');
+var urlHandler = require('./url-handler.js');
 var pushHandler = require('./push-handler.js');
+var loopHandler = require('./loop-handler.js');
 
 var app = express();
 
@@ -52,7 +54,17 @@ app.post('/api/device/edit', deviceHandler.edit);
 
 app.post('/api/push/url', pushHandler.pushUrl);
 
-app.post('/api/push/url/all', pushHandler.pushUrlAll);
+//app.post('/api/push/url/all', pushHandler.pushUrlAll);
+
+app.post('/api/urls/get', urlHandler.get);
+
+app.post('/api/urls/add', urlHandler.add);
+
+app.post('/api/urls/delete', urlHandler.remove);
+
+app.post('/api/urls/update', urlHandler.edit);
+
+app.post('/api/urls/loopcontrol', loopHandler.control);
 
 // A simple handler that returns backend version.
 // Used for health checks and such.

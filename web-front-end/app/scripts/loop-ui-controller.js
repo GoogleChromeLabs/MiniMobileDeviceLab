@@ -22,14 +22,16 @@ var LOADING = 0;
 var SITE_LIST = 1;
 var SIGN_OUT = 2;
 
-var TIMER_INTERVAL = 10000;
+var TIMER_INTERVAL = 60000;
 
 /* jshint unused: false, sub:true */
-function LoopController() {
+function LoopController(autoLoop) {
   var currentState;
   var idToken;
   var sitesModel;
+  var loopModel;
   var deviceListController;
+  var autorun = autoLoop;
 
   var pushInterval = null;
   var currentUrlIndex = 0;
@@ -42,17 +44,18 @@ function LoopController() {
     currentUrlIndex = index;
   };
 
-  this.getIntervalLoop = function() {
+  /**this.getIntervalLoop = function() {
     return pushInterval;
   };
 
   this.setIntervalLoop = function(loop) {
     pushInterval = loop;
-  };
+  };**/
 
   this.setIdToken = function(token) {
     idToken = token;
-    sitesModel = new SitesModel();
+    sitesModel = new SitesModel(token);
+    loopModel = new LoopModel(token);
     deviceListController = new DeviceListController(token);
   };
 
@@ -80,6 +83,14 @@ function LoopController() {
     return sitesModel;
   };
 
+  this.setLoopModel = function(m) {
+    loopModel = m;
+  };
+
+  this.getLoopModel = function() {
+    return loopModel;
+  };
+
   this.getFriendlyCookie = function() {
     var keyValueStrings = document.cookie.split(';');
     var friendlyCookie = {};
@@ -93,6 +104,10 @@ function LoopController() {
     }
 
     return friendlyCookie;
+  };
+
+  this.shouldAutoRun = function() {
+    return autorun;
   };
 }
 
@@ -111,6 +126,9 @@ LoopController.prototype.init = function() {
 
   this.updateSiteList(function() {
     this.setUIState(SITE_LIST);
+    /**if(this.shouldAutoRun()) {
+      this.startPushLooper();
+    }**/
   }.bind(this));
 };
 
@@ -132,18 +150,24 @@ LoopController.prototype.setUIState = function(newState) {
     visible['loading'] = true;
     break;
   case SITE_LIST:
-    var sitesList = this.getSitesModel().getCachedSites();
-    if(sitesList.length === 0) {
-      visible['nav-bar'] = true;
-      visible['empty-lab'] = true;
+    var sitesList = this.getSitesModel().getSitesList(function(err, sites) {
+      if(!sites) {
+        sites = [];
+      }
 
-      this.cancelPushLooper();
-    } else {
-      visible['nav-bar'] = true;
-      visible['site-list'] = true;
+      if(sites.length === 0) {
+        visible['nav-bar'] = true;
+        visible['empty-lab'] = true;
 
-      this.renderSitesList();
-    }
+        this.cancelPushLooper();
+      } else {
+        visible['nav-bar'] = true;
+        visible['site-list'] = true;
+
+        this.renderSitesList();
+      }
+    }.bind(this));
+    
 
     break;
   case SIGN_OUT:
@@ -232,33 +256,16 @@ LoopController.prototype.initialiseStaticElements = function() {
  */
 LoopController.prototype.updateSiteList = function(successCb) {
   var sitesModel = this.getSitesModel();
-  console.log(sitesModel);
   sitesModel.getSitesList(function(err, sites) {
-    if(err !== null) {
+    if(!(err === null || typeof(err) === 'undefined')) {
       window.alert(err);
 
       this.setUIState(SIGN_OUT);
       return;
     }
-
-    console.log('Sites = ', sites);
 
     successCb();
   }.bind(this));
-  /**var deviceListController = this.getDeviceListController();
-  deviceListController.getPlatformLists(function(err, platforms) {
-    if(err !== null) {
-      window.alert(err);
-
-      this.setUIState(SIGN_OUT);
-      return;
-    }
-
-    console.log('platforms = ', platforms);
-
-    this.setPlatforms(platforms);
-    successCb();
-  }.bind(this));**/
 };
 
 /**
@@ -271,7 +278,7 @@ LoopController.prototype.addURLToList = function(url) {
 
   var sitesModel = this.getSitesModel();
   sitesModel.addUrlToList(url, function(err) {
-    if(err !== null) {
+    if(!(err === null || typeof(err) === 'undefined')) {
       window.alert('Couldn\'t push the URL to devices: '+err);
     }
 
@@ -284,38 +291,12 @@ LoopController.prototype.addURLToList = function(url) {
  * query accordingly
  */
 LoopController.prototype.renderSitesList = function() {
-  var sites = this.getSitesModel().getCachedSites();
-
   var className = 'sites';
   var sitelistElem = document.querySelector('.site-list > .list-elem.'+className);
 
   this.prepareSiteList(sitelistElem);
-  //this.setupPlatformDevices('android', androidDeviceIds, new AndroidBrowserModel());
-  //this.setupPlatformDevices('ios', iosDeviceIds, new IOSBrowserModel());
 };
 
-/**
- * Set up a specific platforms device list
- */
-/**LoopController.prototype.setupPlatformDevices = function(className, platform, browserModel) {
-  var deviceIds = platform === null ? [] : platform.deviceIds;
-  var platformEnabled = platform === null ? false : platform.enabled;
-
-  // Hide or show the platform sections
-  var deviceHeader = document.querySelector('.device-list > .os-header.'+className);
-  var devicelistElem = document.querySelector('.device-list > .list-elem.'+className);
-  if(typeof deviceIds === 'undefined' || deviceIds === null || deviceIds.length === 0) {
-    deviceHeader.classList.add('hide');
-    devicelistElem.classList.add('hide');
-    return;
-  }
-
-  deviceHeader.classList.remove('hide');
-  devicelistElem.classList.remove('hide');
-
-  this.prepareDeviceList(devicelistElem, deviceIds, browserModel);
-  this.prepareDeviceGroupState(className, platform.platformId, platformEnabled);
-};**/
 
 /**
  * Get the device list populated with relevant browser options
@@ -329,95 +310,48 @@ LoopController.prototype.prepareSiteList = function(listElem) {
   //var deviceListController = this.getDeviceListController();
   var siteRowTemplate = document.querySelector('#site-li-template').innerHTML;
   //var browserSelectTemplate = document.querySelector('#browser-li-template').innerHTML;
-  var sitesArray = this.getSitesModel().getCachedSites();
-
-  for(var i = 0; i < sitesArray.length; i++) {
-    //device = deviceListController.getDeviceById(deviceIds[i]);
-    var site = sitesArray[i];
-
-    // Create Entry for the Device
-    var output = Mustache.render(siteRowTemplate, site);
-    var liElement = document.createElement('li');
-    liElement.id = 'site-list-item-'+site.id;
-    liElement.innerHTML = output;
-    listElem.appendChild(liElement);
-
-    // Create browser list element
-    //var browserContainer = liElement.querySelector('.device-browser-selection-container');
-    //var selectedIndex = device.selectedBrowserIndex;
-    //if(selectedIndex >= browserArray.length) {
-    //  selectedIndex = 0;
-    //}
-
-    // Add each browser element
-    //for(var j = 0; j < browserArray.length; j++) {
-    //  output = Mustache.render(browserSelectTemplate, browserArray[j]);
-    //  var browserLiElement = document.createElement('li');
-    //  browserLiElement.innerHTML = output;
-    //  browserContainer.appendChild(browserLiElement);
-    //
-    //  if(j === selectedIndex) {
-    //    browserLiElement.classList.add('selected');
-    //  } else {
-    //    browserLiElement.classList.add('deselected');
-    //  }
-    //}
-
-    // If the element is enabled or not
-    var checkbox = liElement.querySelector('#enabled-checkbox-'+site.id);
-    checkbox.checked = site.enabled;
-
-    if(!site.enabled) {
-      liElement.classList.add('disabled');
+  this.getSitesModel().getSitesList(function(err, sites) {
+    if(!sites) {
+      sites = {};
     }
 
-    this.addListElementEvents(liElement, site.id);
-  }
+    var siteId;
+    for (siteId in sites) {
+      var site = sites[siteId];
+      var output = Mustache.render(siteRowTemplate, site);
+      var liElement = document.createElement('li');
+      liElement.id = 'site-list-item-'+site.id;
+      liElement.innerHTML = output;
+      listElem.appendChild(liElement);
+
+      this.addListElementEvents(liElement, site.id);
+    }
+
+    for(var i = 0; i < sites.length; i++) {
+      //device = deviceListController.getDeviceById(deviceIds[i]);
+      var site = sites[i];
+
+      // Create Entry for the Device
+      var output = Mustache.render(siteRowTemplate, site);
+      var liElement = document.createElement('li');
+      liElement.id = 'site-list-item-'+site.id;
+      liElement.innerHTML = output;
+      listElem.appendChild(liElement);
+
+      // If the element is enabled or not
+      //var checkbox = liElement.querySelector('#enabled-checkbox-'+site.id);
+      //checkbox.checked = site.enabled;
+
+      //if(!site.enabled) {
+      //  liElement.classList.add('disabled');
+      //}
+
+      this.addListElementEvents(liElement, site.id);
+    }
+  }.bind(this));
 };
 
-/**
- * Prepare the device group to handle toggling of the enabled checkbox and
- * also set it to the previous state is known
- */
-/**LoopController.prototype.prepareDeviceGroupState = function(className,
-  platformId, enabled) {
-
-  // Set the checkbox state
-  var groupEnableCheckbox = document.querySelector('.os-header.'+className+' > .toggle-switch > .checkbox');
-  groupEnableCheckbox.checked = enabled;
-
-  // Add change listener to the checkbox to handle disabling / enabling
-  groupEnableCheckbox.addEventListener('change', function(e){
-    var devicelistElem = document.querySelector('.device-list > .list-elem.'+className);
-    this.getDeviceListController().onPlatformEnabledChange(platformId, e.target.checked);
-
-    if(e.target.checked) {
-      devicelistElem.classList.remove('disabled');
-    } else {
-      devicelistElem.classList.add('disabled');
-    }
-  }.bind(this), false);
-
-  // Set the device list to be disabled or not
-  var devicelistElem = document.querySelector('.device-list > .list-elem.'+className);
-  if(enabled) {
-    devicelistElem.classList.remove('disabled');
-  } else {
-    devicelistElem.classList.add('disabled');
-  }
-};**/
-
 LoopController.prototype.addListElementEvents = function(liElement, siteId) {
-  /**var siteList = liElement.querySelector('#site-browser-'+siteId);
-
-  // For each mobile device, add a click listener to each browser option
-  for(var i = 0; i < siteList.childNodes.length; i++) {
-    var siteListItem = siteList.childNodes[i];
-    var index = i;
-
-    siteListItem.addEventListener('click',
-      this.getSiteSelectionCb(siteId, index), true);
-  }**/
 
   // Handle the edit text element
   var editButton = document.querySelector('#edit-button-'+siteId);
@@ -435,21 +369,10 @@ LoopController.prototype.addListElementEvents = function(liElement, siteId) {
     this.getDeleteSiteCallback(siteId), true);
 
   // Handle the delete device action
-  var enabledCheckbox = document.querySelector('#enabled-checkbox-'+siteId);
-  enabledCheckbox.addEventListener('change',
-    this.getEnableSiteCallback(siteId), true);
+  //var enabledCheckbox = document.querySelector('#enabled-checkbox-'+siteId);
+  //enabledCheckbox.addEventListener('change',
+  //  this.getEnableSiteCallback(siteId), true);
 };
-
-/**
- * Get a callback to handle a browser selection
- */
-/**LoopController.prototype.getBrowserSelectionCb = function(deviceId, index) {
-  return function(e) {
-    e.preventDefault();
-
-    this.onBrowserSelectionChange(deviceId, index);
-  }.bind(this);
-};**/
 
 /**
  * A callback to edit a device (at the moment only handles nickname changes)
@@ -479,31 +402,16 @@ LoopController.prototype.getEditSiteCallback = function(siteId) {
  */
 LoopController.prototype.getDeleteSiteCallback = function(siteId) {
   return function() {
-    /**var deviceListController = this.getDeviceListController();
-    var idToken = this.getIdToken();
-    deviceListController.removeDevice(deviceId, function(){
-      // Success Callback
-      var listItem = document.querySelector('#site-list-item-'+deviceId);
-      listItem.parentNode.removeChild(listItem);
-
-      this.updateDeviceList(function() {
-        var platforms = this.getPlatforms();
-        if(platforms.length === 0) {
-          this.setUIState(DEVICE_LIST);
-        }
-      }.bind(this));
-    }.bind(this), function(err) {
-      // Error Callback
-      window.alert('This device could not be deleted: '+err);
-    });**/
-    
     var sitesModel = this.getSitesModel();
     sitesModel.removeUrl(siteId, function(err) {
-      if(err !== null) {
+      if(!(err === null || typeof(err) === "undefined")) {
         window.alert('Unabled to remove url: '+err);
+        return;
       }
 
+      console.log('Removing element from list');
       var listItem = document.querySelector('#site-list-item-'+siteId);
+      console.log('Removing element from list', listItem);
       listItem.parentNode.removeChild(listItem);
 
       this.setUIState(SITE_LIST);
@@ -531,19 +439,6 @@ LoopController.prototype.getCompleteEditCallback = function(siteId) {
     var checkbox = document.querySelector('#enabled-checkbox-'+siteId);
     checkbox.disabled = false;
 
-    /**var deviceListController = this.getDeviceListController();
-    deviceListController.changeDeviceNickName(siteId, inputField.value, function(){
-      // Success Callback
-      //window.alert('home-ui-controller.js: Change device name - does anything need doing?');
-    }, function() {
-      // Error Callback
-      var nickname = this.getDeviceListController().getDeviceById(siteId)['device_nickname'];
-      var inputField = document.querySelector('#device-name-input-'+deviceId);
-      inputField.value = nickname;
-
-      window.alert('home-ui-controller.js: Handle device name change error');
-    });**/
-
     var sitesModel = this.getSitesModel();
     sitesModel.updateSiteUrl(siteId, inputField.value, function(err) {
       if(err !== null) {
@@ -555,6 +450,8 @@ LoopController.prototype.getCompleteEditCallback = function(siteId) {
 
 /**
  * A callback to handle completion of device editing
+ *
+ * Currently not used but may add in feature later
  */
 LoopController.prototype.getEnableSiteCallback = function(siteId) {
   return function(e) {
@@ -571,23 +468,31 @@ LoopController.prototype.getEnableSiteCallback = function(siteId) {
 };
 
 LoopController.prototype.startPushLooper = function() {
-  var currentInterval = this.getIntervalLoop();
+  /**var currentInterval = this.getIntervalLoop();
   if(currentInterval) {
     return;
-  }
+  }**/
+
+  var loopModel = this.getLoopModel();
+  loopModel.startLooping(function(err) {
+    if(!(err === null || typeof(err) === 'undefined')) {
+      window.alert('Unabled to start looper: '+err);
+      return;
+    }
+  });
 
   var looperSwitch = document.querySelector('#sites-looper-checkbox');
   looperSwitch.checked = true;
 
-  var newInterval = setInterval(function() {
+  /**var newInterval = setInterval(function() {
     this.handlePush();
   }.bind(this), TIMER_INTERVAL);
 
   this.handlePush();
-  this.setIntervalLoop(newInterval);
+  this.setIntervalLoop(newInterval);**/
 };
 
-LoopController.prototype.handlePush = function() {
+/**LoopController.prototype.handlePush = function() {
   this.getSitesModel().getSitesList(function(err, sitesArray) {
     if(err) {
       window.alert('Unable to push message as couldn\'t any sites');
@@ -605,20 +510,28 @@ LoopController.prototype.handlePush = function() {
 
     this.sendPush(site.url);
   }.bind(this));
-}
+}**/
 
 LoopController.prototype.cancelPushLooper = function() {
-  var currentInterval = this.getIntervalLoop();
+  /**var currentInterval = this.getIntervalLoop();
   if(currentInterval) {
     clearInterval(currentInterval);
     this.setIntervalLoop(null);
-  }
+  }**/
+
+  var loopModel = this.getLoopModel();
+  loopModel.endLooping(function(err) {
+    if(!(err === null || typeof(err) === 'undefined')) {
+      window.alert('Unabled to end looper: '+err);
+      return;
+    }
+  });
 
   var looperSwitch = document.querySelector('#sites-looper-checkbox');
   looperSwitch.checked = false;
 };
 
-LoopController.prototype.sendPush = function(url) {
+/**LoopController.prototype.sendPush = function(url) {
   var currentdate = new Date(); 
   var timeString = currentdate.getHours() + ":"  
                 + currentdate.getMinutes() + ":" 
@@ -631,29 +544,16 @@ LoopController.prototype.sendPush = function(url) {
   var deviceController = this.getDeviceListController();
   deviceController.sendUrlPushMessageToAll(url, function(err) {
     if(err) {
-      console.log('loop-ui-controller: sendUrlPushMessageToAll: ', err);
       if(err.code === 'invalid_id_token') {
         console.log('loop-ui-controller: Reattempting sign in');
-        var identityController = new GPlusIdentity();
-        identityController.silentSignIn(function(err, token) {
-          if(err !== null) {
-            console.log('error');
-            
-            // Error
-            this.setUIState(SIGN_OUT);
-            return;
-          }
 
-          console.log('loop-ui-controller: Successful sign in');
-
-          // Success - Signed In
-          document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-          document.cookie = 'token=' + token + '; path=/';
-
-          this.setIdToken(token);
-
-          this.startPushLooper();
-        }.bind(this));
+        var autorun = this.shouldAutoRun();
+        if(window.location.search.length > 0 && !autorun) {
+          // This is to avoid the scenario where autorun is false 
+          // and we have it set in the location
+          return;
+        }
+        window.location.search = '?autorun='+(!autorun);
       } else if(err.msg) {
         window.alert('Couldn\'t push the URL to devices: '+err.msg);
       } else {
@@ -663,25 +563,15 @@ LoopController.prototype.sendPush = function(url) {
     this.cancelPushLooper();
     return;
   }.bind(this));
-};
-
-/**
- * Handle a browser selection (set / save state) and
- */
-/**LoopController.prototype.onBrowserSelectionChange = function(deviceId, browserIndex) {
-  this.getDeviceListController().setSelectedBrowserIndex(deviceId, browserIndex);
-
-  var browserList = document.querySelector('#device-browser-'+deviceId);
-  var currentItem = browserList.querySelector('.selected');
-  currentItem.classList.remove('selected');
-  currentItem.classList.add('deselected');
-
-  browserList.childNodes[browserIndex].classList.add('selected');
-  browserList.childNodes[browserIndex].classList.remove('deselected');
 };**/
 
 window.onload = function() {
   //localStorage.clear();
-  window.loopController = new LoopController();
+  var autorun = false;
+  if(window.location.search.lastIndexOf('autorun=true') >= 0) {
+    autorun = true;
+  }
+  if(window.location.href)
+  window.loopController = new LoopController(autorun);
   loopController.init();
 };

@@ -18,21 +18,31 @@ limitations under the License.
 /*jshint sub:true*/
 function SitesModel(token) {
   var idToken = token;
-  var sites = [];
+  var cachedSites = null;
 
-  this.getSites = function() {
-    return sites;
+  this.getIDToken = function() {
+    return idToken;
   };
 
-  this.setSites = function(s) {
-    sites = s;
+  this.getCachedSites = function() {
+    return cachedSites;
+  };
 
-    localStorage["sites"] = JSON.stringify(s);
+  this.setCachedSites = function(s) {
+    var sites = {};
+    var site;
+    for(var i = 0; i < s.length; i++) {
+      site = s[i];
+      sites[site.id] = site;
+    }
+    cachedSites = sites;
+
+    //localStorage["sites"] = JSON.stringify(s);
   };
 }
 
 SitesModel.prototype.getSitesList = function(callback) {
-  var sites = localStorage["sites"];
+  /**var sites = localStorage["sites"];
   if(sites) {
     sites = JSON.parse(sites);
   } else {
@@ -41,19 +51,95 @@ SitesModel.prototype.getSitesList = function(callback) {
 
   this.setSites(sites);
 
-  callback(null, sites);
+  callback(null, sites);**/
+  var sites = this.getCachedSites();
+  if(sites === null) {
+    this.updateCachedSites(function() {
+      callback(null, this.getCachedSites());
+    }.bind(this), callback);
+  } else {
+    callback(null, sites);
+  }
 };
 
-SitesModel.prototype.getCachedSites = function() {
-  return this.getSites();
+SitesModel.prototype.updateCachedSites = function(successCb, errorCb) {
+  var config = new Config();
+  var idToken = this.getIDToken();
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', config.getRootUrl()+'/urls/get/', true);
+  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+  xhr.onreadystatechange = function(e) {
+    if (e.target.readyState === 4) {
+      if(e.target.status !== 200) {
+        errorCb();
+        return;
+      } else {
+        var response = JSON.parse(xhr.responseText);
+        this.setCachedSites(response.data);
+        successCb(null, response.data);
+      }
+    }
+  }.bind(this);
+
+  xhr.timeout = 10000;
+  xhr.ontimeout = function() {
+    errorCb('The attempt to update your device list timed out.');
+  };
+
+  var paramString = 'id_token='+encodeURIComponent(idToken);
+  xhr.send(paramString);
 };
 
 SitesModel.prototype.addUrlToList = function(url, callback) {
-  var currentList = this.getSites();
-  currentList.push({url: url, id: currentList.length, enabled: true});
-  this.setSites(currentList);
+  var config = new Config();
+  var idToken = this.getIDToken();
 
-  callback(null);
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', config.getRootUrl()+'/urls/add/', true);
+  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+  xhr.onreadystatechange = function(e) {
+    if (e.target.readyState === 4) {
+      if(e.target.status !== 200) {
+        try {
+          var response = JSON.parse(xhr.responseText);
+          if(response.error && response.error.code === 'already_added') {
+            // NOOP It's added
+            callback('Failed to add url - URL already in the list');
+          } else if(response.error && response.error.msg) {
+            callback('Failed to add url: '+response.error.msg);
+          } else {
+            callback('Failed to add url: ');
+          }
+        } catch(exception) {
+          callback('Failed to add url');
+        }
+        return;
+      }
+      
+      var response = JSON.parse(xhr.responseText);
+      var sites = this.getCachedSites();
+
+      sites[response.data.url_id] = {
+        id: response.data.url_id,
+        url: url
+      };
+
+      callback();
+    }
+  }.bind(this);
+
+  xhr.timeout = 10000;
+  xhr.ontimeout = function() {
+    errorCb('The attempt to delete the url failed.');
+  };
+  console.log('idToken = '+idToken);
+  var paramString = 'id_token='+encodeURIComponent(idToken)+
+  '&url='+encodeURIComponent(url);
+  xhr.send(paramString);
+
 };
 
 SitesModel.prototype.onSiteEnabledChange = function(siteId, enabled) {
@@ -71,9 +157,39 @@ SitesModel.prototype.updateSiteUrl = function(siteId, url, callback) {
 };
 
 SitesModel.prototype.removeUrl = function(siteId, callback) {
-  var currentList = this.getSites();
+  /* jshint unused: false */
+  var config = new Config();
+  var idToken = this.getIDToken();
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', config.getRootUrl()+'/urls/delete/', true);
+  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+  xhr.onreadystatechange = function(e) {
+    if (e.target.readyState === 4) {
+      if(e.target.status !== 200) {
+        callback('Unable to remove URL from the looper');
+        return;
+      } else {
+        var sites = this.getCachedSites();
+
+        delete sites[siteId];
+
+        callback(null);
+      }
+    }
+  }.bind(this);
+
+  xhr.timeout = 10000;
+  xhr.ontimeout = function() {
+    errorCb('The attempt to delete the device failed.');
+  };
+
+  var paramString = 'id_token='+encodeURIComponent(idToken)+'&url_id='+siteId;
+  xhr.send(paramString);
+  /**var currentList = this.getSites();
   currentList.splice(siteId, 1);
   this.setSites(currentList);
 
-  callback(null);
+  callback(null);**/
 };
