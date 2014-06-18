@@ -61,7 +61,7 @@ function manageLoopState(groupId, req, res) {
         if(req.body.delay) {
             delay = parseInt(req.body.delay, 10);
         }
-        startLoopingUrls(groupId, 0, delay);
+        startLoopingUrls(groupId, 0, 10000, delay);
     }
     RequestUtils.respondWithData(
         {success: true},
@@ -69,7 +69,7 @@ function manageLoopState(groupId, req, res) {
     );
 }
 
-function startLoopingUrls(groupId, urlIndex, delay) {
+function startLoopingUrls(groupId, urlIndex, reminderPings, delay) {
     if(intervals[groupId] && intervals[groupId].intervalObject) {
         console.log('Clearing Interval for ID: '+groupId);
         clearInterval(intervals[groupId].intervalObject);
@@ -80,16 +80,24 @@ function startLoopingUrls(groupId, urlIndex, delay) {
 
     intervals[groupId] = {};
 
+    // This should be changed to work to fire on the actual 
+    // delay rather than reminder pings
     intervalObject = setInterval(function(args){
         sendPush(args.groupId, args.urlIndex);
 
-        args.urlIndex++;
+        //args.urlIndex++;
 
-        var urlLength = intervals[groupId].urlLength;
-        if(args.urlIndex >= urlLength) {
-            args.urlIndex = 0;
+
+        if(args.cumulativeInterval >= args.delay) {
+            args.urlIndex++;
+            args.cumulativeInterval = 0;
+
+            var urlLength = intervals[groupId].urlLength;
+            if(args.urlIndex >= urlLength) {
+                args.urlIndex = 0;
+            }
         }
-    }, delay, {groupId: groupId, urlIndex: urlIndex++});
+    }, reminderPings, {groupId: groupId, urlIndex: urlIndex++, delay: delay, cumulativeInterval: 0});
 
     intervals[groupId].intervalObject = intervalObject;
 }
