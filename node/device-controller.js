@@ -16,13 +16,32 @@ exports.get = function(req, res) {
         // Success Callback
         userGroupModel.getUsersGroupId(userId, function(err, groupId) {
             if(err) {
-                // Failed to register
-                RequestUtils.respondWithError(
-                    ErrorCodes.failed_to_get,
-                    "The user isn't a member of a group: "+err,
-                    500,
-                    res
-                );
+                userGroupModel.insertUserAndCreateGroup(userId, function(err) {
+                    if(err) {
+                        RequestUtils.respondWithError(
+                            ErrorCodes.failed_to_add,
+                            "Failed to get devices - can't create group for user: "+err,
+                            500,
+                            res
+                        );
+                        return;
+                    }
+
+                    devicesModel.getDevices(groupId, function(devices){
+                        RequestUtils.respondWithData(
+                            devices,
+                            res
+                        );
+                    }, function(err) {
+                        // Failed to register
+                        RequestUtils.respondWithError(
+                            ErrorCodes.failed_to_get,
+                            "Failed to get device: "+err,
+                            500,
+                            res
+                        );
+                    });
+                });
                 return;
             }
 
