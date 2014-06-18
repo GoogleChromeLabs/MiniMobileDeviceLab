@@ -3,6 +3,7 @@ var gplusController = require('./gplus-controller.js');
 var urlController = require('./url-controller.js');
 var ErrorCodes = require('./error_codes.js');
 var pushHandler = require('./push-handler.js');
+var userGroupModel = require('./user-group-model.js');
 
 var intervals = {};
 
@@ -78,13 +79,16 @@ function sendPush(userId, urlIndex) {
 
         var browserPackage = "com.android.chrome";
 
-        pushHandler.sendPushMsgToAllDevices(userId, browserPackage, urlString, function(err) {
-            if(err) {
-                console.log('Problem sending the push message: '+err);
-                return;
+        userGroupModel.getUsersInGroupWithUserId(userId, function(userIds) {
+            for(var i = 0; i < userIds.length; i++) {
+                pushHandler.sendPushMsgToAllDevices(userIds[i], browserPackage, urlString, function(err) {
+                    if(err) {
+                        console.log('Problem sending the push message: '+err);
+                        return;
+                    }
+                });
             }
         });
-
     }, function(err) {
         // NOOP
     });
