@@ -56,6 +56,7 @@ function LoopController(autoLoop) {
     idToken = token;
     sitesModel = new SitesModel(token);
     loopModel = new LoopModel(token);
+    loopModel.setLoopDelay(10);
     deviceListController = new DeviceListController(token);
   };
 
