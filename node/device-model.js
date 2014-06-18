@@ -1,9 +1,9 @@
 var dbHelper = require('./db-helper');
 
-exports.getDevices = function(userId, successCb, errorCb) {
+exports.getDevices = function(groupId, successCb, errorCb) {
     dbHelper.openDb(function(dbConnection) {
 
-        dbConnection.query('SELECT * FROM devices WHERE user_id = ? ORDER BY platform_id ASC', [userId],
+        dbConnection.query('SELECT * FROM devices WHERE group_id = ? ORDER BY platform_id ASC', [groupId],
             function (err, result) {
                 dbConnection.destroy();
 
@@ -20,10 +20,10 @@ exports.getDevices = function(userId, successCb, errorCb) {
     });
 };
 
-exports.addDevice = function(res, userId, params, successCb, errorCb) {
+exports.addDevice = function(res, groupId, params, successCb, errorCb) {
     dbHelper.openDb(function(dbConnection) {
         var dbParams = {
-            user_id: userId,
+            group_id: groupId,
             device_name: params.device_name,
             device_nickname: params.device_nickname,
             platform_id: params.platform_id,
@@ -34,6 +34,7 @@ exports.addDevice = function(res, userId, params, successCb, errorCb) {
         dbConnection.query('SELECT * FROM devices WHERE cloud_msg_id = ? AND platform_id = ?',
             [params.cloud_msg_id, params.platform_id],
             function (err, result) {
+                console.log('addDevice SELECT err = '+err+' results = '+JSON.stringify(result));
                 if (err) {
                     errorCb(err);
                     dbConnection.destroy();
@@ -56,6 +57,7 @@ exports.addDevice = function(res, userId, params, successCb, errorCb) {
 
                 dbConnection.query('INSERT INTO devices SET ?', dbParams,
                     function (err, result) {
+                        console.log('addDevice INSERT err = '+err+' results = '+JSON.stringify(result));
                         dbConnection.destroy();
 
                         if (err) {
@@ -72,14 +74,14 @@ exports.addDevice = function(res, userId, params, successCb, errorCb) {
     });
 };
 
-exports.deleteDevice = function(userId, params, successCb, errorCb) {
+exports.deleteDevice = function(groupId, params, successCb, errorCb) {
     dbHelper.openDb(function(dbConnection) {
         var dbParams = {
-            user_id: userId,
+            group_id: groupId,
             id: parseInt(params.device_id, 10)
         };
-        dbConnection.query('DELETE FROM devices WHERE user_id = ? AND id = ?',
-            [dbParams.user_id, dbParams.id],
+        dbConnection.query('DELETE FROM devices WHERE group_id = ? AND id = ?',
+            [dbParams.group_id, dbParams.id],
             function (err, result) {
                 dbConnection.destroy();
 
@@ -96,10 +98,10 @@ exports.deleteDevice = function(userId, params, successCb, errorCb) {
     });
 };
 
-exports.updateDevice = function(userId, params, successCb, errorCb) {
+exports.updateDevice = function(groupId, params, successCb, errorCb) {
     dbHelper.openDb(function(dbConnection) {
         var dbParams = {
-            user_id: userId,
+            group_id: groupId,
             id: parseInt(params.device_id, 10)
         };
 
@@ -112,8 +114,8 @@ exports.updateDevice = function(userId, params, successCb, errorCb) {
             updateParams.platform_version = params.platform_version;
         }
 
-        dbConnection.query('UPDATE devices SET ? WHERE user_id = ? AND id = ?',
-            [updateParams, dbParams.user_id, dbParams.id],
+        dbConnection.query('UPDATE devices SET ? WHERE group_id = ? AND id = ?',
+            [updateParams, dbParams.group_id, dbParams.id],
             function (err, result) {
                 dbConnection.destroy();
                 

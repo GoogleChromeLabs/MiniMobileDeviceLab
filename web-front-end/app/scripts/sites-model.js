@@ -145,15 +145,20 @@ SitesModel.prototype.addUrlToList = function(url, callback) {
 SitesModel.prototype.onSiteEnabledChange = function(siteId, enabled) {
   var currentList = this.getSites();
   currentList[siteId].enabled = enabled;
-  this.setSites(currentList);
+  this.setCachedSites(currentList);
 };
 
 SitesModel.prototype.updateSiteUrl = function(siteId, url, callback) {
-  var currentList = this.getSites();
-  currentList[siteId].url = url;
-  this.setSites(currentList);
+  var currentList = this.getSitesList(function(err, urls) {
+    if(err) {
+      callback(err);
+    }
 
-  callback(null);
+    currentList[siteId].url = url;
+    this.setCachedSites(currentList);
+
+    callback(null);
+  });
 };
 
 SitesModel.prototype.removeUrl = function(siteId, callback) {

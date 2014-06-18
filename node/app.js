@@ -2,9 +2,9 @@ var PORT = 3000;
 
 var pkg = require('./package.json');
 var express = require('express');
-var deviceHandler = require('./device-handler.js');
-var urlHandler = require('./url-handler.js');
-var pushHandler = require('./push-handler.js');
+var deviceController = require('./device-controller.js');
+var urlController = require('./url-controller.js');
+var pushController = require('./push-controller.js');
 var loopHandler = require('./loop-handler.js');
 
 var app = express();
@@ -22,23 +22,23 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.post('/api/devices/get', deviceHandler.get);
+app.post('/api/devices/get', deviceController.get);
 
-app.post('/api/devices/add', deviceHandler.add);
+app.post('/api/devices/add', deviceController.add);
 
-app.post('/api/device/delete', deviceHandler.remove);
+app.post('/api/device/delete', deviceController.remove);
 
-app.post('/api/device/edit', deviceHandler.edit);
+app.post('/api/device/edit', deviceController.edit);
 
-app.post('/api/push/url', pushHandler.pushUrl);
+app.post('/api/push/url', pushController.pushUrl);
 
-app.post('/api/urls/get', urlHandler.get);
+app.post('/api/urls/get', urlController.get);
 
-app.post('/api/urls/add', urlHandler.add);
+app.post('/api/urls/add', urlController.add);
 
-app.post('/api/urls/delete', urlHandler.remove);
+app.post('/api/urls/delete', urlController.remove);
 
-app.post('/api/urls/update', urlHandler.edit);
+app.post('/api/urls/update', urlController.edit);
 
 app.post('/api/urls/loopcontrol', loopHandler.control);
 

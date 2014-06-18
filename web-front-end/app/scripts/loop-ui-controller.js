@@ -392,8 +392,8 @@ LoopController.prototype.getEditSiteCallback = function(siteId) {
     var deleteButton = document.querySelector('#delete-button-'+siteId);
     deleteButton.disabled = true;
 
-    var checkbox = document.querySelector('#enabled-checkbox-'+siteId);
-    checkbox.disabled = true;
+    //var checkbox = document.querySelector('#enabled-checkbox-'+siteId);
+    //checkbox.disabled = true;
   };
 };
 
@@ -436,8 +436,8 @@ LoopController.prototype.getCompleteEditCallback = function(siteId) {
     var deleteButton = document.querySelector('#delete-button-'+siteId);
     deleteButton.disabled = false;
 
-    var checkbox = document.querySelector('#enabled-checkbox-'+siteId);
-    checkbox.disabled = false;
+    //var checkbox = document.querySelector('#enabled-checkbox-'+siteId);
+    //checkbox.disabled = false;
 
     var sitesModel = this.getSitesModel();
     sitesModel.updateSiteUrl(siteId, inputField.value, function(err) {

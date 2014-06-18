@@ -5,7 +5,7 @@ var tables = [
     'CREATE TABLE IF NOT EXISTS devices (' +
     'id INT NOT NULL AUTO_INCREMENT,' +
     'PRIMARY KEY(id),' +
-    'user_id TEXT NOT NULL,' +
+    'group_id TEXT NOT NULL,' +
     'device_name TEXT NOT NULL,' +
     'device_nickname TEXT NOT NULL,' +
     'platform_id INT NOT NULL,' +
@@ -15,9 +15,15 @@ var tables = [
     'CREATE TABLE IF NOT EXISTS urls ('+
     'id INT NOT NULL AUTO_INCREMENT,' +
     'PRIMARY KEY(id),' +
-    'user_id TEXT NOT NULL,' +
+    'group_id TEXT NOT NULL,' +
     'url TEXT NOT NULL,' +
     'sort_order INT' +
+    ')',
+    'CREATE TABLE IF NOT EXISTS usergroups ('+
+    'id INT NOT NULL AUTO_INCREMENT,'+
+    'PRIMARY KEY(id),' +
+    'user_id TEXT NOT NULL,'+
+    'group_id INT NOT NULL DEFAULT -1'+
     ')'
 ];
 

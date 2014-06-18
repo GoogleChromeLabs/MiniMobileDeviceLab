@@ -1,116 +1,311 @@
-var dbHelper = require('./db-helper');
+var RequestUtils = require('./request-utils.js');
+var gplusController = require('./gplus-controller.js');
+var urlModel = require('./url-model.js');
+var ErrorCodes = require('./error_codes.js');
+var userGroupModel = require('./user-group-model.js');
 
-exports.getUrls = function(userId, successCb, errorCb) {
-    dbHelper.openDb(function(dbConnection) {
+exports.get = function(req, res) {
+    var requiredParams = [
+        'id_token'
+    ];
+    if(!RequestUtils.ensureValidRequest(req, res, requiredParams)) {
+        return;
+    }
 
-        dbConnection.query('SELECT * FROM urls WHERE user_id = ? ORDER BY sort_order ASC', [userId],
-            function (err, result) {
-                dbConnection.destroy();
-                if (err) {
-                    errorCb(err);
-                    return;
-                }
-
-                successCb(result);
-            }
-        );
-    }, function(err) {
-        errorCb(err);
-    });
-};
-
-exports.addUrl = function(res, userId, params, successCb, errorCb) {
-    dbHelper.openDb(function(dbConnection) {
-        var dbParams = {
-            user_id: userId,
-            url: params.url
-        };
-
-        dbConnection.query('SELECT * FROM urls WHERE user_id = ? AND url = ?',
-            [userId, params.url],
-            function (err, result) {
-                if (err) {
-                    errorCb(err);
-                    dbConnection.destroy();
-                    return;
-                }
-
-                if(result.length > 0) {
-                    var RequestUtils = require('./request-utils.js');
-                    var ErrorCodes = require('./error_codes.js');
+    gplusController.getUserId(req.body.id_token, function (userId) {
+        // Success Callback
+        userGroupModel.getUsersGroupId(userId, function(err, groupId) {
+                if(err) {
                     RequestUtils.respondWithError(
-                        ErrorCodes.already_added,
-                        "URL already added",
+                        ErrorCodes.failed_to_delete,
+                        "User isn't assigned to a group: "+err,
                         500,
                         res
                     );
-                    dbConnection.destroy();
                     return;
                 }
-                dbConnection.query('INSERT INTO urls SET ?', dbParams,
-                    function (err, result) {
-                        dbConnection.destroy();
-                        if (err) {
-                            errorCb(err);
-                            return;
-                        }
 
-                        successCb(result.insertId);
-                    }
+                getUrls(groupId, req, res);
+            }, function(err) {
+                // Failed to register
+                RequestUtils.respondWithError(
+                    ErrorCodes.failed_to_delete,
+                    "Failed to delete device: "+err,
+                    500,
+                    res
                 );
             });
-    }, function(err) {
-        errorCb(err);
+    }, function() {
+        RequestUtils.respondWithError(
+            ErrorCodes.invalid_id_token,
+            "The supplied id_token is invalid",
+            400,
+            res
+        );
     });
 };
 
-exports.deleteUrl = function(userId, params, successCb, errorCb) {
-    dbHelper.openDb(function(dbConnection) {
-        var dbParams = {
-            user_id: userId,
-            id: parseInt(params.url_id, 10)
-        };
-        dbConnection.query('DELETE FROM urls WHERE user_id = ? AND id = ?',
-            [dbParams.user_id, dbParams.id],
-            function (err, result) {
-                dbConnection.destroy();
+function getUrls(groupId, req, res) {
+    urlModel.getUrls(groupId, function(urls) {
+            var filteredUrls = [];
+            for(var i = 0; i < urls.length; i++) {
+                var url = urls[i];
+                filteredUrls.push({
+                    id: url.id,
+                    url: url.url,
+                    sort_order: url.sort_order
+                });
+            }
+            RequestUtils.respondWithData(
+                filteredUrls,
+                res
+            );
+        }, function(err) {
+            // Failed to register
+            RequestUtils.respondWithError(
+                ErrorCodes.failed_to_get,
+                "Failed to get urls: "+err,
+                500,
+                res
+            );
+        });
+}
 
-                if (err) {
-                    errorCb(err);
+exports.add = function(req, res) {
+    var requiredParams = [
+        'id_token',
+        'url'
+    ];
+    if(!RequestUtils.ensureValidRequest(req, res, requiredParams)) {
+        return;
+    }
+    gplusController.getUserId(req.body.id_token, function (userId) {
+        // Success Callback
+        userGroupModel.getUsersGroupId(userId, function(err, groupId) {
+                if(err) {
+                    RequestUtils.respondWithError(
+                        ErrorCodes.failed_to_delete,
+                        "User isn't assigned to a group: "+err,
+                        500,
+                        res
+                    );
                     return;
                 }
 
-                successCb(result.affectedRows);
-            }
+                addUrl(groupId, req.body, res);
+            }, function(err) {
+                // Failed to register
+                RequestUtils.respondWithError(
+                    ErrorCodes.failed_to_delete,
+                    "Failed to delete device: "+err,
+                    500,
+                    res
+                );
+            });
+    }, function() {
+        RequestUtils.respondWithError(
+            ErrorCodes.invalid_id_token,
+            "The supplied id_token is invalid",
+            400,
+            res
         );
-    }, function(err) {
-        errorCb(err);
     });
 };
 
-exports.updateUrl = function(userId, params, successCb, errorCb) {
-    dbHelper.openDb(function(dbConnection) {
-        var dbParams = {
-            user_id: userId,
-            id: parseInt(params.url_id, 10)
-        };
+function addUrl(groupId, params, res) {
+    urlModel.addUrl(res, groupId, params, function(urlId) {
+            RequestUtils.respondWithData(
+                {url_id: urlId},
+                res
+            );
+        }, function(err) {
+            // Failed to register
+            RequestUtils.respondWithError(
+                ErrorCodes.failed_to_add,
+                "Failed to add url: "+err,
+                500,
+                res
+            );
+        });
+    /**devicesController.addDevice(res, userId, params, function(deviceId){
+        // Device registered
+        RequestUtils.respondWithData(
+            { device_id: deviceId },
+            res
+        );
+    }, function(err) {
+        // Failed to register
+        RequestUtils.respondWithError(
+            ErrorCodes.failed_to_add,
+            "Failed to add device: "+err,
+            500,
+            res
+        );
+    });**/
+}
 
-        var updateParams = {ur: params.url};
+exports.remove = function(req, res) {
+    var requiredParams = [
+        'id_token',
+        'url_id'
+    ];
+    if(!RequestUtils.ensureValidRequest(req, res, requiredParams)) {
+        return;
+    }
 
-        dbConnection.query('UPDATE devices SET ? WHERE user_id = ? AND id = ?',
-            [updateParams, dbParams.user_id, dbParams.id],
-            function (err, result) {
-                dbConnection.destroy();
-                
-                if (err) {
-                    errorCb(err);
+    gplusController.getUserId(req.body.id_token, function (userId) {
+        // Success Callback
+        userGroupModel.getUsersGroupId(userId, function(err, groupId) {
+                if(err) {
+                    RequestUtils.respondWithError(
+                        ErrorCodes.failed_to_delete,
+                        "User isn't assigned to a group: "+err,
+                        500,
+                        res
+                    );
                     return;
                 }
 
-                successCb(result.affectedRows);
-            }
+                deleteUrl(groupId, req.body, res);
+            }, function(err) {
+                // Failed to register
+                RequestUtils.respondWithError(
+                    ErrorCodes.failed_to_delete,
+                    "Failed to delete device: "+err,
+                    500,
+                    res
+                );
+            });
+    }, function() {
+        RequestUtils.respondWithError(
+            ErrorCodes.invalid_id_token,
+            "The supplied id_token is invalid",
+            400,
+            res
         );
-    }, function(err) {
-        errorCb(err);
     });
 };
+
+function deleteUrl(groupId, params, res) {
+    urlModel.deleteUrl(groupId, params, function(affectedRows) {
+        // URL deleted
+        if(affectedRows === 0) {
+            RequestUtils.respondWithError(
+                ErrorCodes.not_in_database,
+                "The supplied url_id couldn't be found in the database",
+                400,
+                res
+            );
+            return;
+        }
+        
+        RequestUtils.respondWithData(
+            { success: true },
+            res
+        );
+        }, function(err) {
+            // Failed to delete
+            RequestUtils.respondWithError(
+                ErrorCodes.failed_to_add,
+                "Failed to delete url: "+err,
+                500,
+                res
+            );
+        });
+    /**devicesController.deleteDevice(userId, params, function(affectedRows){
+        // Device deleted
+        if(affectedRows === 0) {
+            RequestUtils.respondWithError(
+                ErrorCodes.not_in_database,
+                "The supplied device_id couldn't be found in the database",
+                400,
+                res
+            );
+            return;
+        }
+
+        RequestUtils.respondWithData(
+            { success: true },
+            res
+        );
+    }, function(err) {
+        // Failed to delete
+        RequestUtils.respondWithError(
+            ErrorCodes.failed_to_add,
+            "Failed to delete device: "+err,
+            500,
+            res
+        );
+    });**/
+}
+
+exports.edit = function(req, res) {
+    var requiredParams = [
+        'id_token',
+        'url_id',
+        'url'
+    ];
+    if(!RequestUtils.ensureValidRequest(req, res, requiredParams)) {
+        return;
+    }
+
+    gplusController.getUserId(req.body.id_token, function (userId) {
+        // Success Callback
+        userGroupModel.getUsersGroupId(userId, function(err, groupId) {
+                if(err) {
+                    RequestUtils.respondWithError(
+                        ErrorCodes.failed_to_delete,
+                        "User isn't assigned to a group: "+err,
+                        500,
+                        res
+                    );
+                    return;
+                }
+
+                editUrl(groupId, req.body, res);
+            }, function(err) {
+                // Failed to register
+                RequestUtils.respondWithError(
+                    ErrorCodes.failed_to_delete,
+                    "Failed to delete device: "+err,
+                    500,
+                    res
+                );
+            });
+    }, function() {
+        RequestUtils.respondWithError(
+            ErrorCodes.invalid_id_token,
+            "The supplied id_token is invalid",
+            400,
+            res
+        );
+    });
+};
+
+function editUrl(groupId, params, res) {
+    urlModel.updateUrl(groupId, params, function(affectedRows){
+        // Device Edited
+        if(affectedRows === 0) {
+            RequestUtils.respondWithError(
+                ErrorCodes.not_in_database,
+                "The supplied url_id couldn't be found in the database",
+                400,
+                res
+            );
+            return;
+        }
+
+        RequestUtils.respondWithData(
+            { success: true },
+            res
+        );
+    }, function(err) {
+        // Failed to delete
+        RequestUtils.respondWithError(
+            ErrorCodes.failed_to_add,
+            "Failed to delete device: "+err,
+            500,
+            res
+        );
+    });
+}

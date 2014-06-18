@@ -1,8 +1,8 @@
 var RequestUtils = require('./request-utils.js');
 var gplusController = require('./gplus-controller.js');
-var urlController = require('./url-controller.js');
+var urlModel = require('./url-model.js');
 var ErrorCodes = require('./error_codes.js');
-var pushHandler = require('./push-handler.js');
+var pushController = require('./push-controller.js');
 var userGroupModel = require('./user-group-model.js');
 
 var intervals = {};
@@ -18,22 +18,27 @@ exports.control = function(req, res) {
 
     gplusController.getUserId(req.body.id_token, function (userId) {
         // Success Callback
-        if(req.body.is_looping == false) {
-            if(intervals[userId] && intervals[userId].intervalObject) {
-                clearInterval(intervals[userId].intervalObject);
-            }
-            delete(intervals[userId]);
-        } else {
-            var delay = 60000;
-            if(req.body.delay) {
-                delay = parseInt(req.body.delay, 10);
-            }
-            startLoopingUrls(userId, 0, delay);
-        }
-        RequestUtils.respondWithData(
-            {success: true},
-            res
-        );
+        userGroupModel.getUsersGroupId(userId, function(err, groupId) {
+                if(err) {
+                    RequestUtils.respondWithError(
+                        ErrorCodes.failed_to_delete,
+                        "User isn't assigned to a group: "+err,
+                        500,
+                        res
+                    );
+                    return;
+                }
+
+                manageLoopState(groupId, req, res);
+            }, function(err) {
+                // Failed to register
+                RequestUtils.respondWithError(
+                    ErrorCodes.failed_to_delete,
+                    "Failed to delete device: "+err,
+                    500,
+                    res
+                );
+            });
     }, function() {
         RequestUtils.respondWithError(
             ErrorCodes.invalid_id_token,
@@ -44,32 +49,54 @@ exports.control = function(req, res) {
     });
 };
 
-function startLoopingUrls(userId, urlIndex, delay) {
-    if(intervals[userId] && intervals[userId].intervalObject) {
-        clearInterval(intervals[userId].intervalObject);
+function manageLoopState(groupId, req, res) {
+    if(req.body.is_looping === 'false') {
+        if(intervals[groupId] && intervals[groupId].intervalObject) {
+            console.log('Clearing Interval for ID: '+groupId);
+            clearInterval(intervals[groupId].intervalObject);
+        }
+        delete(intervals[groupId]);
+    } else {
+        var delay = 60000;
+        if(req.body.delay) {
+            delay = parseInt(req.body.delay, 10);
+        }
+        startLoopingUrls(groupId, 0, delay);
     }
+    RequestUtils.respondWithData(
+        {success: true},
+        res
+    );
+}
 
-    sendPush(userId, urlIndex);
+function startLoopingUrls(groupId, urlIndex, delay) {
+    if(intervals[groupId] && intervals[groupId].intervalObject) {
+        console.log('Clearing Interval for ID: '+groupId);
+        clearInterval(intervals[groupId].intervalObject);
+    }
+    delete(intervals[groupId]);
 
-    intervals[userId] = {};
+    sendPush(groupId, urlIndex);
+
+    intervals[groupId] = {};
 
     intervalObject = setInterval(function(args){
-        sendPush(args.userId, args.urlIndex);
+        sendPush(args.groupId, args.urlIndex);
 
         args.urlIndex++;
 
-        var urlLength = intervals[userId].urlLength;
+        var urlLength = intervals[groupId].urlLength;
         if(args.urlIndex >= urlLength) {
             args.urlIndex = 0;
         }
-    }, delay, {userId: userId, urlIndex: urlIndex++});
+    }, delay, {groupId: groupId, urlIndex: urlIndex++});
 
-    intervals[userId].intervalObject = intervalObject;
+    intervals[groupId].intervalObject = intervalObject;
 }
 
-function sendPush(userId, urlIndex) {
-    urlController.getUrls(userId, function(urls) {
-        intervals[userId].urlLength = urls.length;
+function sendPush(groupId, urlIndex) {
+    urlModel.getUrls(groupId, function(urls) {
+        intervals[groupId].urlLength = urls.length;
 
         if(urlIndex >= urls.length) {
             urlIndex = 0;
@@ -79,27 +106,12 @@ function sendPush(userId, urlIndex) {
 
         var browserPackage = "com.android.chrome";
 
-        userGroupModel.getUsersInGroupWithUserId(userId, function(err, userIds) {
-            if(err) {
-                console.log('Unable to get the full list of URLS');
-                pushHandler.sendPushMsgToAllDevices(userId, browserPackage, urlString, function(err) {
-                    if(err) {
-                        console.log('Problem sending the push message: '+err);
-                        return;
-                    }
-                });
-                return;
-            }
-
-            for(var i = 0; i < userIds.length; i++) {
-                pushHandler.sendPushMsgToAllDevices(userIds[i], browserPackage, urlString, function(err) {
-                    if(err) {
-                        console.log('Problem sending the push message: '+err);
-                        return;
-                    }
-                });
-            }
-        });
+        pushController.sendPushMsgToAllDevices(groupId, browserPackage, urlString, function(err) {
+                if(err) {
+                    console.log('Problem sending the push message: '+err);
+                    return;
+                }
+            });
     }, function(err) {
         // NOOP
     });
