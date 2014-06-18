@@ -22,28 +22,6 @@ app.use(function (req, res, next) {
     next();
 });
 
-// TODO: Return a valid JSON error for error handling
-/**app.use(function(err, req, res, next){
-    console.error(err.stack);
-
-    var response = {
-        error: {
-            code: "unknown_error",
-            msg: "This request caused an unknown error on the server."
-        }
-    };
-
-    // TODO: Set the Status Code
-
-    var body = JSON.stringify(response);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Content-Length', Buffer.byteLength(body));
-    res.end(body);
-});**/
-
-// TODO: Include a catch all - no api fix up
-
 app.post('/api/devices/get', deviceHandler.get);
 
 app.post('/api/devices/add', deviceHandler.add);
@@ -53,8 +31,6 @@ app.post('/api/device/delete', deviceHandler.remove);
 app.post('/api/device/edit', deviceHandler.edit);
 
 app.post('/api/push/url', pushHandler.pushUrl);
-
-//app.post('/api/push/url/all', pushHandler.pushUrlAll);
 
 app.post('/api/urls/get', urlHandler.get);
 

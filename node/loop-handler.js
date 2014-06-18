@@ -79,7 +79,18 @@ function sendPush(userId, urlIndex) {
 
         var browserPackage = "com.android.chrome";
 
-        userGroupModel.getUsersInGroupWithUserId(userId, function(userIds) {
+        userGroupModel.getUsersInGroupWithUserId(userId, function(err, userIds) {
+            if(err) {
+                console.log('Unable to get the full list of URLS');
+                pushHandler.sendPushMsgToAllDevices(userId, browserPackage, urlString, function(err) {
+                    if(err) {
+                        console.log('Problem sending the push message: '+err);
+                        return;
+                    }
+                });
+                return;
+            }
+
             for(var i = 0; i < userIds.length; i++) {
                 pushHandler.sendPushMsgToAllDevices(userIds[i], browserPackage, urlString, function(err) {
                     if(err) {

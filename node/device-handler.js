@@ -1,6 +1,6 @@
 var RequestUtils = require('./request-utils.js');
 var gplusController = require('./gplus-controller.js');
-var devicesController = require('./device-controller.js');
+var devicesController = require('./device-model.js');
 var ErrorCodes = require('./error_codes.js');
 
 exports.get = function(req, res) {

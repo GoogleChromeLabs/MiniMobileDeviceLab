@@ -4,6 +4,7 @@ var gplusController = require('./gplus-controller.js');
 var ErrorCodes = require('./error_codes.js');
 var gcm = require('node-gcm');
 var config = require('./config.js');
+var userGroupModel = require('./user-group-model.js');
 
 var PLATFORM_ID_ANDROID = 0;
 
@@ -21,7 +22,6 @@ exports.pushUrl = function(req, res) {
 
     gplusController.getUserId(req.body.id_token, function (userId) {
         // Success Callback
-
         var deviceParams = req.body.device_params;
         var deviceIds = '';
         var packages = {};
