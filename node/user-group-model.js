@@ -27,7 +27,7 @@ exports.getUsersInGroupWithUserId = function(userId, callback) {
 
                         var userIds = [];
                         for(var i = 0; i < result.length; i++) {
-                            userIds.push(result.user_id);
+                            userIds.push(result[i].user_id);
                         }
 
                         console.log('getUsersInGroupWithUserId() userIds = '+JSON.stringify(userIds));
