@@ -5,6 +5,7 @@ var ErrorCodes = require('./error_codes.js');
 var gcm = require('node-gcm');
 var config = require('./config.js');
 var userGroupModel = require('./user-group-model.js');
+var request = require('request');
 
 var PLATFORM_ID_ANDROID = 0;
 
@@ -214,5 +215,9 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, session
 };
 
 function sendWebHookPush(groupId, browserPackage, url, session) {
-    console.log('MMDL_PUSH_WEBHOOK_URL = '+config.webhookurl);
+    if(config.webhookurl === null || config.webhookurl.length === 0) {
+        return;
+    }
+
+    request.post(config.webhookurl, {form:{url:url, pkg: browserPackage, session: session, group_id: groupId, secret: config.webhookSecret}})
 }

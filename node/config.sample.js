@@ -7,3 +7,4 @@ exports.dbURL = process.env.MMDL_DB_URL || {
 exports.dbName = process.env.MMDL_DB_NAME || 'minimobiledevicelab';
 exports.gplusClientId = '<G+ Client ID>';
 exports.webhookurl = process.env.MMDL_PUSH_WEBHOOK_URL || null;
+exports.webhookSecret = process.env.MMDL_PUSH_WEBHOOK_SECRET || null;
