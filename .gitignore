@@ -4,6 +4,7 @@
 node_modules
 *.log
 infra/mmdl-template.json
+infra/mmdl-template.yaml
 web-front-end/dist
 web-front-end/bower_components
 node/config.js

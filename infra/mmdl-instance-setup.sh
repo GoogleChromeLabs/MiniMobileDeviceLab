@@ -24,6 +24,7 @@ DB_NAME=\$(get_meta MMDL_DB_NAME)
 DB_USER=\$(get_meta MMDL_DB_USER)
 DB_PASSWORD=\$(get_meta MMDL_DB_PASSWORD)
 GPLUS_CLIENT_ID=\$(get_meta MMDL_GPLUS_CLIENT_ID)
+GCM_CLIENT_ID=\$(get_meta MMDL_GCM_CLIENT_ID)
 
 if [ ! -d \$APP_DIR ]; then
     git clone \$REPO_URL \$APP_DIR
@@ -40,6 +41,7 @@ exports.dbURL = {
 };
 exports.dbName = '\$DB_NAME';
 exports.gplusClientId = '\$GPLUS_CLIENT_ID';
+exports.gcmClientId = '\$GCM_CLIENT_ID';
 EOC
 
 cd node && npm install
