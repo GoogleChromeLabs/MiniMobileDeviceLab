@@ -214,5 +214,5 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, session
 };
 
 function sendWebHookPush(groupId, browserPackage, url, session) {
-    console.log('MMDL_PUSH_WEBHOOK_URL = '+process.env.MMDL_PUSH_WEBHOOK_URL);
+    console.log('MMDL_PUSH_WEBHOOK_URL = '+config.webhookurl);
 }
