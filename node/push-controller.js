@@ -17,7 +17,7 @@ exports.pushUrl = function(req, res) {
         'device_params'
     ];
     if(!RequestUtils.ensureValidRequest(req, res, requiredParams)) {
-        return;
+        return; 
     }
 
     gplusController.getUserId(req.body.id_token, function (userId) {
@@ -88,7 +88,7 @@ function pushUrlToDevice(groupId, req, res) {
 
                         switch(parseInt(platformId)) {
                             case PLATFORM_ID_ANDROID:
-                                console.log('');
+                                //console.log('');
 
                                 // Figure out what to do for batching messages
                                 // create a message with default values
@@ -96,15 +96,15 @@ function pushUrlToDevice(groupId, req, res) {
                                 message.addDataWithKeyValue('url', req.body.url);
                                 message.addDataWithKeyValue('pkg', packages[deviceId]);
 
-                                console.log('Sending url: '+req.body.url);
-                                console.log('Sending pkg: '+packages[deviceId]);
+                                //console.log('Sending url: '+req.body.url);
+                                //console.log('Sending pkg: '+packages[deviceId]);
 
                                 var sender = new gcm.Sender(config.gcmClientId);
                                 var registrationIds = [];
                                 registrationIds.push(cloudMsgId);
 
                                 sender.send(message, registrationIds, 5, function (err, result) {
-                                    console.log(result);
+                                    //console.log(result);
                                 });
 
                                 break;
@@ -167,7 +167,7 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, callbac
                     return;
                 }
 
-                console.log('result = ', JSON.stringify(result));
+                //console.log('result = ', JSON.stringify(result));
 
                 for(var i = 0; i < result.length; i++) {
                     var deviceId = result[i].id;
@@ -176,7 +176,7 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, callbac
 
                     switch(parseInt(platformId)) {
                         case PLATFORM_ID_ANDROID:
-                            console.log('');
+                            //console.log('');
 
                             // Figure out what to do for batching messages
                             // create a message with default values
@@ -184,15 +184,15 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, callbac
                             message.addDataWithKeyValue('url', url);
                             message.addDataWithKeyValue('pkg', browserPackage);
 
-                            console.log('Sending url: '+url);
-                            console.log('Sending pkg: '+browserPackage);
+                            //console.log('Sending url: '+url);
+                            //console.log('Sending pkg: '+browserPackage);
 
                             var sender = new gcm.Sender(config.gcmClientId);
                             var registrationIds = [];
                             registrationIds.push(cloudMsgId);
 
                             sender.send(message, registrationIds, 5, function (err, result) {
-                                console.log(result);
+                                //console.log(result);
                             });
 
                             break;

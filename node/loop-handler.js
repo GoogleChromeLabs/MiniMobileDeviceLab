@@ -85,9 +85,6 @@ function startLoopingUrls(groupId, urlIndex, reminderPings, delay) {
     intervalObject = setInterval(function(args){
         sendPush(args.groupId, args.urlIndex);
 
-        //args.urlIndex++;
-
-
         if(args.cumulativeInterval >= args.delay) {
             args.urlIndex++;
             args.cumulativeInterval = 0;
@@ -96,8 +93,10 @@ function startLoopingUrls(groupId, urlIndex, reminderPings, delay) {
             if(args.urlIndex >= urlLength) {
                 args.urlIndex = 0;
             }
+        } else {
+            args.cumulativeInterval += args.reminderPings;
         }
-    }, reminderPings, {groupId: groupId, urlIndex: urlIndex++, delay: delay, cumulativeInterval: 0});
+    }, reminderPings, {groupId: groupId, urlIndex: urlIndex++, delay: delay, reminderPings: reminderPings, cumulativeInterval: 0});
 
     intervals[groupId].intervalObject = intervalObject;
 }

@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Browser;
 import android.util.Log;
+import android.content.SharedPreferences;
 
 import co.uk.gauntface.cordova.plugin.gcmbrowserlaunch.C;
 
@@ -34,6 +35,8 @@ import org.json.JSONObject;
 import java.util.List;
 
 public class PushNotificationReceiver extends BroadcastReceiver {
+
+    private static final String PREFS_NAME = "DEVICE_LAB_PREFS";
 
     public PushNotificationReceiver() {
 
@@ -56,8 +59,21 @@ public class PushNotificationReceiver extends BroadcastReceiver {
             if(data != null) {
                 String url = validateUrl(data.getString("url"));
                 String packageName = data.getString("pkg");
-                if(url != null) {
+
+                SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+                String lastReceivedUrl = settings.getString("lastreceivedurl", null);
+                Log.v(C.TAG, "PushNotificationReceiver: url = "+url);
+                Log.v(C.TAG, "PushNotificationReceiver: lastReceivedUrl = "+lastReceivedUrl);
+                if(url != null && !url.equals(lastReceivedUrl)) {
                     launchBrowserTask(context, url, packageName);
+
+                    // We need an Editor object to make preference changes.
+                    // All objects are from android.context.Context
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("lastreceivedurl", url);
+
+                    // Commit the edits!
+                    editor.commit();
                 }
 
             }
