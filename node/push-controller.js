@@ -103,6 +103,8 @@ function pushUrlToDevice(groupId, req, res) {
                                 var registrationIds = [];
                                 registrationIds.push(cloudMsgId);
 
+                                sendWebHookPush(groupId, packages[deviceId], req.body.url, null);
+
                                 sender.send(message, registrationIds, 5, function (err, result) {
                                     //console.log(result);
                                 });
@@ -159,6 +161,8 @@ function pushUrlToDevice(groupId, req, res) {
 };**/
 
 exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, session, callback) {
+    sendWebHookPush(groupId, browserPackage, url, session);
+
     dbHelper.openDb(function(dbConnection) {
         dbConnection.query('SELECT cloud_msg_id, platform_id, id FROM devices WHERE group_id = ?', [groupId],
             function (err, result) {
@@ -208,3 +212,7 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, session
             errorCb(err);
         });
 };
+
+function sendWebHookPush(groupId, browserPackage, url, session) {
+    console.log('MMDL_PUSH_WEBHOOK_URL = '+process.env.MMDL_PUSH_WEBHOOK_URL);
+}
