@@ -158,7 +158,7 @@ function pushUrlToDevice(groupId, req, res) {
     });
 };**/
 
-exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, callback) {
+exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, session, callback) {
     dbHelper.openDb(function(dbConnection) {
         dbConnection.query('SELECT cloud_msg_id, platform_id, id FROM devices WHERE group_id = ?', [groupId],
             function (err, result) {
@@ -183,9 +183,11 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, callbac
                             var message = new gcm.Message();
                             message.addDataWithKeyValue('url', url);
                             message.addDataWithKeyValue('pkg', browserPackage);
+                            message.addDataWithKeyValue('session', session);
 
-                            //console.log('Sending url: '+url);
+                            console.log('Sending url: '+url);
                             //console.log('Sending pkg: '+browserPackage);
+                            console.log('Sending session: '+session);
 
                             var sender = new gcm.Sender(config.gcmClientId);
                             var registrationIds = [];

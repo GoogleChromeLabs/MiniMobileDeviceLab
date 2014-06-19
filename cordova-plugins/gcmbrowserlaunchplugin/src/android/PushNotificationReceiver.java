@@ -59,18 +59,31 @@ public class PushNotificationReceiver extends BroadcastReceiver {
             if(data != null) {
                 String url = validateUrl(data.getString("url"));
                 String packageName = data.getString("pkg");
+                String session = data.getString("session");
 
                 SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+                String lastSession = settings.getString("lastsession", null);
                 String lastReceivedUrl = settings.getString("lastreceivedurl", null);
-                Log.v(C.TAG, "PushNotificationReceiver: url = "+url);
-                Log.v(C.TAG, "PushNotificationReceiver: lastReceivedUrl = "+lastReceivedUrl);
-                if(url != null && !url.equals(lastReceivedUrl)) {
+                
+                if(session != null && 
+                    session.equals(lastSession) && 
+                    url.equals(lastReceivedUrl)) {
+                    setResultCode(Activity.RESULT_OK);
+                    return;
+                }
+
+                //Log.v(C.TAG, "PushNotificationReceiver: url = "+url);
+                //Log.v(C.TAG, "PushNotificationReceiver: lastsession = "+lastSession);
+                //Log.v(C.TAG, "PushNotificationReceiver: lastReceivedUrl = "+lastReceivedUrl);
+                
+                if(url != null) {
                     launchBrowserTask(context, url, packageName);
 
                     // We need an Editor object to make preference changes.
                     // All objects are from android.context.Context
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString("lastreceivedurl", url);
+                    editor.putString("lastsession", session);
 
                     // Commit the edits!
                     editor.commit();

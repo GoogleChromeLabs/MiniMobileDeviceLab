@@ -76,14 +76,16 @@ function startLoopingUrls(groupId, urlIndex, reminderPings, delay) {
     }
     delete(intervals[groupId]);
 
-    sendPush(groupId, urlIndex);
+    var session = '' + Math.floor(Math.random()*1000);
+
+    sendPush(groupId, urlIndex, session);
 
     intervals[groupId] = {};
 
     // This should be changed to work to fire on the actual 
     // delay rather than reminder pings
     intervalObject = setInterval(function(args){
-        sendPush(args.groupId, args.urlIndex);
+        sendPush(args.groupId, args.urlIndex, args.session);
 
         if(args.cumulativeInterval >= args.delay) {
             args.urlIndex++;
@@ -96,12 +98,19 @@ function startLoopingUrls(groupId, urlIndex, reminderPings, delay) {
         } else {
             args.cumulativeInterval += args.reminderPings;
         }
-    }, reminderPings, {groupId: groupId, urlIndex: urlIndex++, delay: delay, reminderPings: reminderPings, cumulativeInterval: 0});
+    }, reminderPings, {
+        groupId: groupId, 
+        urlIndex: urlIndex++, 
+        delay: delay, 
+        reminderPings: reminderPings, 
+        cumulativeInterval: 0,
+        session: session
+    });
 
     intervals[groupId].intervalObject = intervalObject;
 }
 
-function sendPush(groupId, urlIndex) {
+function sendPush(groupId, urlIndex, session) {
     urlModel.getUrls(groupId, function(urls) {
         intervals[groupId].urlLength = urls.length;
 
@@ -113,7 +122,7 @@ function sendPush(groupId, urlIndex) {
 
         var browserPackage = "com.android.chrome";
 
-        pushController.sendPushMsgToAllDevices(groupId, browserPackage, urlString, function(err) {
+        pushController.sendPushMsgToAllDevices(groupId, browserPackage, urlString, session, function(err) {
                 if(err) {
                     console.log('Problem sending the push message: '+err);
                     return;
