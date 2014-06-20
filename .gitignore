@@ -14,3 +14,4 @@ cordova-app/yeoman/dist
 cordova-app/yeoman/app/scripts/config.js
 .cache
 bower_components
+cordova-plugins/nativegplussignin/src/android/C.java
