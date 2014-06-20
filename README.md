@@ -19,7 +19,7 @@ This is still in early stages of development, which means you can probably expec
   </a>
 </p>
 
-Building the App Engine App
+<!--Building the App Engine App
 ---------------------------
 
 You'll need [Eclipse with the App Engine plugin](https://developers.google.com/appengine/docs/java/gettingstarted/installing) installed to run the server.
@@ -46,7 +46,7 @@ You'll then want to configure the mobile app to use this server, so open config.
 
 <p align="center">
   <img src="http://i.imgur.com/gCvZhRL.png" alt="Device Lab Front End"/>
-</p>
+</p>-->
 
 Building the Cordova App
 ------------------------
@@ -57,20 +57,26 @@ Start of with getting the yeoman project building.
 
 `npm install`
 
-`npm install -g grunt-cli`
+`sudo npm install -g grunt-cli`
 
-`grunt build`
-
-Then get the cordova side of things building. Make sure you have the Android tools, ant on your path (i.e. `$ android`).
+Then get the cordova side of things building. Make sure you have the Android tools, ant on your path (i.e. `android`).
 
 `npm install -g cordova`
 
-`cordova run android`
+`cd ..`
 
+`mkdir www`
 
-This can be a little fiddly I'm afraid.
+`cordova platform add android`
 
-A little bit of admin is needed to gain access to the Google Plus API, so you'll need to create a project in the [Google API Console](https://code.google.com/apis/console/), switch on the Google Plus Service, then create a client ID for installed applications, specifically Android in this case, which will require the debug signing key your Android SDK uses. Then just pop the client ID in `cordova-app/platforms/android/src/co/uk/gauntface/mobile/devicelab/C.java` for `DEBUG_CLIENT_ID`.
+Next up a little bit of fiddly admin work.
+
+To gain access to the Google Plus API you'll need to create a project in the [Google API Console](https://code.google.com/apis/console/).
+
+    1. Switch on the *Google+ API* in the APIs & Auth section.
+    2. Go to *APIS & AUTH* > *Credentials* and create a new client ID for *Installed application*, specifically Android in this case. This will require the debug signing key which is normally in ~/.android/debug.keystore. `keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore -list -v`
+    Then copy the SHA1 value into the *Create client ID* field and use "co.uk.gauntface.mini.mobile.devicelab" for the package name.
+	3. Then take the client ID and add it to `cordova-plugins/platforms/nativegplussignin/src/android/C.java` as the  `DEBUG_CLIENT_ID` value.
 
 Then build the application with the following commands:
 
@@ -84,7 +90,9 @@ Once you've done that, the next step is to build the Android APK, which means yo
 
 Then add a dependency on the [Google Play Services](http://developer.android.com/google/play-services/setup.html). This will give support for Google Cloud Messaging and Google Plus Sign In.
 
-Now you've got yourself a working build :)
+To install and run on an Android device to have yourself a working build :)
+
+`cordova run android`
 
 <p align="center">
   <img src="http://i.imgur.com/xxF0ovI.png" alt="Device Lab App"/>
