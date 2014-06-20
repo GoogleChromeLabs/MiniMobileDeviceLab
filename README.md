@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://i.imgur.com/mOthLyL.png" alt="Device Lab Logo"/>
+  <img src="http://i.imgur.com/ZT75eem.png" alt="Device Lab Logo"/>
 </p>
 
 
