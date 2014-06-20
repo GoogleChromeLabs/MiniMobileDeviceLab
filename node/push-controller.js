@@ -107,7 +107,12 @@ function pushUrlToDevice(groupId, req, res) {
                                 sendWebHookPush(groupId, packages[deviceId], req.body.url, null);
 
                                 sender.send(message, registrationIds, 5, function (err, result) {
-                                    //console.log(result);
+                                    console.log('===============================');
+                                    console.log('GCM Response:');
+                                    console.log('');
+                                    console.log(result);
+                                    console.log('');
+                                    console.log('===============================');
                                 });
 
                                 break;
