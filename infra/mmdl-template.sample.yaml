@@ -53,6 +53,12 @@ modules:
                 value: secret
               - key: MMDL_GPLUS_CLIENT_ID
                 value: "get me from developers console"
+              - key: MMDL_GCM_CLIENT_ID
+                value: "google cloud messaging client ID"
+              - key: MMDL_WEBHOOK_URL
+                value: "http://webhook.example.org/"
+              - key: MMDL_WEBHOOK_SECRET
+                value: "some-webhook-secret-word"
           networkInterfaces: 
             - accessConfigs: 
                 - name: "External NAT"
