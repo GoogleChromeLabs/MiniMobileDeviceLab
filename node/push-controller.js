@@ -215,7 +215,7 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, session
 };
 
 function sendWebHookPush(groupId, browserPackage, url, session) {
-    if(config.webhookurl === null || config.webhookurl.length === 0) {
+    if(!config.webhookurl) {
         return;
     }
 

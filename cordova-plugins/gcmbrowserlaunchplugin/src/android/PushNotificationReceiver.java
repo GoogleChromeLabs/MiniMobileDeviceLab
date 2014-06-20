@@ -72,7 +72,8 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                     return;
                 }
 
-                //Log.v(C.TAG, "PushNotificationReceiver: url = "+url);
+                Log.v(C.TAG, "PushNotificationReceiver: Received URL = "+url);
+                Log.v(C.TAG, "PushNotificationReceiver: Received Package = "+packageName);
                 //Log.v(C.TAG, "PushNotificationReceiver: lastsession = "+lastSession);
                 //Log.v(C.TAG, "PushNotificationReceiver: lastReceivedUrl = "+lastReceivedUrl);
                 
@@ -108,6 +109,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
     }
 
     private void launchBrowserTask(Context context, String url, String packageName) {
+        Log.v(C.TAG, "launchBrowserTask");
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         browserIntent.setPackage(packageName);
         browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -118,10 +120,13 @@ public class PushNotificationReceiver extends BroadcastReceiver {
             browserIntent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
             context.startActivity(browserIntent);
         } else {
-            Intent playStoreIntent = new Intent(Intent.ACTION_VIEW);
+            /**Intent playStoreIntent = new Intent(Intent.ACTION_VIEW);
             playStoreIntent.setData(Uri.parse("market://details?id="+packageName));
             playStoreIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(playStoreIntent);
+            context.startActivity(playStoreIntent);**/
+            Intent rawIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            rawIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(rawIntent);
         }
     }
 }
