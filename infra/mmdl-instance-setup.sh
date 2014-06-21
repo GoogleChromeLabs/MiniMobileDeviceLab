@@ -5,6 +5,8 @@
 # - update nodejs apps
 
 mkdir -p /apps/bin
+echo 'apps ALL=(ALL) NOPASSWD: /etc/init.d/nginx' >> /etc/sudoers
+echo 'www-data ALL=(ALL) NOPASSWD: /apps/bin/update.sh' >> /etc/sudoers
 
 cat <<EOF > /apps/bin/update.sh
 #!/bin/bash
@@ -53,9 +55,10 @@ forever stop --plain \$APP_DIR/node/app.js
 forever start --plain \$APP_DIR/node/app.js
 
 cd \$APP_DIR/web-front-end && npm install
-bower install
-cp -r bower_components/* app/bower_components/
-grunt build --no-color
+cd app && bower install
+cd .. && grunt build --no-color
+
+sudo /etc/init.d/nginx reload
 EOF
 
 chmod +x /apps/bin/update.sh
@@ -87,7 +90,6 @@ proc.execFile('sudo', ['-u', 'apps', '/apps/bin/update.sh'], {}, function(err, s
 EOF
 
 chmod +x /apps/bin/github-push-to-deploy.js
-echo 'www-data ALL=(ALL) NOPASSWD: /apps/bin/update.sh' >> /etc/sudoers
 
 
 cat <<EOF > /etc/nginx/sites-enabled/default
