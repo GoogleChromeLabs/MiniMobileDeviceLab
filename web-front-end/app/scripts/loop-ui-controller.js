@@ -257,6 +257,8 @@ LoopController.prototype.initialiseStaticElements = function() {
   // Set up push looper switch
   var looperSwitch = document.querySelector('#sites-looper-checkbox');
   looperSwitch.addEventListener('change', function(evt) {
+    var looperSwitch = document.querySelector('#sites-looper-checkbox');
+    looperSwitch.disabled = true;
     if(evt.target.checked) {
       this.startPushLooper();
     } else {
@@ -497,6 +499,9 @@ LoopController.prototype.startPushLooper = function() {
       window.alert('Unabled to start looper: '+err);
       return;
     }
+
+    var looperSwitch = document.querySelector('#sites-looper-checkbox');
+    looperSwitch.disabled = false;
   });
 
   var looperSwitch = document.querySelector('#sites-looper-checkbox');
@@ -543,6 +548,9 @@ LoopController.prototype.cancelPushLooper = function() {
       window.alert('Unabled to end looper: '+err);
       return;
     }
+
+    var looperSwitch = document.querySelector('#sites-looper-checkbox');
+    looperSwitch.disabled = false;
   });
 
   var looperSwitch = document.querySelector('#sites-looper-checkbox');
