@@ -17,9 +17,7 @@ modules:
         - IPProtocol: tcp
           ports: 
             - 80
-            - 9000
             - 3000
-      # name: allow-nodejs-apps
       network: default
       sourceRanges: 
         - 0.0.0.0/0
@@ -36,9 +34,8 @@ modules:
               initializeParams: 
                 diskSizeGb: 10
                 sourceImage: "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/backports-debian-7-wheezy-v20140415"
-              # mode: READ_WRITE
           initAction: setup_vm
-          machineType: f1-micro
+          machineType: g1-small
           metadata: 
             items: 
               - key: MMDL_DB_HOST
