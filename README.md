@@ -48,6 +48,17 @@ You'll then want to configure the mobile app to use this server, so open config.
   <img src="http://i.imgur.com/gCvZhRL.png" alt="Device Lab Front End"/>
 </p>-->
 
+Setting Up Node Back-End
+------------------------
+
+To get the Node server up and running, do the followering:
+
+	1. Install dependencies with: `npm install`
+	2. Rename config.sample.js to config.js
+	3. Update the config.js file with the appropriate values for the sql server.
+	4. Get a G+ client ID from the developer console.
+
+
 Building the Cordova App
 ------------------------
 
@@ -105,6 +116,8 @@ The front end can be run seperate from node back-end with
 
 `grunt serve`
 
+
+To make a release version of the web front-end just run `grunt build` and copy the *web-front-end/dist* directory to your server to host.
 
 Future of Device Lab
 =====================

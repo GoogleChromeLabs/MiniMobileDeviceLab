@@ -229,6 +229,9 @@ LoopController.prototype.initialiseStaticElements = function() {
   // On send button press, send the push message
   var addButton = document.querySelector('.add-url');
   addButton.addEventListener('click', function() {
+    document.querySelector('.url-add-container > .add-url').style.display = "none";
+    document.querySelector('.url-add-container > .spinner').style.display = "block";
+
     this.addURLToList(document.querySelector('.url-to-add').value);
   }.bind(this), false);
 
@@ -269,7 +272,7 @@ LoopController.prototype.updateSiteList = function(successCb) {
 };
 
 /**
- * This method will send the url to all devices
+ * This method will add the URL to the list of looped URLS
  */
 LoopController.prototype.addURLToList = function(url) {
   if(typeof url === undefined || url.length === 0) {
@@ -280,8 +283,12 @@ LoopController.prototype.addURLToList = function(url) {
   sitesModel.addUrlToList(url, function(err) {
     if(!(err === null || typeof(err) === 'undefined')) {
       window.alert('Couldn\'t push the URL to devices: '+err);
+    } else {
+      document.querySelector('.url-to-add').value = "";
     }
 
+    document.querySelector('.url-add-container > .add-url').style.display = "block";
+    document.querySelector('.url-add-container > .spinner').style.display = "none";
     this.setUIState(SITE_LIST);
   }.bind(this));
 };

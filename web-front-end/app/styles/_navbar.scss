@@ -55,6 +55,20 @@
         background-image: url(./../images/button_add.svg);
     }
 
+    .spinner {
+        display: none;
+        
+        width: 48px;
+        height: 48px;
+
+        position: absolute;
+
+        top: 8px;
+        right: 8px;
+
+        box-sizing: border-box;
+    }
+
 }
 
 .nav-bar > button {
