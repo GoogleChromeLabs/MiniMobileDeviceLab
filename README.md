@@ -93,11 +93,18 @@ To install and run on an Android device, plugin in the device and run the follow
 Building the Web Front-End
 ---------------------------
 
-You only need to do this if you are altering / developing the Web Front End.
+The front end can be run seperate from node back-end with
 
-The front end can be run seperate from app-engine with `grunt server`.
+`cd web-front-end`
 
-But if you want to produce a build for app-engine, the command `grunt build-prod` will build the site and copy it to the `app-engine` directory.
+`npm install`
+
+`cd app`
+
+`bower install`
+
+`grunt serve`
+
 
 Future of Device Lab
 =====================
