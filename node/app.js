@@ -42,6 +42,8 @@ app.post('/api/urls/update', urlController.edit);
 
 app.post('/api/urls/loopcontrol', loopHandler.control);
 
+app.post('/api/urls/loopstate', loopHandler.state);
+
 // A simple handler that returns backend version.
 // Used for health checks and such.
 app.get('/api/version', function(req, res) {

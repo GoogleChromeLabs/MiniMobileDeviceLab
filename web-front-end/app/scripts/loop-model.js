@@ -29,6 +29,10 @@ function LoopModel(token) {
     return looping;
   };
 
+  this.setIsLooping = function(isLooping) {
+    looping = isLooping;
+  }
+
   this.setLoopDelay = function(newDelay) {
     delay = parseInt(newDelay, 10);
   };
@@ -91,5 +95,35 @@ LoopModel.prototype.endLooping = function(callback) {
   };
 
   var paramString = 'id_token='+encodeURIComponent(idToken)+'&is_looping=false';
+  xhr.send(paramString);
+};
+
+LoopModel.prototype.updateLoopState = function(callback) {
+  var config = new Config();
+  var idToken = this.getIDToken();
+  
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', config.getRootUrl()+'/urls/loopstate/', true);
+  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+  xhr.onreadystatechange = function(e) {
+    if (e.target.readyState === 4) {
+      if(e.target.status !== 200) {
+        callback('Unable to get the loop state');
+        return;
+      } else {
+        var response = JSON.parse(xhr.responseText);
+        this.setIsLooping(response.data.is_looping);
+        callback(null);
+      }
+    }
+  }.bind(this);
+
+  xhr.timeout = 10000;
+  xhr.ontimeout = function() {
+    callback('The attempt to update the loop state failed.');
+  };
+
+  var paramString = 'id_token='+encodeURIComponent(idToken);
   xhr.send(paramString);
 };

@@ -49,6 +49,55 @@ exports.control = function(req, res) {
     });
 };
 
+exports.state = function(req, res) {
+    var requiredParams = [
+        'id_token'
+    ];
+    if(!RequestUtils.ensureValidRequest(req, res, requiredParams)) {
+        return;
+    }
+
+    gplusController.getUserId(req.body.id_token, function (userId) {
+        // Success Callback
+        userGroupModel.getUsersGroupId(userId, function(err, groupId) {
+                if(err) {
+                    RequestUtils.respondWithError(
+                        ErrorCodes.failed_to_delete,
+                        "User isn't assigned to a group: "+err,
+                        500,
+                        res
+                    );
+                    return;
+                }
+
+                getLoopState(groupId, req, res);
+            }, function(err) {
+                // Failed to register
+                RequestUtils.respondWithError(
+                    ErrorCodes.failed_to_delete,
+                    "Failed to get loop state: "+err,
+                    500,
+                    res
+                );
+            });
+    }, function() {
+        RequestUtils.respondWithError(
+            ErrorCodes.invalid_id_token,
+            "The supplied id_token is invalid",
+            400,
+            res
+        );
+    });
+};
+
+function getLoopState(groupId, req, res) {
+    var isLooping = intervals[groupId] && intervals[groupId].intervalObject;
+    RequestUtils.respondWithData(
+        {is_looping: isLooping},
+        res
+    );
+}
+
 function manageLoopState(groupId, req, res) {
     if(req.body.is_looping === 'false') {
         if(intervals[groupId] && intervals[groupId].intervalObject) {

@@ -125,12 +125,23 @@ LoopController.prototype.init = function() {
   this.setUIState(LOADING);
 
   this.updateSiteList(function() {
-    this.setUIState(SITE_LIST);
-    /**if(this.shouldAutoRun()) {
-      this.startPushLooper();
-    }**/
+    //this.setUIState(SITE_LIST);
+    this.updateLooperState();
   }.bind(this));
 };
+
+LoopController.prototype.updateLooperState = function() {
+  var loopModel = this.getLoopModel();
+  loopModel.updateLoopState(function(err) {
+    if(err) {
+      console.log('Unable to update the loop state: '+err);
+    }
+    var looperSwitch = document.querySelector('#sites-looper-checkbox');
+    looperSwitch.disabled = false;
+    looperSwitch.checked = loopModel.isLooping();
+    this.setUIState(SITE_LIST);
+  }.bind(this));
+}
 
 /**
  * Set the UI state for the page
