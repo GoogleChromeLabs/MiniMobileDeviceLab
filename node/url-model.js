@@ -30,8 +30,8 @@ exports.addUrl = function(res, groupId, params, successCb, errorCb) {
             [groupId, params.url],
             function (err, result) {
                 if (err) {
-                    errorCb(err);
                     dbConnection.destroy();
+                    errorCb(err);
                     return;
                 }
 

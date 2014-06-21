@@ -36,8 +36,8 @@ exports.addDevice = function(res, groupId, params, successCb, errorCb) {
             function (err, result) {
                 console.log('addDevice SELECT err = '+err+' results = '+JSON.stringify(result));
                 if (err) {
-                    errorCb(err);
                     dbConnection.destroy();
+                    errorCb(err);
                     return;
                 }
 

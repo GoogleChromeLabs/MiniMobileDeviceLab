@@ -5,12 +5,14 @@ exports.getUsersInGroupWithUserId = function(userId, callback) {
         dbConnection.query('SELECT group_id FROM usergroups WHERE user_id = ?', [userId],
             function (err, result) {
                 if (err) {
+                    dbConnection.destroy();
                     callback(err);
                     return;
                 }
 
                 if(result.length !== 1) {
                     // Either no results or unexpected result
+                    dbConnection.destroy();
                     callback(null, [userId]);
                     return;
                 }
@@ -18,6 +20,8 @@ exports.getUsersInGroupWithUserId = function(userId, callback) {
                 var groupId = result[0].group_id;
                 dbConnection.query('SELECT user_id FROM usergroups WHERE group_id = ?', [groupId],
                     function (err, result) {
+                        dbConnection.destroy();
+
                         if (err) {
                             callback(err);
                             return;
@@ -42,6 +46,8 @@ exports.getUsersGroupId = function(userId, callback) {
     dbHelper.openDb(function(dbConnection) {
         dbConnection.query('SELECT group_id FROM usergroups WHERE user_id = ? AND group_id > 0', [userId],
             function (err, result) {
+                dbConnection.destroy();
+
                 if (err) {
                     callback(err);
                     return;
@@ -72,7 +78,7 @@ exports.insertUserAndCreateGroup = function(userId, callback) {
     dbHelper.openDb(function(dbConnection) {
         dbConnection.query('INSERT INTO usergroups SET ?', {user_id: userId},
             function (err, result) {
-                    console.log('insertUserAndCreateGroup() INSERT err = '+err);
+                console.log('insertUserAndCreateGroup() INSERT err = '+err);
                 if (err) {
                     dbConnection.destroy();
                     callback(err);

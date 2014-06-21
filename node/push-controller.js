@@ -172,6 +172,8 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, session
     dbHelper.openDb(function(dbConnection) {
         dbConnection.query('SELECT cloud_msg_id, platform_id, id FROM devices WHERE group_id = ?', [groupId],
             function (err, result) {
+                dbConnection.destroy();
+                
                 if (err) {
                     callback(err);
                     return;
