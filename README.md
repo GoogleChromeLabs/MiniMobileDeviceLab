@@ -76,26 +76,18 @@ To gain access to the Google Plus API you'll need to create a project in the [Go
     1. Switch on the *Google+ API* in the APIs & Auth section.
     2. Go to *APIS & AUTH* > *Credentials* and create a new client ID for *Installed application*, specifically Android in this case. This will require the debug signing key which is normally in ~/.android/debug.keystore. `keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore -list -v`
     Then copy the SHA1 value into the *Create client ID* field and use "co.uk.gauntface.mini.mobile.devicelab" for the package name.
-	3. Then take the client ID and add it to `cordova-plugins/platforms/nativegplussignin/src/android/C.java` as the  `DEBUG_CLIENT_ID` value.
+    3. Rename the C.sample.java file to C.java in `cordova-plugins/platforms/nativegplussignin/src/android/`
+	4. Then take the client ID and add it to `cordova-plugins/platforms/nativegplussignin/src/android/C.java` as the  `DEBUG_CLIENT_ID` value.
+	5. Next up rename the config.sample.js file in `cordova-app/yeoman/app/scripts/` and add your URL to the node server (i.e. the IP address of the machine you are hosting the node server on)
 
-Then build the application with the following commands:
+To install and run on an Android device, plugin in the device and run the following
 
-`cd cordova-app/yeoman`
-
-`grunt debug-build`
-
-`cordova prepare`
-
-Once you've done that, the next step is to build the Android APK, which means you'll need to import the  project into IntelliJ or Eclipse (NOTE: Android Studio with Gradle hasn't been tested yet).
-
-Then add a dependency on the [Google Play Services](http://developer.android.com/google/play-services/setup.html). This will give support for Google Cloud Messaging and Google Plus Sign In.
-
-To install and run on an Android device to have yourself a working build :)
+`cd cordova-app`
 
 `cordova run android`
 
 <p align="center">
-  <img src="http://i.imgur.com/xxF0ovI.png" alt="Device Lab App"/>
+  <img src="http://i.imgur.com/uKCv5d1.png" alt="Device Lab App"/>
 </p>
 
 Building the Web Front-End
