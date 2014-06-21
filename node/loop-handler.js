@@ -91,7 +91,11 @@ exports.state = function(req, res) {
 };
 
 function getLoopState(groupId, req, res) {
-    var isLooping = intervals[groupId] && intervals[groupId].intervalObject;
+    var isLooping = false;
+    if(intervals[groupId] && intervals[groupId].intervalObject) {
+        isLooping = true;
+    }
+    
     RequestUtils.respondWithData(
         {is_looping: isLooping},
         res
