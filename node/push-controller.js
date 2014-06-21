@@ -107,7 +107,12 @@ function pushUrlToDevice(groupId, req, res) {
                                 sendWebHookPush(groupId, packages[deviceId], req.body.url, null);
 
                                 sender.send(message, registrationIds, 5, function (err, result) {
-                                    //console.log(result);
+                                    console.log('===============================');
+                                    console.log('GCM Response:');
+                                    console.log('');
+                                    console.log(result);
+                                    console.log('');
+                                    console.log('===============================');
                                 });
 
                                 break;
@@ -192,14 +197,19 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, session
 
                             console.log('Sending url: '+url);
                             //console.log('Sending pkg: '+browserPackage);
-                            console.log('Sending session: '+session);
+                            //console.log('Sending session: '+session);
 
                             var sender = new gcm.Sender(config.gcmClientId);
                             var registrationIds = [];
                             registrationIds.push(cloudMsgId);
 
                             sender.send(message, registrationIds, 5, function (err, result) {
-                                //console.log(result);
+                                console.log('===============================');
+                                console.log('GCM Response:');
+                                console.log('');
+                                console.log(result);
+                                console.log('');
+                                console.log('===============================');
                             });
 
                             break;
@@ -215,7 +225,7 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, session
 };
 
 function sendWebHookPush(groupId, browserPackage, url, session) {
-    if(config.webhookurl === null || config.webhookurl.length === 0) {
+    if(!config.webhookurl) {
         return;
     }
 

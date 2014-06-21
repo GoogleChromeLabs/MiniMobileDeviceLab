@@ -108,6 +108,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
     }
 
     private void launchBrowserTask(Context context, String url, String packageName) {
+        Log.v(C.TAG, "launchBrowserTask");
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         browserIntent.setPackage(packageName);
         browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -122,6 +123,9 @@ public class PushNotificationReceiver extends BroadcastReceiver {
             playStoreIntent.setData(Uri.parse("market://details?id="+packageName));
             playStoreIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(playStoreIntent);
+            /**Intent rawIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            rawIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(rawIntent);**/
         }
     }
 }

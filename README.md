@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://i.imgur.com/mOthLyL.png" alt="Device Lab Logo"/>
+  <img src="http://i.imgur.com/ZT75eem.png" alt="Device Lab Logo"/>
 </p>
 
 
@@ -19,7 +19,7 @@ This is still in early stages of development, which means you can probably expec
   </a>
 </p>
 
-Building the App Engine App
+<!--Building the App Engine App
 ---------------------------
 
 You'll need [Eclipse with the App Engine plugin](https://developers.google.com/appengine/docs/java/gettingstarted/installing) installed to run the server.
@@ -46,7 +46,7 @@ You'll then want to configure the mobile app to use this server, so open config.
 
 <p align="center">
   <img src="http://i.imgur.com/gCvZhRL.png" alt="Device Lab Front End"/>
-</p>
+</p>-->
 
 Building the Cordova App
 ------------------------
@@ -57,47 +57,54 @@ Start of with getting the yeoman project building.
 
 `npm install`
 
-`npm install -g grunt-cli`
+`sudo npm install -g grunt-cli`
 
-`grunt build`
-
-Then get the cordova side of things building. Make sure you have the Android tools, ant on your path (i.e. `$ android`).
+Then get the cordova side of things building. Make sure you have the Android tools, ant on your path (i.e. `android`).
 
 `npm install -g cordova`
 
+`cd ..`
+
+`mkdir www`
+
+`cordova platform add android`
+
+Next up a little bit of fiddly admin work.
+
+To gain access to the Google Plus API you'll need to create a project in the [Google API Console](https://code.google.com/apis/console/).
+
+    1. Switch on the *Google+ API* in the APIs & Auth section.
+    2. Go to *APIS & AUTH* > *Credentials* and create a new client ID for *Installed application*, specifically Android in this case. This will require the debug signing key which is normally in ~/.android/debug.keystore. `keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore -list -v`
+    Then copy the SHA1 value into the *Create client ID* field and use "co.uk.gauntface.mini.mobile.devicelab" for the package name.
+    3. Rename the C.sample.java file to C.java in `cordova-plugins/platforms/nativegplussignin/src/android/`
+	4. Then take the client ID and add it to `cordova-plugins/platforms/nativegplussignin/src/android/C.java` as the  `DEBUG_CLIENT_ID` value.
+	5. Next up rename the config.sample.js file in `cordova-app/yeoman/app/scripts/` and add your URL to the node server (i.e. the IP address of the machine you are hosting the node server on)
+
+To install and run on an Android device, plugin in the device and run the following
+
+`cd cordova-app`
+
 `cordova run android`
 
-
-This can be a little fiddly I'm afraid.
-
-A little bit of admin is needed to gain access to the Google Plus API, so you'll need to create a project in the [Google API Console](https://code.google.com/apis/console/), switch on the Google Plus Service, then create a client ID for installed applications, specifically Android in this case, which will require the debug signing key your Android SDK uses. Then just pop the client ID in `cordova-app/platforms/android/src/co/uk/gauntface/mobile/devicelab/C.java` for `DEBUG_CLIENT_ID`.
-
-Then build the application with the following commands:
-
-`cd cordova-app/yeoman`
-
-`grunt debug-build`
-
-`cordova prepare`
-
-Once you've done that, the next step is to build the Android APK, which means you'll need to import the  project into IntelliJ or Eclipse (NOTE: Android Studio with Gradle hasn't been tested yet).
-
-Then add a dependency on the [Google Play Services](http://developer.android.com/google/play-services/setup.html). This will give support for Google Cloud Messaging and Google Plus Sign In.
-
-Now you've got yourself a working build :)
-
 <p align="center">
-  <img src="http://i.imgur.com/xxF0ovI.png" alt="Device Lab App"/>
+  <img src="http://i.imgur.com/uKCv5d1.png" alt="Device Lab App"/>
 </p>
 
 Building the Web Front-End
 ---------------------------
 
-You only need to do this if you are altering / developing the Web Front End.
+The front end can be run seperate from node back-end with
 
-The front end can be run seperate from app-engine with `grunt server`.
+`cd web-front-end`
 
-But if you want to produce a build for app-engine, the command `grunt build-prod` will build the site and copy it to the `app-engine` directory.
+`npm install`
+
+`cd app`
+
+`bower install`
+
+`grunt serve`
+
 
 Future of Device Lab
 =====================
