@@ -68,3 +68,23 @@ exports.removeEntryForLoop = function(groupId, callback) {
         callback(err);
     });
 };
+
+exports.getLoopingGroups = function(callback) {
+    dbHelper.openDb(function(dbConnection) {
+        dbConnection.query('SELECT * FROM loopstate',
+            [groupId],
+            function (err, result) {
+                dbConnection.destroy();
+
+                if (err) {
+                    callback(err);
+                    return;
+                }
+
+                callback(null, result);
+            }
+        );
+    }, function(err) {
+        callback(err);
+    });
+};

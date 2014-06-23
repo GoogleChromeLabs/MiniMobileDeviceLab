@@ -92,6 +92,25 @@ exports.state = function(req, res) {
     });
 };
 
+exports.initialised = function() {
+    loopStateModel.getLoopingGroups(function(err, results) {
+            console.log('loopStateModel.removeEntryForLoop err = '+err);
+            if(err) {
+                RequestUtils.respondWithError(
+                    ErrorCodes.failed_to_add,
+                    "Failed to get loop state: "+err,
+                    500,
+                    res
+                );
+                return;
+            }
+
+            for(var i = 0; i < results.length; i++) {
+                startLoopingUrls(results[i].group_id, 0, 10000, delay);
+            }
+        });
+};
+
 function getLoopState(groupId, req, res) {
     var isLooping = false;
     if(intervals[groupId] && intervals[groupId].intervalObject) {

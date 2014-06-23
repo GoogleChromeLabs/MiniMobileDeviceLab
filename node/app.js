@@ -53,3 +53,6 @@ app.get('/api/version', function(req, res) {
 
 app.listen(PORT);
 console.log('Listening on port '+PORT);
+
+loopHandler.initialised();
+console.log('Initialised loops');
