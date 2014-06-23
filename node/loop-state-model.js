@@ -26,6 +26,7 @@ exports.addEntryForLoop = function(groupId, callback) {
                 }
 
                 console.log('addEntryForLoop INSERT');
+                try {
                 dbConnection.query('INSERT INTO loopstate SET ?', dbParams,
                     function (err, result) {
                         dbConnection.destroy();
@@ -34,11 +35,14 @@ exports.addEntryForLoop = function(groupId, callback) {
                             callback(err);
                             return;
                         }
-                        
+
                         console.log('addEntryForLoop INSERT result.insertId = '+result.insertId);
                         callback(null, result.insertId);
                     }
                 );
+                } catch(exception) {
+                    console.log('addEntryForLoop exception = '+err);
+                }
             });
     }, function(err) {
         callback(err);
