@@ -106,12 +106,6 @@ function getLoopState(groupId, req, res) {
 
 function manageLoopState(groupId, req, res) {
     if(req.body.is_looping === 'false') {
-        if(intervals[groupId] && intervals[groupId].intervalObject) {
-            console.log('Clearing Interval for ID: '+groupId);
-            clearInterval(intervals[groupId].intervalObject);
-        }
-        delete(intervals[groupId]);
-
         console.log('remove the entry for the looper');
         loopStateModel.removeEntryForLoop(groupId, function(err) {
             console.log('loopStateModel.removeEntryForLoop err = '+err);
@@ -125,6 +119,12 @@ function manageLoopState(groupId, req, res) {
                 return;
             }
 
+            if(intervals[groupId] && intervals[groupId].intervalObject) {
+                console.log('Clearing Interval for ID: '+groupId);
+                clearInterval(intervals[groupId].intervalObject);
+            }
+            delete(intervals[groupId]);
+
             RequestUtils.respondWithData(
                 {success: true},
                 res
@@ -135,8 +135,7 @@ function manageLoopState(groupId, req, res) {
         if(req.body.delay) {
             delay = parseInt(req.body.delay, 10);
         }
-        startLoopingUrls(groupId, 0, 10000, delay);
-
+        
         console.log('Add the entry for the looper');
         loopStateModel.addEntryForLoop(groupId, function(err) {
             console.log('loopStateModel.addEntryForLoop err = '+err);
@@ -149,6 +148,8 @@ function manageLoopState(groupId, req, res) {
                 );
                 return;
             }
+
+            startLoopingUrls(groupId, 0, 10000, delay);
 
             RequestUtils.respondWithData(
                 {success: true},
