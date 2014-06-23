@@ -597,7 +597,6 @@ window.onload = function() {
   if(window.location.search.lastIndexOf('autorun=true') >= 0) {
     autorun = true;
   }
-  if(window.location.href)
   window.loopController = new LoopController(autorun);
   loopController.init();
 };
