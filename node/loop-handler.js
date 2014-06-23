@@ -136,7 +136,7 @@ function manageLoopState(groupId, req, res) {
             delay = parseInt(req.body.delay, 10);
         }
         
-        console.log('Add the entry for the looper');
+        console.log('Add the entry for the looper test');
         loopStateModel.addEntryForLoop(groupId, function(err) {
             console.log('loopStateModel.addEntryForLoop err = '+err);
             if(err) {
