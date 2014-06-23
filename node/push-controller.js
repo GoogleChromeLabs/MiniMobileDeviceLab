@@ -8,6 +8,7 @@ var userGroupModel = require('./user-group-model.js');
 var request = require('request');
 
 var PLATFORM_ID_ANDROID = 0;
+var logging_enabled = false;
 
 exports.pushUrl = function(req, res) {
     'use strict';
@@ -197,21 +198,25 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, session
                             message.addDataWithKeyValue('pkg', browserPackage);
                             message.addDataWithKeyValue('session', session);
 
-                            console.log('Sending url: '+url);
-                            //console.log('Sending pkg: '+browserPackage);
-                            //console.log('Sending session: '+session);
+                            if(logging_enabled) {
+                                console.log('Sending url: '+url);
+                                //console.log('Sending pkg: '+browserPackage);
+                                //console.log('Sending session: '+session);
+                            }
 
                             var sender = new gcm.Sender(config.gcmClientId);
                             var registrationIds = [];
                             registrationIds.push(cloudMsgId);
 
                             sender.send(message, registrationIds, 5, function (err, result) {
-                                console.log('===============================');
-                                console.log('GCM Response:');
-                                console.log('');
-                                console.log(result);
-                                console.log('');
-                                console.log('===============================');
+                                if(logging_enabled) {
+                                    console.log('===============================');
+                                    console.log('GCM Response:');
+                                    console.log('');
+                                    console.log(result);
+                                    console.log('');
+                                    console.log('===============================');
+                                }
                             });
 
                             break;
