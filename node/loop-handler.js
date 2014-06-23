@@ -112,7 +112,9 @@ function manageLoopState(groupId, req, res) {
         }
         delete(intervals[groupId]);
 
+        console.log('remove the entry for the looper');
         loopStateModel.removeEntryForLoop(groupId, function(err) {
+            console.log('loopStateModel.removeEntryForLoop err = '+err);
             if(err) {
                 RequestUtils.respondWithError(
                     ErrorCodes.failed_to_add,
@@ -135,7 +137,9 @@ function manageLoopState(groupId, req, res) {
         }
         startLoopingUrls(groupId, 0, 10000, delay);
 
+        console.log('Add the entry for the looper');
         loopStateModel.addEntryForLoop(groupId, function(err) {
+            console.log('loopStateModel.addEntryForLoop err = '+err);
             if(err) {
                 RequestUtils.respondWithError(
                     ErrorCodes.failed_to_add,
