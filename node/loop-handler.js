@@ -107,6 +107,12 @@ function getLoopState(groupId, req, res) {
 function manageLoopState(groupId, req, res) {
     if(req.body.is_looping === 'false') {
         console.log('remove the entry for the looper');
+        if(intervals[groupId] && intervals[groupId].intervalObject) {
+            console.log('Clearing Interval for ID: '+groupId);
+            clearInterval(intervals[groupId].intervalObject);
+        }
+        delete(intervals[groupId]);
+
         loopStateModel.removeEntryForLoop(groupId, function(err) {
             console.log('loopStateModel.removeEntryForLoop err = '+err);
             if(err) {
@@ -118,12 +124,6 @@ function manageLoopState(groupId, req, res) {
                 );
                 return;
             }
-
-            if(intervals[groupId] && intervals[groupId].intervalObject) {
-                console.log('Clearing Interval for ID: '+groupId);
-                clearInterval(intervals[groupId].intervalObject);
-            }
-            delete(intervals[groupId]);
 
             RequestUtils.respondWithData(
                 {success: true},
