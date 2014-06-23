@@ -92,7 +92,10 @@ exports.state = function(req, res) {
     });
 };
 
-exports.initialised = function() {
+exports.initialised = function(delay) {
+    if(!delay) {
+        delay = 60000;
+    }
     loopStateModel.getLoopingGroups(function(err, results) {
             console.log('loopStateModel.removeEntryForLoop err = '+err);
             if(err) {
