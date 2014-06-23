@@ -8,6 +8,7 @@ var loopStateModel = require('./loop-state-model.js');
 
 var intervals = {};
 
+// Minor tweak
 exports.control = function(req, res) {
     var requiredParams = [
         'id_token',
