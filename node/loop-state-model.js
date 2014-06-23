@@ -7,7 +7,7 @@ exports.addEntryForLoop = function(groupId, callback) {
         };
 
         dbConnection.query('SELECT * FROM loopstate WHERE group_id = ?',
-            [groupId, params.url],
+            [groupId],
             function (err, result) {
                 if (err) {
                     dbConnection.destroy();
