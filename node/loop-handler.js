@@ -4,6 +4,7 @@ var urlModel = require('./url-model.js');
 var ErrorCodes = require('./error_codes.js');
 var pushController = require('./push-controller.js');
 var userGroupModel = require('./user-group-model.js');
+var loopStateModel = require('./loop-state-model.js');
 
 var intervals = {};
 
@@ -109,17 +110,47 @@ function manageLoopState(groupId, req, res) {
             clearInterval(intervals[groupId].intervalObject);
         }
         delete(intervals[groupId]);
+
+        loopStateModel.removeEntryForLoop(groupId, function(err) {
+            if(err) {
+                RequestUtils.respondWithError(
+                    ErrorCodes.failed_to_add,
+                    "Failed to get loop state: "+err,
+                    500,
+                    res
+                );
+                return;
+            }
+
+            RequestUtils.respondWithData(
+                {success: true},
+                res
+            );
+        });
     } else {
         var delay = 60000;
         if(req.body.delay) {
             delay = parseInt(req.body.delay, 10);
         }
         startLoopingUrls(groupId, 0, 10000, delay);
+
+        loopStateModel.addEntryForLoop(groupId, function(err) {
+            if(err) {
+                RequestUtils.respondWithError(
+                    ErrorCodes.failed_to_add,
+                    "Failed to get loop state: "+err,
+                    500,
+                    res
+                );
+                return;
+            }
+
+            RequestUtils.respondWithData(
+                {success: true},
+                res
+            );
+        });
     }
-    RequestUtils.respondWithData(
-        {success: true},
-        res
-    );
 }
 
 function startLoopingUrls(groupId, urlIndex, reminderPings, delay) {

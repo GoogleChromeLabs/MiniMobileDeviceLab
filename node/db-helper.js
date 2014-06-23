@@ -24,6 +24,11 @@ var tables = [
     'PRIMARY KEY(id),' +
     'user_id TEXT NOT NULL,'+
     'group_id INT NOT NULL DEFAULT -1'+
+    ')',
+    'CREATE TABLE IF NOT EXISTS loopstate ('+
+    'id INT NOT NULL AUTO_INCREMENT,'+
+    'PRIMARY KEY(id),'+
+    'group_id INT NOT NULL'+
     ')'
 ];
 
