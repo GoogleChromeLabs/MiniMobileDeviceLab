@@ -106,6 +106,7 @@ exports.initialised = function() {
             }
 
             for(var i = 0; i < results.length; i++) {
+                console.log('results['+i+'].group_id = '+results[i].group_id);
                 startLoopingUrls(results[i].group_id, 0, 10000, delay);
             }
         });
