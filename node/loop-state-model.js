@@ -72,7 +72,7 @@ exports.removeEntryForLoop = function(groupId, callback) {
 exports.getLoopingGroups = function(callback) {
     dbHelper.openDb(function(dbConnection) {
         dbConnection.query('SELECT * FROM loopstate',
-            [groupId],
+            [],
             function (err, result) {
                 dbConnection.destroy();
 
