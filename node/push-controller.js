@@ -222,7 +222,7 @@ exports.sendPushMsgToAllDevices = function(groupId, browserPackage, url, session
                 //successCb(result);
             });
         }, function(err) {
-            errorCb(err);
+            callback(err);
         });
 };
 
