@@ -46,6 +46,7 @@ exports.get = function(req, res) {
 };
 
 function getUrls(groupId, req, res) {
+    console.log('url-controller.js: getUrls() groupId = '+groupId);
     urlModel.getUrls(groupId, function(urls) {
             var filteredUrls = [];
             for(var i = 0; i < urls.length; i++) {
@@ -56,6 +57,8 @@ function getUrls(groupId, req, res) {
                     sort_order: url.sort_order
                 });
             }
+
+            console.log('url-controller.js: getUrls() returning filteredUrls.length = '+filteredUrls.length);
             RequestUtils.respondWithData(
                 filteredUrls,
                 res

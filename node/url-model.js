@@ -5,7 +5,9 @@ exports.getUrls = function(groupId, successCb, errorCb) {
 
         dbConnection.query('SELECT * FROM urls WHERE group_id = ? ORDER BY sort_order ASC', [groupId],
             function (err, result) {
+                console.log('url-model.js: getUrls() result.length = '+result.length);
                 dbConnection.destroy();
+
                 if (err) {
                     errorCb(err);
                     return;

@@ -85,7 +85,7 @@ SitesModel.prototype.updateCachedSites = function(successCb, errorCb) {
 
   xhr.timeout = 10000;
   xhr.ontimeout = function() {
-    errorCb('The attempt to update your device list timed out.');
+    errorCb('The attempt to update your URL list timed out.');
   };
 
   var paramString = 'id_token='+encodeURIComponent(idToken);
@@ -187,7 +187,7 @@ SitesModel.prototype.removeUrl = function(siteId, callback) {
 
   xhr.timeout = 10000;
   xhr.ontimeout = function() {
-    errorCb('The attempt to delete the device failed.');
+    errorCb('The attempt to delete the URL failed.');
   };
 
   var paramString = 'id_token='+encodeURIComponent(idToken)+'&url_id='+siteId;
