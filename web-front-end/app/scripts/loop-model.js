@@ -19,7 +19,7 @@ limitations under the License.
 function LoopModel(token) {
   var idToken = token;
   var looping = false;
-  var delay = 30000;
+  var delay = 45000;
 
   this.getIDToken = function() {
     return idToken;
