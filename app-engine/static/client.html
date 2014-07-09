@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript" src="/_ah/channel/jsapi"></script>
+    <title>Device Wall Client</title>
+    <style type="text/css">
+      span.clientID {
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Device Lab Client</h1>
+      <div>
+        <!-- 
+          Desktop browsers may not open a new tab unless the window.open()
+          function is called via a user gesture.  This button fires the
+          required user gesture. 
+        -->
+        <button style="display:none;" class="btn" id="btnTab" type="button">
+          Tap me to open a new tab!
+        </button>
+      </div>
+      <div>
+        <b>Open pages:</b> <input id="cbOpen" type="checkbox" checked>
+      </div>
+      <div>
+        <b>Client ID:</b> <span class="clientID">{{ token }}</span>
+      </div>
+      <div>
+        <b>Status: </b> <span id="status" class="label label-default">Opening</span>
+      </div>
+      <div>
+        <b>Connected At:</b> <span id="connectedAt"></span>
+      </div>
+      <div>
+        <b>Last Message Received At:</b> <span id="lmrAt"></span>
+      </div>
+      <div>
+        <b>URLs Received</b>
+        <ul id="urlList">
+        </ul>
+      </div>
+      <div id="msg"></div>
+    </div>
+
+    <script type="text/javascript">
+
+      var bigScreen = false;
+      var devLabWindow;
+      var currentUrl = "";
+      var timerCount = 0;
+      var channel = new goog.appengine.Channel('{{ token }}');
+      var socket = channel.open();
+      var lmrAt = $("#lmrAt");
+      var urlList = $("#urlList");
+      var cbOpen = $("#cbOpen");
+      socket.onopen = onOpen;
+      socket.onmessage = onMessage;
+      socket.onerror = onError;
+      socket.onclose = onClose;
+
+      /* AppEngine event fired when the channel is opened */
+      function onOpen(evt) {
+        console.log("onOpen", evt);
+        $("#connectedAt").text(Date());
+        $("#status")
+          .removeClass("label-default")
+          .removeClass("label-danger")
+          .addClass("label-success")
+          .text("Connected");
+      }
+
+      /* AppEngine event fired when a URL is received */
+      function onMessage(evt) {
+        console.log("onMessage", evt);
+        // Update the last message received at
+        lmrAt.text(Date());
+
+        // Get the URL and ensure it starts with http
+        var url = evt.data;
+        if (url.indexOf("http") != 0) {
+          url = "http://" + url;
+        }
+
+        // If the URL is the same as our current URL do nothing,
+        // otherwise open the new page.
+        if (url != currentUrl) {
+          // Add the url to the unordered list
+          currentUrl = url;
+          var li = $("<li></li>");
+          li.text(url);
+          urlList.append(li);
+          // If we're running on Android TV or other WebView experience,
+          // call the native handler, otherwise, if the Open URL checkbox
+          // is checked, close the existing tab on mobile devices, then
+          // open a window to the new URL
+          if (window.DeviceLab) {
+            window.DeviceLab.onURLPush(url);
+          } else if (cbOpen.prop("checked")) {
+            if ((devLabWindow !== undefined) && (!bigScreen)) {
+              devLabWindow.close();
+              window.focus();
+            }
+            setTimeout(function() {
+              devLabWindow = window.open(url, "MMobDevLab");
+              devLabWindow.focus();
+            }, 1000);
+          }
+        }
+      }
+
+      function onError(evt) {
+        console.log("onError", evt);
+        $("#status")
+          .removeClass("label-default")
+          .removeClass("label-success")
+          .addClass("label-danger")
+          .text("Error");
+        window.location.reload();
+      }
+
+      function onClose(evt) {
+        $("#status")
+          .removeClass("label-danger")
+          .removeClass("label-success")
+          .addClass("label-default")
+          .text("Disconnected");
+        window.location.reload();
+      }
+
+      function init() {
+        // Check if we're on a big screen (likely desktop browser)
+        // and show the user gesture action button.
+        if (window.screen.availWidth > 800) {
+          bigScreen = true;
+          var btn = document.getElementById("btnTab");
+          btn.addEventListener("click", function() {
+            onMessage({"data": "http://www.google.com/"});
+          });
+          btn.style.display = "inline";
+        }
+      }
+
+      init();
+
+    </script>
+  </body>
+</html>

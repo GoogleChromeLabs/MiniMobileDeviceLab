@@ -19,35 +19,6 @@ This is still in early stages of development, which means you can probably expec
   </a>
 </p>
 
-<!--Building the App Engine App
----------------------------
-
-You'll need [Eclipse with the App Engine plugin](https://developers.google.com/appengine/docs/java/gettingstarted/installing) installed to run the server.
-
-Sidenote: You have two options, create a new project and just copy the code OR attempt to import and handle any issues. I've actually found it easier to do the former, but here is some hints for the latter.
-
-Open Eclipse and import the project `File > Import` and set the directory to `app-engine` which should display the `mini-device-lab` project as an option.
-
-You may need to right click the src folder and go to `Build Path > Make Source Folder`. Then right click the war directory and go to `Build Path > Exclude`.
-
-Right click the project heading and select properting, in the popup window select `Java Build Path > Output folder - Browse` and select `mini-device-lab/war/WEB-INF/classes`.
-
-Right click the project and go to `Java Build Path > Add JARs > mini-device-lab > war > WEB_INF > lib` and select all the jar files except `app-engine-api-1.0-sdk-1.7.4.jar`. Then go to `Add Library > Google App Engine > Finish`. Then finall go to `Add Library > JRE System Library > Finish`.
-
-You'll need to add a Google Cloud Messaging API key in `mini-device-lab > src > utils > C.java`, you can do this by following the instructions @ [here](http://developer.android.com/google/gcm/gs.html)
-
-You'll need to make the local server accessible on your network so mobile devices can access it. To do this go to `Run > Run Configurations`, go to the arguments tab and add `--address=0.0.0.0 ` to the start of any existing text.
-
-You can view the controller site @ [http://localhost:8888/front-end/](http://localhost:8888/front-end/)
-
-You'll then want to configure the mobile app to use this server, so open config.js in `cordova-app/yeoman/app/scripts/config.js` and add your local IP address.
-
-`var localIP = 'http://<your_ip_addr>:8888';`
-
-<p align="center">
-  <img src="http://i.imgur.com/gCvZhRL.png" alt="Device Lab Front End"/>
-</p>-->
-
 Setting Up Node Back-End
 ------------------------
 
@@ -101,6 +72,24 @@ To install and run on an Android device, plugin in the device and run the follow
   <img src="http://i.imgur.com/uKCv5d1.png" alt="Device Lab App"/>
 </p>
 
+Building the AppEngine App
+--------------------------
+
+The AppEngine app is used for iOS devices, Desktop/Laptop devices or WebView
+based apps.  It uses the Channel API to push messages out to the devices. 
+When the app receives a POST message with the appropriate parameters, it 
+will push the URL to any attached devices.
+
+To add a device to the lab, open https://YourAppName.appspot.com/wall on the
+device.  If the device is a desktop, be sure to click the "Tap me" button to
+fire a user initiated gesture that will open a new window.  Otherwise the
+browser may not open the window as a new tab.
+
+The "background" page running on the device listens for a message (URL), and
+will do a `window.open()` with the URL. To monitor status, without opening
+a new page, simply uncheck the Open Pages checkbox.
+
+
 Building the Web Front-End
 ---------------------------
 
@@ -115,7 +104,6 @@ The front end can be run seperate from node back-end with
 `bower install`
 
 `grunt serve`
-
 
 To make a release version of the web front-end just run `grunt build` and copy the *web-front-end/dist* directory to your server to host.
 

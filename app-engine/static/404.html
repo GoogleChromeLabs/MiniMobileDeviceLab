@@ -1,0 +1,35 @@
+{% extends "/static/base.html" %}
+
+
+{% block head %}
+  <style type="text/css">
+    .space {
+      height: 80px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-sm-2">
+      
+    </div>
+    <div class="col-sm-3">
+      <img src="/img/sadpanda.png" style="width:200px;height:300px;">
+    </div>
+    <div class="col-sm-5">
+      <div class="space hidden-xs">
+      </div>
+      <h1>You've found Sad Panda!</h1>
+      <p class="lead">
+        He's crying because he can't find the page you're looking for.
+      </p>
+    </div>
+    <div class="col-sm-2">
+      
+    </div>
+  </div>
+{% endblock %}
+
+{% block bottom %}
+{% endblock %}
