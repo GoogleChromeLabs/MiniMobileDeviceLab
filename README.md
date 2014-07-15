@@ -24,10 +24,10 @@ Setting Up Node Back-End
 
 To get the Node server up and running, do the followering:
 
-	1. Install dependencies with: `npm install`
-	2. Rename config.sample.js to config.js
-	3. Update the config.js file with the appropriate values for the sql server.
-	4. Get a G+ client ID from the developer console.
+1. Install dependencies by running: `npm install`
+2. Rename `config.sample.js` to `config.js`
+3. Update the config.js file with the appropriate values for the sql server.
+4. Get a G+ client ID from the developer console.
 
 
 Building the Cordova App
@@ -55,14 +55,17 @@ Next up a little bit of fiddly admin work.
 
 To gain access to the Google Plus API you'll need to create a project in the [Google API Console](https://code.google.com/apis/console/).
 
-    1. Switch on the *Google+ API* in the APIs & Auth section.
-    2. Go to *APIS & AUTH* > *Credentials* and create a new client ID for *Installed application*, specifically Android in this case. This will require the debug signing key which is normally in ~/.android/debug.keystore. `keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore -list -v`
-    Then copy the SHA1 value into the *Create client ID* field and use "co.uk.gauntface.mini.mobile.devicelab" for the package name.
-    3. Rename the C.sample.java file to C.java in `cordova-plugins/platforms/nativegplussignin/src/android/`
-	4. Then take the client ID and add it to `cordova-plugins/platforms/nativegplussignin/src/android/C.java` as the  `DEBUG_CLIENT_ID` value.
-	5. Next up rename the config.sample.js file in `cordova-app/yeoman/app/scripts/` and add your URL to the node server (i.e. the IP address of the machine you are hosting the node server on)
+1.  Go to **APIs & AUTH** > **APIs** and switch on the **Google+ API**.
+2.  Go to **APIs & AUTH** > **Credentials** and create a new OAuth client ID. Select **Installed application** and **Android**. This will require the debug signing key which is normally in `~/.android/debug.keystore`. Display the keystore contents by running: 
+    
+        keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore -list -v
+    
+    Then copy the SHA1 value into the **Create client ID** field and use `co.uk.gauntface.mini.mobile.devicelab` for the package name.
+3.  Rename the `C.sample.java` file to `C.java` in `cordova-plugins/platforms/nativegplussignin/src/android/`
+4.  Then take the client ID and add it to `cordova-plugins/platforms/nativegplussignin/src/android/C.java` as the  `DEBUG_CLIENT_ID` value.
+5.  Next up rename the `config.sample.js` file in `cordova-app/yeoman/app/scripts/` and add your URL to the node server (i.e. the IP address of the machine you are hosting the node server on).
 
-To install and run on an Android device, plugin in the device and run the following
+To install and run on an Android device, plugin in the device and run the following commands:
 
 `cd cordova-app`
 
@@ -80,7 +83,7 @@ based apps.  It uses the Channel API to push messages out to the devices.
 When the app receives a POST message with the appropriate parameters, it 
 will push the URL to any attached devices.
 
-To add a device to the lab, open https://YourAppName.appspot.com/wall on the
+To add a device to the lab, open `https://YourAppName.appspot.com/wall` on the
 device.  If the device is a desktop, be sure to click the "Tap me" button to
 fire a user initiated gesture that will open a new window.  Otherwise the
 browser may not open the window as a new tab.
@@ -93,7 +96,7 @@ a new page, simply uncheck the Open Pages checkbox.
 Building the Web Front-End
 ---------------------------
 
-The front end can be run seperate from node back-end with
+The front-end can be run separately from the node back-end by running the following commands:
 
 `cd web-front-end`
 
@@ -105,7 +108,7 @@ The front end can be run seperate from node back-end with
 
 `grunt serve`
 
-To make a release version of the web front-end just run `grunt build` and copy the *web-front-end/dist* directory to your server to host.
+To make a release version of the web front-end just run `grunt build` and copy the `web-front-end/dist` directory to your server to host.
 
 Future of Device Lab
 =====================
