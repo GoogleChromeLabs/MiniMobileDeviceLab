@@ -65,7 +65,7 @@ To gain access to the Google Plus API you'll need to create a project in the [Go
 4.  Then take the client ID and add it to `cordova-plugins/platforms/nativegplussignin/src/android/C.java` as the  `DEBUG_CLIENT_ID` value.
 5.  Next up rename the `config.sample.js` file in `cordova-app/yeoman/app/scripts/` and add your URL to the node server (i.e. the IP address of the machine you are hosting the node server on).
 
-To install and run on an Android device, plugin in the device and run the following commands:
+To install and run on an Android device, plug in the device and run the following commands:
 
 `cd cordova-app`
 
