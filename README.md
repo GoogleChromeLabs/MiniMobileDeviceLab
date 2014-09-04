@@ -22,7 +22,7 @@ This is still in early stages of development, which means you can probably expec
 Setting Up Node Back-End
 ------------------------
 
-To get the Node server up and running, do the followering:
+To get the Node server up and running, do the following:
 
 	1. Install dependencies with: `npm install`
 	2. Rename config.sample.js to config.js
@@ -62,7 +62,7 @@ To gain access to the Google Plus API you'll need to create a project in the [Go
 	4. Then take the client ID and add it to `cordova-plugins/platforms/nativegplussignin/src/android/C.java` as the  `DEBUG_CLIENT_ID` value.
 	5. Next up rename the config.sample.js file in `cordova-app/yeoman/app/scripts/` and add your URL to the node server (i.e. the IP address of the machine you are hosting the node server on)
 
-To install and run on an Android device, plugin in the device and run the following
+To install and run on an Android device, plug-in the device and run the following:
 
 `cd cordova-app`
 
