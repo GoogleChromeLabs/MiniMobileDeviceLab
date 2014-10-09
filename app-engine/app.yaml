@@ -1,0 +1,39 @@
+application: mmobdevlab
+version: 20140709-1
+runtime: python27
+threadsafe: true
+api_version: 1
+
+builtins:
+- remote_api: on
+
+libraries:
+- name: webapp2
+  version: latest
+- name: jinja2
+  version: latest
+
+inbound_services:
+- channel_presence
+
+handlers:
+- url: /favicon.ico
+  static_files: static/favicon.ico
+  upload: static/favicon.ico
+
+- url: /img
+  static_dir: img
+
+- url: /_ah/channel/.*
+  script: wall.application
+
+- url: /wall/send
+  static_files: static/sender.html
+  upload: static/sender.html
+  login: admin
+
+- url: /wall
+  script: wall.application
+
+- url: /wall/.*
+  script: wall.application
