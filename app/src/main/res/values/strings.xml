@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2014 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<resources>
+
+    <string name="app_name">MiniMobileDeviceLab</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="log_out">Log out</string>
+
+    <!--Logged out-->
+    <string name="description_logged_out1">Welcome to Your Device Lab\n\nThere are 2 components to your device lab: this app, which should be installed on all Android devices you want to include in your lab, and a google app engine app. Go to https://github.com/GoogleChrome/MiniMobileDeviceLab to download the google app engine code and deploy it.</string>
+    <string name="gae_id_label">GAE app id</string>
+    <string name="gae_number_label">GAE app number</string>
+    <string name="gae_cancel">Cancel</string>
+    <string name="gae_set">Set</string>
+    <string name="gae_not_verified">Tap to verify your GAE project ID</string>
+    <string name="gae_verifying">Verifying your GAE project ID</string>
+    <string name="gae_verifying_passed">GAE Project ID verified, you may now log in. The GAE Number will be verified upon logging in.</string>
+    <string name="gae_verifying_id_failed">GAE ID verification failed, please check that you have deployed your GAE app properly and entered the correct Project ID. Tap to retry.</string>
+    <string name="gae_id_label_hint">Tap to set your GAE app id</string>
+    <string name="gae_number_label_hint">Tap to set your GAE app number</string>
+    <string name="gae_id_hint">The Project ID of your GAE app</string>
+    <string name="gae_number_hint">The Project Number of your GAE app</string>
+    <string name="login_verifying">We are adding your device to your lab...</string>
+    <string name="login_verifying_failed">Sorry, we couldn\'t add your device to your lab, due to</string>
+    <string name="login_verifying_failed_gplus">error logging you in with Google +</string>
+    <string name="login_verifying_failed_push">error registering for pushed notifications. Please, verify the project number you have entered</string>
+    <string name="login_verifying_failed_gae">error communicating with your GAE app</string>
+    <string name="description_logged_out2">Once you\'ve deployed your GAE app and we have verified your setup is correct, you will be able to login to add this device to your lab.</string>
+    <string name="description_logged_out3">You can now login to add this device to your lab.</string>
+    <string name="description_logged_out4">Once you provide the project number for your GAE, you will be able to login to add this device to your lab.</string>
+
+    <!--Logged in-->
+    <string name="description_logged_in">Device Lab\n\nThere isn\'t much you can do with this...\n\nBut if you send a URL from your device lab site, we\'ll be ready and waiting to handle it for you</string>
+    <string name="logout_verifying">We are removing your device from your lab...</string>
+    <string name="logout_401_error">Sorry, we couldn\'t delete your device from your lab, it seems that the user you have used to log into Google + doesn\'t own the device in the lab - contact the device lab administrator</string>
+    <string name="logout_general_error">Sorry, we couldn\'t delete your device from your lab, due to error communicating with your GAE app</string>
+
+</resources>
