@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/usr/local/google/home/nmasse/AndroidStudioProjects/MiniMobileDeviceLabAndroid/app/build/intermediates/pre-dexed/debug/classes-bbce267d212c3638aa16591923fe44d6060d08c8.jar"
+        jar="/usr/local/google/home/nmasse/AndroidStudioProjects/MiniMobileDeviceLabAndroid/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/5.0.89/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="d71573c9c5ea98a8db47ad6ff993a63d492b3bfa"/>
+    <item
+        dex="/usr/local/google/home/nmasse/AndroidStudioProjects/MiniMobileDeviceLabAndroid/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-f8492205b0109d75b73572b0d0573877360c07cc.jar"
+        jar="/usr/local/google/home/nmasse/Dev/Android/android-studio/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
+
+</pre-dex-items>
