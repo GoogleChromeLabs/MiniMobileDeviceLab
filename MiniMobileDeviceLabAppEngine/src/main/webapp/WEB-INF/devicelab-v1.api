@@ -1,0 +1,306 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://neat-gasket-714.appspot.com/_ah/api",
+  "name" : "devicelab",
+  "version" : "v1",
+  "description" : "Device API for adding and getting devices, and pushing messages to them",
+  "defaultVersion" : false,
+  "adapter" : {
+    "bns" : "https://neat-gasket-714.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "methods" : {
+    "devicelab.deleteDevice" : {
+      "path" : "devices",
+      "httpMethod" : "DELETE",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
+      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.deleteDevice",
+      "request" : {
+        "parameters" : {
+          "accessToken" : {
+            "type" : "string",
+            "required" : true
+          },
+          "userId" : {
+            "type" : "string",
+            "required" : true
+          },
+          "deviceId" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "devicelab.getDevices" : {
+      "path" : "devices",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
+      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.getDevices",
+      "request" : {
+        "parameters" : {
+          "accessToken" : {
+            "type" : "string",
+            "required" : true
+          },
+          "userId" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "devicelab.pushUrl" : {
+      "path" : "push/url",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
+      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.pushUrl",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "devicelab.saveDevice" : {
+      "path" : "devices",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
+      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.saveDevice",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "devicelab.editDevice" : {
+      "path" : "devices",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
+      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.editDevice",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "ResponseForm" : {
+        "id" : "ResponseForm",
+        "type" : "object",
+        "properties" : {
+          "error" : {
+            "type" : "string"
+          },
+          "success" : {
+            "type" : "boolean"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Device" : {
+        "id" : "Device",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "groupId" : {
+            "type" : "integer"
+          },
+          "deviceName" : {
+            "type" : "string"
+          },
+          "platformId" : {
+            "type" : "integer"
+          },
+          "platformVersion" : {
+            "type" : "string"
+          },
+          "gcmId" : {
+            "type" : "string"
+          }
+        }
+      },
+      "DeviceCollection" : {
+        "id" : "DeviceCollection",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "Device"
+            }
+          }
+        }
+      },
+      "PushUrlForm" : {
+        "id" : "PushUrlForm",
+        "type" : "object",
+        "properties" : {
+          "token" : {
+            "type" : "string"
+          },
+          "userId" : {
+            "type" : "string"
+          },
+          "url" : {
+            "type" : "string"
+          },
+          "sameBrowserForAllDevices" : {
+            "type" : "boolean"
+          },
+          "browserPackageName" : {
+            "type" : "string"
+          },
+          "individualDevices" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "DeviceBrowserForm"
+            }
+          }
+        }
+      },
+      "DeviceBrowserForm" : {
+        "id" : "DeviceBrowserForm",
+        "type" : "object",
+        "properties" : {
+          "deviceId" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "browserPackageName" : {
+            "type" : "string"
+          }
+        }
+      },
+      "DeviceForm" : {
+        "id" : "DeviceForm",
+        "type" : "object",
+        "properties" : {
+          "token" : {
+            "type" : "string"
+          },
+          "deviceName" : {
+            "type" : "string"
+          },
+          "platformId" : {
+            "type" : "integer"
+          },
+          "platformVersion" : {
+            "type" : "string"
+          },
+          "cloudMsgId" : {
+            "type" : "string"
+          },
+          "userId" : {
+            "type" : "string"
+          }
+        }
+      },
+      "DeviceEditForm" : {
+        "id" : "DeviceEditForm",
+        "type" : "object",
+        "properties" : {
+          "deviceId" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "deviceName" : {
+            "type" : "string"
+          },
+          "token" : {
+            "type" : "string"
+          },
+          "userId" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "methods" : {
+      "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.deleteDevice" : {
+        "response" : {
+          "$ref" : "ResponseForm"
+        }
+      },
+      "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.getDevices" : {
+        "response" : {
+          "$ref" : "DeviceCollection"
+        }
+      },
+      "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.pushUrl" : {
+        "request" : {
+          "$ref" : "PushUrlForm"
+        },
+        "response" : {
+          "$ref" : "ResponseForm"
+        }
+      },
+      "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.saveDevice" : {
+        "request" : {
+          "$ref" : "DeviceForm"
+        },
+        "response" : {
+          "$ref" : "Device"
+        }
+      },
+      "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.editDevice" : {
+        "request" : {
+          "$ref" : "DeviceEditForm"
+        },
+        "response" : {
+          "$ref" : "Device"
+        }
+      }
+    }
+  }
+}
