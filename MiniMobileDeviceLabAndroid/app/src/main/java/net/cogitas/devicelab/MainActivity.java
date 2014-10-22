@@ -128,7 +128,9 @@ public class MainActivity extends Activity
         findViewById(R.id.signInButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!mGoogleApiClient.isConnecting()) {
+                if (mGoogleApiClient.isConnected()){
+                    onConnectedAction();
+                } else if (!mGoogleApiClient.isConnecting()) {
                     mSignInClicked = true;
                     resolveSignInError();
                 }
@@ -334,6 +336,10 @@ public class MainActivity extends Activity
     @Override
     public void onConnected(Bundle connectionHint) {
         mSignInClicked = false;
+        onConnectedAction();
+    }
+
+    private void onConnectedAction(){
         refreshUI();
         if (UserSettings.getDeviceGplusToken(this).equals("")
                 && UserSettings.getAppEngineIdStatus(this)
@@ -348,7 +354,6 @@ public class MainActivity extends Activity
                 != GAEIdVerificationStatus.VERIFICATION_PASSED) {
             logOut();
         }
-
 
     }
 
