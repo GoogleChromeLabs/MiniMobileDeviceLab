@@ -69,7 +69,6 @@ google.devrel.mobiledevicelab.signout = function() {
   document.getElementById('loggedOut').style.display = 'block';
   document.getElementById('loggedIn').style.display = 'none';
   document.getElementById('navbar').style.display = 'none';
-  google.devrel.mobiledevicelab.showSignedin();
 }
 
 /**
