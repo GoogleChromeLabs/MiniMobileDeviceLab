@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Mini Mobile Device Lab</title>
+<script type="text/javascript" src="/js/devices-model.js"></script>
+<script type="text/javascript" src="/js/android-browser-model.js"></script>
+<script type="text/javascript" src="/js/libs/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" src="/js/ui-controller.js"></script>
+<script type="text/javascript" src="/js/server-controller.js"></script>
+<link type="text/css" rel="stylesheet" href="/css/style.css">
+<link href='https://fonts.googleapis.com/css?family=Roboto'
+	rel='stylesheet' type='text/css'>
+<script src="https://apis.google.com/js/client:platform.js" async defer></script>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-signin-clientid"
+	content="557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" />
+<meta name="google-signin-scope"
+	content="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email" />
+<meta name="google-signin-requestvisibleactions"
+	content="http://schema.org/AddAction" />
+<meta name="google-signin-cookiepolicy" content="single_host_origin" />
+</head>
+<body>
+	<div class="navbar" id="navbar">
+		<span>Device Lab</span>
+		<div class="url-send-container">
+			<input id="url" type="text" /> <img class="button"
+				src="images/button_send.svg" alt="Send" id="pushUrl" /> <span
+				id="pushMessage"></span>
+		</div>
+	</div>
+
+
+	<div class="loggedOut" id="loggedOut">
+		<header>
+			<h2>Welcome to Your Device Lab</h2>
+		</header>
+		<p>Ever wanted to launch a url on a number of devices?</p>
+		<p>Well set-up your device lab and you'll be good to go.</p>
+		<div>
+			<button id="signinButton">
+				<img src="images/g-plus-logo.png" alt="Google Plus logo"
+					height="48px" width="48px" /><span>Sign In</span>
+			</button>
+		</div>
+	</div>
+
+	<div class="container" id="loggedIn">
+		<section class="platform">
+			<div class="platform-header">
+				<header>
+					<img src="images/android.svg" alt="Android" /><span>Android</span>
+				</header>
+				<div class="refreshDevices">
+					<img class="button" src="images/button_refresh.svg" alt="Send"
+						id="getDevices" /> <span id="devicesMessage"></span>
+				</div>
+				<span class="toggle-switch"> <input
+					id="android-header-checkbox" class="checkbox" type="checkbox"
+					checked> <label for="android-header-checkbox"
+					class="checkbox-label"></label>
+				</span>
+			</div>
+			<div id="devicesTable">
+			</div>
+		</section>
+	</div>
+	<script type="text/javascript">
+		function init() {
+			google.devrel.mobiledevicelab.init('//' + window.location.host
+					+ '/_ah/api');
+		}
+	</script>
+	<script src="https://apis.google.com/js/client.js?onload=init"></script>
+	
+	<!-- Device List Item Template -->
+        <script id="device-row-template" type="text/html">
+			<tr id="{{id}}">
+			<td class="device-name" id="device-name-{{id}}"><span id="device-name-display-{{id}}">{{device-name}}</span>
+			<input id="device-name-input-{{id}}" type="text" style="display:none" class="device-name"/>
+			<img id="device-name-input-confirm-{{id}}" src="images/button_tick.svg" alt="Confirm name" class="button-device-confirm"  style="display:none"/>
+			</td>
+			<td class="device-version" id="device-version-{{id}}">{{device-version}}</td>
+			<td class="device-icons">
+			{{browser-row}}
+			</td>
+			<td class="device-right">
+			<img id="edit-{{id}}" src="images/button_edit.svg" alt="Edit" class="button"/>
+			<img id="delete-{{id}}" src="images/button_bin.svg" alt="Delete" class="button"/>
+			<span class="toggle-switch"> <input
+					id="toggle-{{id}}" " class="checkbox" type="checkbox"
+					checked> <label for="toggle-{{id}}"
+					class="checkbox-label"></label>
+				</span>
+			</td>
+			</tr>
+        </script>
+        <script id="device-row-browser-template" type="text/html">
+			<img  id="device-browser-{{browser-index-start-at-1}}-{{id}}" class="browser-icon" {{src}} {{alt}}/>
+        </script>
+	
+</body>
+</html>
