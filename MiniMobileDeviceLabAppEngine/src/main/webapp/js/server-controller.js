@@ -64,8 +64,13 @@ google.devrel.mobiledevicelab.getDevices = function() {
 							}
 						},
 						function(reason) {
-							google.devrel.mobiledevicelab
-									.displayDeviceMessage('Error getting devices.');
+							if (reason.status == 401){
+								google.devrel.mobiledevicelab
+								.displayDeviceMessage('Your sign-in token has expired, please refresh the page.');
+							} else {
+								google.devrel.mobiledevicelab
+								.displayDeviceMessage('Error getting devices.');
+							}
 						});
 
 	}
