@@ -30,6 +30,7 @@ Other devices (TODO):
 Go to https://your-app-id.appspot.com/listen.html
 Login with G+ and enter the name you want to use for this device
 You must stay on this page during your testing session
+For Safari, make sure you allow pop ups.
 
 Your device lab:
 Go to https://your-app-id.appspot.com
