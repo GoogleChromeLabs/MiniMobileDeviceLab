@@ -25,6 +25,31 @@
     "maxAge" : 0
   },
   "methods" : {
+    "devicelab.getUrls" : {
+      "path" : "url",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
+      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.getUrls",
+      "request" : {
+        "parameters" : {
+          "accessToken" : {
+            "type" : "string",
+            "required" : true
+          },
+          "userId" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "devicelab.deleteDevice" : {
       "path" : "devices",
       "httpMethod" : "DELETE",
@@ -126,10 +151,64 @@
       "response" : {
         "body" : "autoTemplate(backendResponse)"
       }
+    },
+    "devicelab.registerBrowserForUpdates" : {
+      "path" : "devices/updates",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
+      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.registerBrowserForUpdates",
+      "request" : {
+        "parameters" : {
+          "accessToken" : {
+            "type" : "string",
+            "required" : true
+          },
+          "userId" : {
+            "type" : "string",
+            "required" : true
+          },
+          "clientId" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
     }
   },
   "descriptor" : {
     "schemas" : {
+      "Url" : {
+        "id" : "Url",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "url" : {
+            "type" : "string"
+          }
+        }
+      },
+      "UrlCollection" : {
+        "id" : "UrlCollection",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "Url"
+            }
+          }
+        }
+      },
       "ResponseForm" : {
         "id" : "ResponseForm",
         "type" : "object",
@@ -167,6 +246,19 @@
           },
           "gcmId" : {
             "type" : "string"
+          },
+          "browserClientId" : {
+            "type" : "string"
+          },
+          "browserToken" : {
+            "type" : "string"
+          },
+          "browserConnected" : {
+            "type" : "boolean"
+          },
+          "browserConnectedTime" : {
+            "type" : "string",
+            "format" : "int64"
           }
         }
       },
@@ -243,6 +335,9 @@
           },
           "userId" : {
             "type" : "string"
+          },
+          "browserClientId" : {
+            "type" : "string"
           }
         }
       },
@@ -267,6 +362,11 @@
       }
     },
     "methods" : {
+      "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.getUrls" : {
+        "response" : {
+          "$ref" : "UrlCollection"
+        }
+      },
       "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.deleteDevice" : {
         "response" : {
           "$ref" : "ResponseForm"
@@ -299,6 +399,11 @@
         },
         "response" : {
           "$ref" : "Device"
+        }
+      },
+      "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.registerBrowserForUpdates" : {
+        "response" : {
+          "$ref" : "ResponseForm"
         }
       }
     }

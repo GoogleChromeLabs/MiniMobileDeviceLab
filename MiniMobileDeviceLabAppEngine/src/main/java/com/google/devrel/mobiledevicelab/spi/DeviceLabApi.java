@@ -25,9 +25,9 @@ import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
-import com.google.appengine.api.utils.SystemProperty;
 import com.google.devrel.mobiledevicelab.Constants;
 import com.google.devrel.mobiledevicelab.domain.Device;
+import com.google.devrel.mobiledevicelab.domain.Url;
 import com.google.devrel.mobiledevicelab.form.DeviceEditForm;
 import com.google.devrel.mobiledevicelab.form.DeviceForm;
 import com.google.devrel.mobiledevicelab.form.PushUrlForm;
@@ -36,7 +36,7 @@ import com.google.devrel.mobiledevicelab.spi.helper.DeviceLabApiHelper;
 
 
 /**
- * Defines device APIs.
+ * Defines the APIs for the device lab.
  */
 @Api(
     name = "devicelab",
@@ -70,19 +70,31 @@ public class DeviceLabApi {
     if (deviceForm.getUserId() == null) {
       throw new BadRequestException("Missing user id!");
     }
-    if (deviceForm.getCloudMsgId() == null) {
-      throw new BadRequestException("Missing cloud msg id!");
-    }
-    if (deviceForm.getDeviceName() == null) {
-      throw new BadRequestException("Missing device name!");
-    }
-    if (deviceForm.getPlatformVersion() == null) {
-      throw new BadRequestException("Missing platformVersion!");
-    }
+
     if (deviceForm.getPlatformId() != 0 && deviceForm.getPlatformId() != 1) {
       throw new BadRequestException(
           "Invalid platform id, only 0 (Android) and 1 (iOS) are allowed!");
     }
+
+    if (deviceForm.getPlatformId() == 0) {
+      if (deviceForm.getCloudMsgId() == null) {
+        throw new BadRequestException("Missing cloud msg id!");
+      }
+      if (deviceForm.getDeviceName() == null) {
+        throw new BadRequestException("Missing device name!");
+      }
+      if (deviceForm.getPlatformVersion() == null) {
+        throw new BadRequestException("Missing platformVersion!");
+      }
+    }
+
+    if (deviceForm.getPlatformId() == 1) {
+      if (deviceForm.getBrowserClientId() == null) {
+        throw new BadRequestException("Missing browser client id!");
+      }
+    }
+
+
 
     return DeviceLabApiHelper.saveDevice(deviceForm);
   }
@@ -128,8 +140,24 @@ public class DeviceLabApi {
    */
   @ApiMethod(name = "getDevices", path = "devices", httpMethod = HttpMethod.GET) public
       List<Device> getDevices(@Named("accessToken") final String accessToken,
-          @Named("userId") final String userId) throws UnauthorizedException {
+          @Named("userId") final String userId)
+          throws UnauthorizedException {
     return DeviceLabApiHelper.getDevices(accessToken, userId);
+  }
+
+  /**
+   * This gets all the devices linked to the given lab owner
+   *
+   * @return List of matching Devices
+   * @throws UnauthorizedException if the given access token and user email do
+   *         not match
+   */
+  @ApiMethod(name = "registerBrowserForUpdates", path = "devices/updates",
+      httpMethod = HttpMethod.GET) public ResponseForm registerBrowserForUpdates(
+      @Named("accessToken") final String accessToken,
+      @Named("userId") final String userId, @Named("clientId") final String clientId)
+      throws UnauthorizedException {
+    return DeviceLabApiHelper.registerBrowserForUpdates(accessToken, userId, clientId);
   }
 
   /**
@@ -162,9 +190,6 @@ public class DeviceLabApi {
    */
   @ApiMethod(name = "pushUrl", path = "push/url", httpMethod = HttpMethod.POST) public ResponseForm
       pushUrl(final PushUrlForm pushUrlForm) throws BadRequestException, UnauthorizedException {
-    log.info("Application id " + SystemProperty.applicationId.get());
-
-
     if (pushUrlForm == null) {
       throw new BadRequestException("Missing push url form!");
     }
@@ -191,5 +216,16 @@ public class DeviceLabApi {
   }
 
 
-
+  /**
+   * This gets all the devices linked to the given lab owner
+   *
+   * @return List of matching Devices
+   * @throws UnauthorizedException if the given access token and user email do
+   *         not match
+   */
+  @ApiMethod(name = "getUrls", path = "url", httpMethod = HttpMethod.GET) public List<Url> getUrls(
+      @Named("accessToken") final String accessToken,
+      @Named("userId") final String userId) throws UnauthorizedException {
+    return DeviceLabApiHelper.getUrls(accessToken, userId);
+  }
 }

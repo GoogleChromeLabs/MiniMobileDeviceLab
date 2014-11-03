@@ -50,6 +50,11 @@ public class DeviceForm {
   private String userId;
 
   /**
+   * The client id of the browser for the device, as used by Channel API
+   */
+  private String browserClientId;
+
+  /**
    * Just making the default constructor private.
    */
   private DeviceForm() {
@@ -65,19 +70,13 @@ public class DeviceForm {
    * @param cloudMsgId The registration id for the device, provided by GCM
    * @param userId The id of the user to whom the device is registered for
    */
-  public DeviceForm(String token,
-      String deviceName,
-      int platformId,
-      String platformVersion,
-      String cloudMsgId,
-      String userId) {
-    this.token = token;
-    this.deviceName = deviceName;
-    this.platformId = platformId;
-    this.platformVersion = platformVersion;
-    this.cloudMsgId = cloudMsgId;
-    this.userId = userId;
-  }
+  /**
+   * public DeviceForm(String token, String deviceName, int platformId, String
+   * platformVersion, String cloudMsgId, String userId) { this.token = token;
+   * this.deviceName = deviceName; this.platformId = platformId;
+   * this.platformVersion = platformVersion; this.cloudMsgId = cloudMsgId;
+   * this.userId = userId; }
+   **/
 
   public String getToken() {
     return token;
@@ -101,6 +100,10 @@ public class DeviceForm {
 
   public String getUserId() {
     return userId;
+  }
+
+  public String getBrowserClientId() {
+    return browserClientId;
   }
 
 }

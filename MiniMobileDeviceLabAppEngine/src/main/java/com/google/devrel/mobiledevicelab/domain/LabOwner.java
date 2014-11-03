@@ -15,6 +15,8 @@
  **/
 package com.google.devrel.mobiledevicelab.domain;
 
+import java.util.logging.Logger;
+
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -24,6 +26,9 @@ import com.googlecode.objectify.annotation.Index;
  */
 @Entity
 public class LabOwner {
+
+  private static final Logger log = Logger.getLogger(LabOwner.class.getName());
+
 
   /**
    * The userId provided by Google OAuth service, used as the datastore key.
@@ -36,6 +41,27 @@ public class LabOwner {
    * are added to a new group
    */
   @Index private int groupId;
+
+  /**
+   * ClientIds for the lab owner, one for each active browser window; Channel
+   * API is used to automatically refresh list of devices
+   * 
+   * A concatenated list as follows:
+   * clientid1:time1;clientid2:time2;clientid3:time3
+   * 
+   */
+  private String clientIds;
+
+  /**
+   * Client ids separator
+   */
+  private final static String CLIENT_ID_SEP = ";";
+
+  /**
+   * Time for client id separator
+   */
+  public final static String TIME_SEP = ":";
+
 
   /**
    * Just making the default constructor private.
@@ -61,5 +87,44 @@ public class LabOwner {
   public int getGroupId() {
     return groupId;
   }
+
+  public String getClientIdsStr() {
+    return clientIds;
+  }
+
+  public String[] getClientIdsWithTime() {
+    if (clientIds == null || clientIds.equals("")) {
+      return null;
+    } else {
+      return clientIds.split(CLIENT_ID_SEP);
+    }
+  }
+
+  public boolean containsClientId(String clientId) {
+    return clientIds != null && clientIds.contains(clientId);
+  }
+
+  public void addClientId(String clientId) {
+    if (clientIds == null) {
+      clientIds = "";
+    }
+    if (clientIds.equals("")) {
+      clientIds = clientId + TIME_SEP + System.currentTimeMillis();
+    } else {
+      clientIds += CLIENT_ID_SEP + clientId + TIME_SEP + System.currentTimeMillis();
+    }
+  }
+
+  public void removeClientId(String clientId) {
+    if (clientIds == null || clientIds.equals("")) {
+      return;
+    } else {
+      String regEx = "(" + clientId + TIME_SEP + ")[0-9]+";
+      clientIds = clientIds.replaceAll(regEx + "(" + CLIENT_ID_SEP + ")", "");
+      clientIds = clientIds.replaceAll("(" + CLIENT_ID_SEP + ")" + regEx, "");
+      clientIds = clientIds.replaceAll(regEx, "");
+    }
+  }
+
 
 }

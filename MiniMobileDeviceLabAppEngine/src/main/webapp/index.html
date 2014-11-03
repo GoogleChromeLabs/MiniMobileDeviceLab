@@ -2,6 +2,8 @@
 <html>
 <head>
 <title>Mini Mobile Device Lab</title>
+<script type="text/javascript" src="/_ah/channel/jsapi"></script>
+<script type="text/javascript" src="/js/urls-model.js"></script>
 <script type="text/javascript" src="/js/devices-model.js"></script>
 <script type="text/javascript" src="/js/android-browser-model.js"></script>
 <script type="text/javascript" src="/js/libs/jquery-2.1.1.min.js"></script>
@@ -27,9 +29,10 @@
 	<div class="navbar" id="navbar">
 		<span>Device Lab</span>
 		<div class="url-send-container">
-			<input id="url" type="text" /> <img class="button"
-				src="images/button_send.svg" alt="Send" id="pushUrl" /> <span
-				id="pushMessage"></span>
+			<form><input id="url" type="text" list="previousUrls"/>
+			<datalist id="previousUrls"></datalist></form>
+			<img class="button" src="images/button_send.svg" alt="Send"
+				id="pushUrl" /> <span id="pushMessage"></span>
 		</div>
 	</div>
 
@@ -49,24 +52,37 @@
 	</div>
 
 	<div class="container" id="loggedIn">
-		<section class="platform">
-			<div class="platform-header">
-				<header>
-					<img src="images/android.svg" alt="Android" /><span>Android</span>
-				</header>
-				<div class="refreshDevices">
-					<img class="button" src="images/button_refresh.svg" alt="Send"
-						id="getDevices" /> <span id="devicesMessage"></span>
-				</div>
-				<span class="toggle-switch"> <input
-					id="android-header-checkbox" class="checkbox" type="checkbox"
-					checked> <label for="android-header-checkbox"
-					class="checkbox-label"></label>
-				</span>
+		<div class="platform-header">
+			<header>
+				<img src="images/android.svg" alt="Android" /><span>Android</span>
+			</header>
+			<div class="refreshDevices">
+				<img class="button" src="images/button_refresh.svg" alt="Send"
+					id="getDevices1" /> <span id="devicesMessage1"></span>
 			</div>
-			<div id="devicesTable">
+			<span class="toggle-switch"> <input
+				id="android-header-checkbox" class="checkbox" type="checkbox"
+				checked> <label for="android-header-checkbox"
+				class="checkbox-label"></label>
+			</span>
+		</div>
+		<div class="device-table" id="androidDevicesTable"></div>
+		<div class="platform-header">
+			<header>
+				<img src="images/sites.svg" alt="Non Android" /><span>Non
+					Android</span>
+			</header>
+			<div class="refreshDevices">
+				<img class="button" src="images/button_refresh.svg" alt="Send"
+					id="getDevices2" /> <span id="devicesMessage2"></span>
 			</div>
-		</section>
+			<span class="toggle-switch"> <input
+				id="non-android-header-checkbox" class="checkbox" type="checkbox"
+				checked> <label for="non-android-header-checkbox"
+				class="checkbox-label"></label>
+			</span>
+		</div>
+		<div class="device-table" id="nonAndroidDevicesTable"></div>
 	</div>
 	<script type="text/javascript">
 		function init() {
@@ -75,9 +91,9 @@
 		}
 	</script>
 	<script src="https://apis.google.com/js/client.js?onload=init"></script>
-	
-	<!-- Device List Item Template -->
-        <script id="device-row-template" type="text/html">
+
+	<!-- Templates -->
+	<script id="device-row-template" type="text/html">
 			<tr id="{{id}}">
 			<td class="device-name" id="device-name-{{id}}"><span id="device-name-display-{{id}}">{{device-name}}</span>
 			<input id="device-name-input-{{id}}" type="text" style="display:none" class="device-name"/>
@@ -98,9 +114,12 @@
 			</td>
 			</tr>
         </script>
-        <script id="device-row-browser-template" type="text/html">
+	<script id="device-row-browser-template" type="text/html">
 			<img  id="device-browser-{{browser-index-start-at-1}}-{{id}}" class="browser-icon" {{src}} {{alt}}/>
         </script>
-	
+	<script id="datalist-row-template" type="text/html">
+			<option value="{{value}}">
+        </script>
+
 </body>
 </html>
