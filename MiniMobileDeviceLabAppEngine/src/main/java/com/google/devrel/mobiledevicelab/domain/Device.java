@@ -43,9 +43,9 @@ public class Device {
   private String deviceName;
 
   /**
-   * Android = 0, iPhone = 1
+   * Android = 0, others = 1
    */
-  private int platformId;
+  @Index private int platformId;
 
   /**
    * The version of the platform, eg "4.4"
@@ -57,6 +57,28 @@ public class Device {
    */
   @Index private String gcmId;
 
+
+  /**
+   * The client id of the browser for the device, as used by Channel API
+   */
+  @Index private String browserClientId;
+
+
+  /**
+   * The token the browser can use to listen on, using Channel API
+   */
+  private String browserToken;
+
+  /**
+   * Whether the browser is connected, using Channel API
+   */
+  private boolean browserConnected;
+
+  /**
+   * When the browser connected to the channel API
+   */
+  private long browserConnectedTime;
+
   /**
    * Just making the default constructor private.
    */
@@ -64,24 +86,44 @@ public class Device {
   }
 
   /**
-   * Public constructor for Device.
+   * Public constructor for Android Device.
    * 
    * @param deviceName The name of the device
-   * @param platformId Android = 0, iPhone = 1
    * @param platformVersion The version of the platform, eg "4.4"
    * @param cloudMsgId The registration id for the device, provided by GCM
    * @param groupId The group id of the user the device belongs to
    */
   public Device(String deviceName,
-      int platformId,
       String platformVersion,
       String cloudMsgId,
       int groupId) {
     this.groupId = groupId;
     this.deviceName = deviceName;
-    this.platformId = platformId;
+    this.platformId = 0;
     this.platformVersion = platformVersion;
     this.gcmId = cloudMsgId;
+  }
+
+  /**
+   * Public constructor for non Android Device.
+   * 
+   * @param deviceName The name of the device
+   * @param browserClientId The client id of the browser for the device, as used
+   *        by Channel API
+   * @param groupId The group id of the user the device belongs to
+   * @param browserToken The token the browser can use to listen on, using
+   *        Channel API
+   */
+  public Device(String deviceName,
+      String browserClientId,
+      int groupId, String browserToken) {
+    this.groupId = groupId;
+    this.deviceName = deviceName;
+    this.platformId = 1;
+    this.browserToken = browserToken;
+    this.browserClientId = browserClientId;
+    this.browserConnected = false;
+    this.browserConnectedTime = System.currentTimeMillis();
   }
 
   public Long getId() {
@@ -108,12 +150,31 @@ public class Device {
     return gcmId;
   }
 
+  public String getBrowserClientId() {
+    return browserClientId;
+  }
+
+  public String getBrowserToken() {
+    return browserToken;
+  }
+
+  public boolean isBrowserConnected() {
+    return browserConnected;
+  }
+
+  public long getBrowserConnectedTime() {
+    return browserConnectedTime;
+  }
+
   public void update(String deviceName) {
     if (deviceName != null && !deviceName.equals("")) {
       this.deviceName = deviceName;
     }
   }
 
-
+  public void browserConnected() {
+    this.browserConnected = true;
+    this.browserConnectedTime = System.currentTimeMillis();
+  }
 
 }

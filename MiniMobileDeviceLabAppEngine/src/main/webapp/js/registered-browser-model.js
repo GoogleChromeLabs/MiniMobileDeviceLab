@@ -15,7 +15,7 @@
  **/
 /**
  * @fileoverview
- * Provides model for login status and devices
+ * Provides model for registered device/browser (listen.html)
  *
   */
 
@@ -29,46 +29,17 @@ google.devrel = google.devrel || {};
 google.devrel.mobiledevicelab = google.devrel.mobiledevicelab || {};
 
 /**
- * The signin token
+ * The registered device
  */
-google.devrel.mobiledevicelab.token = "";
+google.devrel.mobiledevicelab.registeredDevice = null;
 
 /**
- * The user id
+ * The channel the registered device/browser can listen to urls
  */
-google.devrel.mobiledevicelab.userId = "";
+google.devrel.mobiledevicelab.channel = null;
 
 /**
- * The android devices of the logged in user
+ * The socket the registered device/browser can listen to urls
  */
-google.devrel.mobiledevicelab.androidDevices = null;
+google.devrel.mobiledevicelab.socket = null;
 
-/**
- * The non android devices of the logged in user
- */
-google.devrel.mobiledevicelab.nonAndroidDevices = null;
-
-/**
- * The UI state of each device (browser selected, toggle on/off)
- */
-google.devrel.mobiledevicelab.devicesState = new Object();;
-
-/**
- * The state of the main on/off toggle
- */
-google.devrel.mobiledevicelab.androidDevicesSwitchedOff = false;
-
-/**
- * The state of the main on/off toggle
- */
-google.devrel.mobiledevicelab.nonAndroidDevicesSwitchedOff = false;
-
-/**
- * The channel the lab can listen for devices update
- */
-google.devrel.mobiledevicelab.labchannel = null;
-
-/**
- * The socket the lab can listen for devices update
- */
-google.devrel.mobiledevicelab.labsocket = null;

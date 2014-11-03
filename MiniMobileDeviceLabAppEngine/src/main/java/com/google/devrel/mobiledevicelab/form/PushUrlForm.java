@@ -62,33 +62,6 @@ public class PushUrlForm {
   private PushUrlForm() {
   }
 
-  /**
-   * Public constructor for PushUrlForm.
-   * 
-   * @param token The token provided by Google OAuth service
-   * @param userId The id of the user linked to the access token
-   * @param url The url to push to devices in the lab
-   * @param sameBrowserForAllDevices Whether to push to the same browser on all
-   *        devices
-   * @param browserPackageName The package name of the browser to push, if
-   *        sameBrowserForAllDevices is true
-   * @param devices The list of browser package names to use for each device we
-   *        want to push the url to
-   */
-  public PushUrlForm(String token,
-      String userId,
-      String url,
-      boolean sameBrowserForAllDevices,
-      String browserPackageName,
-      List<DeviceBrowserForm> devices) {
-    this.token = token;
-    this.userId = userId;
-    this.url = url;
-    this.sameBrowserForAllDevices = sameBrowserForAllDevices;
-    this.browserPackageName = browserPackageName;
-    this.individualDevices = devices;
-  }
-
   public String getToken() {
     return token;
   }
@@ -98,6 +71,9 @@ public class PushUrlForm {
   }
 
   public String getUrl() {
+    if (!url.contains("http://") && !url.contains("https://")) {
+      url = "http://" + url;
+    }
     return url;
   }
 
@@ -129,6 +105,20 @@ public class PushUrlForm {
       }
     }
     return null;
+  }
+
+  /**
+   * @param id
+   * @return true if the device with the given id is in the list of individual
+   *         devices
+   */
+  public boolean isDeviceInList(long id) {
+    for (DeviceBrowserForm device : individualDevices) {
+      if (device.getDeviceId() == id) {
+        return true;
+      }
+    }
+    return false;
   }
 
 

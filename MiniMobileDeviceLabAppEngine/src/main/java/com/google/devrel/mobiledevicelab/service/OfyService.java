@@ -17,6 +17,7 @@ package com.google.devrel.mobiledevicelab.service;
 
 import com.google.devrel.mobiledevicelab.domain.Device;
 import com.google.devrel.mobiledevicelab.domain.LabOwner;
+import com.google.devrel.mobiledevicelab.domain.Url;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
@@ -32,6 +33,8 @@ public class OfyService {
   static {
     factory().register(Device.class);
     factory().register(LabOwner.class);
+    factory().register(Url.class);
+    ofy().cache(false);
   }
 
   /**

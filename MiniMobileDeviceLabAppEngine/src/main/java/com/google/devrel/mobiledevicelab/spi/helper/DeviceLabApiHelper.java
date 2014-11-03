@@ -33,6 +33,8 @@ import org.json.JSONObject;
 
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
+import com.google.appengine.api.channel.ChannelService;
+import com.google.appengine.api.channel.ChannelServiceFactory;
 import com.google.appengine.api.urlfetch.HTTPHeader;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.api.urlfetch.HTTPRequest;
@@ -40,6 +42,7 @@ import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.devrel.mobiledevicelab.Constants;
 import com.google.devrel.mobiledevicelab.domain.Device;
 import com.google.devrel.mobiledevicelab.domain.LabOwner;
+import com.google.devrel.mobiledevicelab.domain.Url;
 import com.google.devrel.mobiledevicelab.form.DeviceEditForm;
 import com.google.devrel.mobiledevicelab.form.DeviceForm;
 import com.google.devrel.mobiledevicelab.form.PushUrlForm;
@@ -69,13 +72,53 @@ public class DeviceLabApiHelper {
     validateTokenForUserId(getTokenJsonFromAccessToken(deviceForm.getToken()), deviceForm
         .getUserId());
 
-    // Verify GCM id
-    String GCMError = pushUrlToDevice(deviceForm.getCloudMsgId(), "test", "test");
-    if (GCMError != null) {
-      throw new UnauthorizedException("GCMError");
-    }
+    if (deviceForm.getPlatformId() == 0) {
+      // Verify GCM id
+      String GCMError = pushUrlToDevice(deviceForm.getCloudMsgId(), "test", "test");
+      if (GCMError != null) {
+        throw new UnauthorizedException("GCMError");
+      }
 
-    LabOwner labOwner = ofy().load().key(Key.create(LabOwner.class, deviceForm.getUserId())).now();
+      LabOwner labOwner = getLabOwner(deviceForm);
+
+      // Check we don't have device already (using cloudMsgId for matching)
+      List<Device> devices =
+          ofy().load().type(Device.class).filter("gcmId", deviceForm.getCloudMsgId()).list();
+      if (devices.size() > 0) {
+        ofy().delete().key(Key.create(Device.class, devices.get(0).getId())).now();
+
+      }
+      Device device =
+          new Device(deviceForm.getDeviceName(), deviceForm
+              .getPlatformVersion(), deviceForm.getCloudMsgId(), labOwner.getGroupId());
+      ofy().save().entity(device).now();
+      return device;
+    } else {
+      LabOwner labOwner = getLabOwner(deviceForm);
+
+      String token = createChannel(deviceForm);
+
+      Device device =
+          new Device(deviceForm.getDeviceName(), deviceForm
+              .getBrowserClientId(), labOwner.getGroupId(), token);
+      ofy().save().entity(device).now();
+
+      ConnectionChannelApiHelper.pushUpdateDevicesToChannel(labOwner);
+
+      return device;
+    }
+  }
+
+  /**
+   * This gets the lab owner, or create it if new
+   * 
+   * @param deviceForm A DeviceForm object sent from the client form.
+   * @return the lab owner
+   */
+  private static LabOwner getLabOwner(final DeviceForm deviceForm) {
+    ofy().clear();
+    LabOwner labOwner =
+        ofy().load().key(Key.create(LabOwner.class, deviceForm.getUserId())).now();
     if (labOwner == null) {
       List<LabOwner> owners = ofy().load().type(LabOwner.class).order("groupId").list();
       int newGroupId = 0;
@@ -87,19 +130,31 @@ public class DeviceLabApiHelper {
       labOwner = new LabOwner(deviceForm.getUserId(), newGroupId);
       ofy().save().entity(labOwner).now();
     }
+    return labOwner;
+  }
 
-    // Check we don't have device already (using cloudMsgId for matching)
-    List<Device> devices =
-        ofy().load().type(Device.class).filter("gcmId", deviceForm.getCloudMsgId()).list();
-    if (devices.size() > 0) {
-      ofy().delete().key(Key.create(Device.class, devices.get(0).getId())).now();
 
-    }
-    Device device =
-        new Device(deviceForm.getDeviceName(), deviceForm.getPlatformId(), deviceForm
-            .getPlatformVersion(), deviceForm.getCloudMsgId(), labOwner.getGroupId());
-    ofy().save().entity(device).now();
-    return device;
+  /**
+   * Creates a channel for the device as given in the deviceForm and returns the
+   * token associated with the channel
+   * 
+   * @param deviceForm A DeviceForm object sent from the client form.
+   * @return the token for the newly created channel
+   */
+  private static String createChannel(final DeviceForm deviceForm) {
+    return createChannel(deviceForm.getBrowserClientId());
+  }
+
+  /**
+   * Creates a channel for the given clientId and returns the token associated
+   * with the channel
+   * 
+   * @param clientId The clientId to create the channnel for
+   * @return the token for the newly created channel
+   */
+  private static String createChannel(final String clientId) {
+    ChannelService channelService = ChannelServiceFactory.getChannelService();
+    return channelService.createChannel(clientId);
   }
 
   /**
@@ -116,12 +171,15 @@ public class DeviceLabApiHelper {
     validateTokenForUserId(getTokenJsonFromAccessToken(deviceForm.getToken()), deviceForm
         .getUserId());
     Device device = ofy().load().key(Key.create(Device.class, deviceForm.getDeviceId())).now();
+    ofy().clear();
     if (device != null) {
       LabOwner labOwner =
           ofy().load().key(Key.create(LabOwner.class, deviceForm.getUserId())).now();
       if (labOwner != null && labOwner.getGroupId() == device.getGroupId()) {
         device.update(deviceForm.getDeviceName());
         ofy().save().entity(device).now();
+        ConnectionChannelApiHelper.pushNameToChannel(device.getBrowserClientId(), device
+            .getDeviceName());
 
         return device;
       } else {
@@ -135,6 +193,8 @@ public class DeviceLabApiHelper {
   /**
    * This gets all the devices linked to the given lab owner
    *
+   * @param accessToken The G+ access token for the lab owner
+   * @param userId The G+ user id for the lab owner
    * @return List of matching Devices
    * @throws UnauthorizedException if the given access token and user email do
    *         not match
@@ -148,6 +208,34 @@ public class DeviceLabApiHelper {
       devices = ofy().load().type(Device.class).filter("groupId", labOwner.getGroupId()).list();
     }
     return devices;
+  }
+
+  /**
+   * This registers the browser of the lab owner to receive updates
+   *
+   * @param accessToken The G+ access token for the lab owner
+   * @param userId The G+ user id for the lab owner
+   * @param clientId The clientId for the browser, to use for the Channel API
+   *        for automatic refreshing of devices
+   * @return The token the browser can then use to connect to the Channel API
+   * @throws UnauthorizedException if the given access token and user email do
+   *         not match
+   */
+  public static ResponseForm registerBrowserForUpdates(final String accessToken,
+      final String userId,
+      final String clientId)
+      throws UnauthorizedException {
+    ofy().clear();
+    validateTokenForUserId(getTokenJsonFromAccessToken(accessToken), userId);
+    log.info("Register Browser with id " + clientId);
+    LabOwner labOwner = ofy().load().key(Key.create(LabOwner.class, userId)).now();
+    if (!labOwner.containsClientId(clientId)) {
+      labOwner.addClientId(clientId);
+      ofy().save().entity(labOwner).now();
+      log.info("Client Ids " + labOwner.getClientIdsStr());
+    }
+    String token = createChannel(clientId);
+    return new ResponseForm(null, true, token);
   }
 
   /**
@@ -166,7 +254,9 @@ public class DeviceLabApiHelper {
     if (device != null) {
       LabOwner labOwner = ofy().load().key(Key.create(LabOwner.class, userId)).now();
       if (labOwner != null && labOwner.getGroupId() == device.getGroupId()) {
+        ConnectionChannelApiHelper.pushDisconnectToChannel(device.getBrowserClientId());
         ofy().delete().key(Key.create(Device.class, deviceId)).now();
+
         return new ResponseForm("", true, "Device with id " + deviceId + " deleted");
       } else {
         throw new UnauthorizedException("The device doesn't belong to the group of the lab owner!");
@@ -193,7 +283,9 @@ public class DeviceLabApiHelper {
 
     // Get list of devices
     List<Device> devices = new ArrayList<Device>();
-    int devicesSuccessfullyPushedTo = 0;
+    int androidDevicesSuccessfullyPushedTo = 0;
+    int nonAndroidDevicesSuccessfullyPushedTo = 0;
+    ofy().clear();
     LabOwner labOwner = ofy().load().key(Key.create(LabOwner.class, pushUrlForm.getUserId())).now();
     String error = "";
     if (labOwner != null) {
@@ -201,22 +293,71 @@ public class DeviceLabApiHelper {
       if (devices.size() > 0) {
         for (Device device : devices) {
           String browser = pushUrlForm.getBrowserPackageNameForDeviceId(device.getId());
-          if (browser != null) {
-            String errorPushing = pushUrlToDevice(device, pushUrlForm, browser);
+          if (browser != null && device.getPlatformId() == 0) {
+            String errorPushing = pushUrlToDevice(device.getGcmId(), pushUrlForm.getUrl(), browser);
             if (errorPushing == null) {
-              devicesSuccessfullyPushedTo += 1;
+              androidDevicesSuccessfullyPushedTo += 1;
             } else {
               error += errorPushing + " for device with id " + device.getId() + "\n";
             }
+          } else if (pushUrlForm.isDeviceInList(device.getId()) && device.getPlatformId() == 1) {
+            boolean channelPushSuccess =
+                ConnectionChannelApiHelper.pushUrlToChannel(pushUrlForm, device);
+            if (channelPushSuccess) {
+              nonAndroidDevicesSuccessfullyPushedTo += 1;
+            } else {
+              error +=
+                  "Device with name " + device.getDeviceName() + "appears to be disconnected\n";
+            }
+          } else if (browser == null && pushUrlForm.isDeviceInList(device.getId())
+              && device.getPlatformId() == 0) {
+            error += "No package name provided for Android device " + device.getDeviceName() + "\n";
           }
         }
       }
     }
-    log.info("devices pushed to: " + devicesSuccessfullyPushedTo);
+    log.info("Android devices pushed to: " + androidDevicesSuccessfullyPushedTo);
+    log.info("Non Android devices pushed to: " + nonAndroidDevicesSuccessfullyPushedTo);
+    ConnectionChannelApiHelper.cleanUpDisconnectedDevices(labOwner.getGroupId());
+    ConnectionChannelApiHelper.cleanUpDisconnectedLabs(labOwner);
 
-    return new ResponseForm(error, error.equals(""), "Notification pushed to "
-        + devicesSuccessfullyPushedTo + " Android "
-        + (devicesSuccessfullyPushedTo > 1 ? "devices" : "device"));
+    List<Url> urls =
+        ofy().load().type(Url.class).filter("groupId", labOwner.getGroupId()).filter("url",
+            pushUrlForm.getUrl()).list();
+    if (urls.size() > 0) {
+      urls.get(0).urlPushed();
+    } else {
+      Url url = new Url(pushUrlForm.getUrl(), labOwner.getGroupId());
+      urls.add(url);
+    }
+    ofy().save().entity(urls.get(0)).now();
+
+    return new ResponseForm(error, error.equals(""), "Url pushed to "
+        + androidDevicesSuccessfullyPushedTo + " Android "
+        + (androidDevicesSuccessfullyPushedTo > 1 ? "devices" : "device") + " and to "
+        + nonAndroidDevicesSuccessfullyPushedTo + " non Android "
+        + (nonAndroidDevicesSuccessfullyPushedTo > 1 ? "devices" : "device"));
+  }
+
+
+  /**
+   * This gets all the urls linked to the given lab owner
+   *
+   * @return List of matching Url
+   * @throws UnauthorizedException if the given access token and user email do
+   *         not match
+   */
+  public static List<Url> getUrls(final String accessToken, final String userId)
+      throws UnauthorizedException {
+    validateTokenForUserId(getTokenJsonFromAccessToken(accessToken), userId);
+    List<Url> urls = new ArrayList<Url>();
+    LabOwner labOwner = ofy().load().key(Key.create(LabOwner.class, userId)).now();
+    if (labOwner != null) {
+      urls =
+          ofy().load().type(Url.class).filter("groupId", labOwner.getGroupId()).order("-lastUsed")
+              .list();
+    }
+    return urls;
   }
 
   /**
@@ -321,20 +462,6 @@ public class DeviceLabApiHelper {
     return "Exception thrown - see logs";
   }
 
-  /**
-   * @param device
-   * @param form
-   * @param browser
-   * @return null if successful, or error message if not
-   */
-  private static String pushUrlToDevice(Device device, PushUrlForm form, String browser) {
-    if (device.getPlatformId() == 0) {
-      return pushUrlToDevice(device.getGcmId(), form.getUrl(), browser);
-    } else {
-      return "Not an Android device";
-    }
-
-  }
 
   /**
    * @param responseFromGCM The string response as received from GCM server
