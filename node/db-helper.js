@@ -32,17 +32,30 @@ var tables = [
     ')'
 ];
 
-exports.openDb = function(successCb, errorCb) {
+function openDb(successCb, errorCb) {
     connection = mysql.createConnection(config.dbURL);
-    // a connection can also be implicitly established by invoking a query
+    connection.connect(function (err) {
+        if (err) {
+            console.error('db connection error: ' + err.stack);
+            // retry after 1 sec
+            setTimeout(openDb.bind(null, successCb, errorCb), 1000);
+            return;
+        }
+        initDb(connection, successCb, errorCb);
+    })
+}
+
+function initDb(connection, successCb, errorCb) {
     connection.query('CREATE DATABASE IF NOT EXISTS ' + config.dbName, function (err) {
         if (err) {
-            throw err;
+            errorCb(err);
+            return
         }
 
         connection.query('USE ' + config.dbName, function (err) {
             if (err) {
-                throw err;
+                errorCb(err);
+                return;
             }
 
             initTable(connection, 0, successCb, errorCb);
@@ -67,3 +80,5 @@ function initTable(connection, index, successCb, errorCb) {
             initTable(connection, index, successCb, errorCb);
         });
 }
+
+exports.openDb = openDb;
