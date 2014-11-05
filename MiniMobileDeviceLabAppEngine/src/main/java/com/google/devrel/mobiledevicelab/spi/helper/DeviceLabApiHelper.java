@@ -206,7 +206,9 @@ public class DeviceLabApiHelper {
     LabOwner labOwner = ofy().load().key(Key.create(LabOwner.class, userId)).now();
     if (labOwner != null) {
       devices = ofy().load().type(Device.class).filter("groupId", labOwner.getGroupId()).list();
+      ConnectionChannelApiHelper.cleanUpDisconnectedDevices(labOwner.getGroupId());
     }
+
     return devices;
   }
 
