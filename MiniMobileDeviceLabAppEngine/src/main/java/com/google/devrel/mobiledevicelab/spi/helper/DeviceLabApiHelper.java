@@ -205,8 +205,8 @@ public class DeviceLabApiHelper {
     List<Device> devices = new ArrayList<Device>();
     LabOwner labOwner = ofy().load().key(Key.create(LabOwner.class, userId)).now();
     if (labOwner != null) {
-      devices = ofy().load().type(Device.class).filter("groupId", labOwner.getGroupId()).list();
       ConnectionChannelApiHelper.cleanUpDisconnectedDevices(labOwner.getGroupId());
+      devices = ofy().load().type(Device.class).filter("groupId", labOwner.getGroupId()).list();
     }
 
     return devices;
