@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   Copyright 2014 The Android Open Source Project
 
@@ -14,11 +15,14 @@
   limitations under the License.
   -->
 <resources>
-    <color name="primary">#9c27b0</color>
-    <color name="primary_dark">#7b1fa2</color>
-    <color name="accent">#607d8b</color>
-    <color name="text_white">#FFFFFF</color>
-    <color name="text">#000000</color>
-    <color name="touch">#666666</color>
-    <color name="focus">#AAAAAA</color>
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@color/text_white</item>
+        <item name="android:navigationBarColor">@color/primary_dark</item>
+    </style>
+
+
+
 </resources>
