@@ -23,6 +23,7 @@ import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,7 +53,7 @@ import net.cogitas.devicelab.enums.GAEIdVerificationStatus;
 import net.cogitas.devicelab.io.HttpCallHelper;
 
 
-public class MainActivity extends Activity
+public class MainActivity extends ActionBarActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SetGAEIdDialogFragment.SetGAEIdDialogListener {
 
