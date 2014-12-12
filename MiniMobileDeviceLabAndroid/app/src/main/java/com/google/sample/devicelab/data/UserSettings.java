@@ -13,12 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  **/
-package net.cogitas.devicelab.data;
+package com.google.sample.devicelab.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import net.cogitas.devicelab.enums.GAEIdVerificationStatus;
+import com.google.sample.devicelab.enums.GAEIdVerificationStatus;
 
 /**
  * This class reads and stores user settings

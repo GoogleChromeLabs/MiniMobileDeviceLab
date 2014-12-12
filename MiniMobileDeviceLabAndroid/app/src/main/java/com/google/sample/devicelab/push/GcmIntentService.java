@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  **/
-package net.cogitas.devicelab.push;
+package com.google.sample.devicelab.push;
 
 import android.app.Service;
 import android.content.Intent;
