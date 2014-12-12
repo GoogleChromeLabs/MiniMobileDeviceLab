@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  **/
-package net.cogitas.devicelab.enums;
+package com.google.sample.devicelab.enums;
 
 
 import android.content.Context;

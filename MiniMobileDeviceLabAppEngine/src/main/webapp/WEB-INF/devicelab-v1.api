@@ -1,13 +1,13 @@
 {
   "extends" : "thirdParty.api",
   "abstract" : false,
-  "root" : "https://neat-gasket-714.appspot.com/_ah/api",
+  "root" : "https://device-lab-gauntface.appspot.com/_ah/api",
   "name" : "devicelab",
   "version" : "v1",
   "description" : "Device API for adding and getting devices, and pushing messages to them",
   "defaultVersion" : false,
   "adapter" : {
-    "bns" : "https://neat-gasket-714.appspot.com/_ah/spi",
+    "bns" : "https://device-lab-gauntface.appspot.com/_ah/spi",
     "deadline" : 65.0,
     "type" : "lily"
   },
@@ -30,8 +30,8 @@
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
-      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "audiences" : [ "replace this with your OAuth web application client ID" ],
+      "clientIds" : [ "replace this with your OAuth web application client ID", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.getUrls",
       "request" : {
         "parameters" : {
@@ -55,8 +55,8 @@
       "httpMethod" : "DELETE",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
-      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "audiences" : [ "replace this with your OAuth web application client ID" ],
+      "clientIds" : [ "replace this with your OAuth web application client ID", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.deleteDevice",
       "request" : {
         "parameters" : {
@@ -84,8 +84,8 @@
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
-      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "audiences" : [ "replace this with your OAuth web application client ID" ],
+      "clientIds" : [ "replace this with your OAuth web application client ID", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.getDevices",
       "request" : {
         "parameters" : {
@@ -109,8 +109,8 @@
       "httpMethod" : "POST",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
-      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "audiences" : [ "replace this with your OAuth web application client ID" ],
+      "clientIds" : [ "replace this with your OAuth web application client ID", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.pushUrl",
       "request" : {
         "body" : "autoTemplate(backendRequest)",
@@ -125,8 +125,8 @@
       "httpMethod" : "POST",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
-      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "audiences" : [ "replace this with your OAuth web application client ID" ],
+      "clientIds" : [ "replace this with your OAuth web application client ID", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.saveDevice",
       "request" : {
         "body" : "autoTemplate(backendRequest)",
@@ -141,8 +141,8 @@
       "httpMethod" : "PUT",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
-      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "audiences" : [ "replace this with your OAuth web application client ID" ],
+      "clientIds" : [ "replace this with your OAuth web application client ID", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.editDevice",
       "request" : {
         "body" : "autoTemplate(backendRequest)",
@@ -157,8 +157,8 @@
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com" ],
-      "clientIds" : [ "557330147749-d6itrvuhkauapjkhe430m5k2h8s657r8.apps.googleusercontent.com", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
+      "audiences" : [ "replace this with your OAuth web application client ID" ],
+      "clientIds" : [ "replace this with your OAuth web application client ID", "replace this with your Android client ID", "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "com.google.devrel.mobiledevicelab.spi.DeviceLabApi.registerBrowserForUpdates",
       "request" : {
         "parameters" : {

@@ -1,4 +1,4 @@
-package net.cogitas.devicelab;
+package com.google.sample.devicelab;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,7 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import net.cogitas.devicelab.data.UserSettings;
+import com.google.sample.devicelab.data.UserSettings;
+
 import net.cogitas.devicelab.R;
 
 /**
