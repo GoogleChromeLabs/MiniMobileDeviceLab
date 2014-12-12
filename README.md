@@ -40,7 +40,7 @@ This project consists of 2 elements:
 - Go to the Developer console for your project at [https://console.developers.google.com/](https://console.developers.google.com/)
 - Go to "APIs & Auth > Credentials" and click "Create new Client ID"
 - Select "Install applcation" and "Android"
-- For the package name you can use the existing packe "com.google.sample.devicelab" or you can alter it to something specific to you (If you do this, be sure to make the same change in the /app/build.gradle file)
+- For the package name you can use the existing package "com.google.sample.devicelab" or you can alter it to something specific to you (If you do this, be sure to make the same change in the /app/build.gradle file)
 - To find out the Signing Certificate SHA1 for a debug certificate use the command: `keytool -list -v -keystore ~/.android/debug.keystore`
 - This may take a while to allow the app to sign in, so give a try every once in a while.
 
