@@ -17,11 +17,18 @@ This project consists of 2 elements:
 - Go to Google developer console at https://console.developers.google.com and create a new project
 - Rename or copy the src/main/webapp/WEB-INF/appengine-web.sample.xml to src/main/webapp/WEB-INF/appengine-web.xml
 - Open the appengine-web.xml file and change "your-app-id" to your project ID
-- In the Google developer console, select your project, and click on "APIs" in left menu. Make sure you enable "Google Cloud Messaging For Android" and "Google+ API".
-- Then, in left menu, click on "Consent Screen", enter your email address and project name, and click on save.
-- Then, in left menu, click on "Credentials". Select "Create New Key" and follow the instructions (enter 0.0.0.0/0 for IPs). Then, select "create new Client ID", choose "web application" and follow the instructions.
-- The two keys created above need to be inserted in the file src/main/java/com/google/devrel/mobiledevicelab/Constants.java, in API_KEY and WEB_CLIENT_ID respectively.
-- Additionally, the client id needs to be inserted in src/main/wenapp/index.html and listen.html, replacing the string "web-client-id" with your new web application client id.
+- In the Google developer console, select your project, and click on "APIs & Auth > APIS" in left menu. Make sure you enable "Google Cloud Messaging For Android" and "Google+ API".
+- Then, in left menu, click on "APIS & Auth > Consent Screen", enter your email address and project name, and click on save.
+- Then, in left menu, click on "APIS & Auth > Credentials". Select "Create New Key", select "Server key" and follow the instructions (leave the accept requests from server IP addresses empty to allow from all IPs). 
+- Then, select "create new Client ID", choose "web application" and follow the instructions.
+
+MATT: Presumably the the authorised javascript origins will be https://*projectid*.appspot.com
+MATT: Presumable the Authorised redirect URIs will be left alone to https://*projectid*.appspot.com/oauth2callback
+
+
+
+- The two keys created above need to be inserted in the file MiniMobileDeviceLabAppEngine/src/main/java/com/google/devrel/mobiledevicelab/Constants.java, in API_KEY and WEB_CLIENT_ID respectively.
+- Additionally, the client id needs to be inserted in MiniMobileDeviceLabAppEngine/src/main/wenapp/index.html and listen.html, replacing the string "web-client-id" with your new web application client id.
 
 **Android App setup**
 - (TODO)
