@@ -13,9 +13,8 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  **/
-package net.cogitas.devicelab;
+package com.google.sample.devicelab;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +32,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.sample.devicelab.data.UserSettings;
+import com.google.sample.devicelab.enums.GAEIdVerificationStatus;
+import com.google.sample.devicelab.io.HttpCallHelper;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
@@ -48,9 +50,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import net.cogitas.devicelab.data.UserSettings;
-import net.cogitas.devicelab.enums.GAEIdVerificationStatus;
-import net.cogitas.devicelab.io.HttpCallHelper;
+import net.cogitas.devicelab.R;
 
 
 public class MainActivity extends ActionBarActivity

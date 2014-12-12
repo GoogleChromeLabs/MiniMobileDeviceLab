@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  **/
-package net.cogitas.devicelab.io;
+package com.google.sample.devicelab.io;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
