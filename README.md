@@ -28,7 +28,7 @@ MATT: Presumable the Authorised redirect URIs will be left alone to https://*pro
 
 
 - The two keys created above need to be inserted in the file MiniMobileDeviceLabAppEngine/src/main/java/com/google/devrel/mobiledevicelab/Constants.java, in API_KEY and WEB_CLIENT_ID respectively.
-- Additionally, the client id needs to be inserted in MiniMobileDeviceLabAppEngine/src/main/wenapp/index.html and listen.html, replacing the string "web-client-id" with your new web application client id.
+- Additionally, the client id needs to be inserted in MiniMobileDeviceLabAppEngine/src/main/wenapp/index.html and listen.html, replacing the string "OAuth-web-application-client-id" with your new web application client id.
 
 **Android App setup**
 - (TODO)
