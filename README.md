@@ -1,8 +1,6 @@
 Mini Mobile Device Lab
 ======================
 
-IN PROGRESS
-
 **Goal of the project**
 
 To enable website developers to test their websites on several devices with one click.
@@ -17,7 +15,8 @@ This project consists of 2 elements:
 **App Engine Java app setup**
 - Download the code in the folder MiniMobileDeviceLabAppEngine
 - Go to Google developer console at https://console.developers.google.com and create a new project
-- Open the file in src/main/webapp/WEB-INF/appengine-web.xnml and change "your-app-id" to your project ID
+- Rename or copy the src/main/webapp/WEB-INF/appengine-web.sample.xml to src/main/webapp/WEB-INF/appengine-web.xml
+- Open the appengine-web.xml file and change "your-app-id" to your project ID
 - In the Google developer console, select your project, and click on "APIs" in left menu. Make sure you enable "Google Cloud Messaging For Android" and "Google+ API".
 - Then, in left menu, click on "Consent Screen", enter your email address and project name, and click on save.
 - Then, in left menu, click on "Credentials". Select "Create New Key" and follow the instructions (enter 0.0.0.0/0 for IPs). Then, select "create new Client ID", choose "web application" and follow the instructions.
