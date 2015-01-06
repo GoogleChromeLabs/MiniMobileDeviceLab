@@ -55,7 +55,10 @@ jQuery(document).ready(function($) {
  */
 google.devrel.mobiledevicelab.signin = function() {
 	var additionalParams = {
-		'callback' : google.devrel.mobiledevicelab.signincallback
+		'cookiepolicy': 'single_host_origin',
+		'scope': 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email',
+		'clientid': google.devrel.mobiledevicelab.config.clientid,
+		'callback': google.devrel.mobiledevicelab.signincallback
 	};
 	gapi.auth.signIn(additionalParams);
 }
