@@ -24,7 +24,8 @@ This project consists of 2 elements:
 - Then, select "create new Client ID", choose "web application" and follow the instructions.
 - The authorised javascript origins will be https://**projectid**.appspot.com and the Authorised redirect URIs will be left alone to https://**projectid**.appspot.com/oauth2callback
 - The two keys created above need to be inserted in the file **MiniMobileDeviceLabAppEngine/src/main/java/com/google/devrel/mobiledevicelab/Constants.java**, so create that class copying ConstantsSample.java, and add in API_KEY and WEB_CLIENT_ID respectively.
-- Additionally, the client id needs to be inserted in **MiniMobileDeviceLabAppEngine/src/main/wenapp/index.html** and **listen.html**, replacing the string "**OAuth-web-application-client-id**" with your new web application client id.
+- Copy and paste or rename **MiniMobileDeviceLabAppEngine/src/main/webapp/js/config.sample.js** to **MiniMobileDeviceLabAppEngine/src/main/webapp/js/config.js**.
+- Additionally, the client id needs to be inserted in **MiniMobileDeviceLabAppEngine/src/main/webapp/js/config.js** and **listen.html**, replacing the string "**OAuth-web-application-client-id**" with your new web application client id.
 - To deploy this, it's probably easiest to use [Eclipse](https://www.eclipse.org/) with the [App Engine plugin](https://cloud.google.com/appengine/docs/java/tools/eclipse).
 - Select "File > Import" to bring the project into Eclipse
 - Then select "Maven > Existing Maven Project"
