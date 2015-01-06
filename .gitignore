@@ -1,6 +1,6 @@
 MiniMobileDeviceLabAppEngine/src/main/webapp/WEB-INF/appengine-web.xml
 MiniMobileDeviceLabAppEngine/src/main/java/com/google/devrel/mobiledevicelab/Constants.java
 .idea/
-.gradle/
-build/
+MiniMobileDeviceLabAndroid/.gradle/
+MiniMobileDeviceLabAndroid/build/
 MiniMobileDeviceLabAndroid/app/*.apk
