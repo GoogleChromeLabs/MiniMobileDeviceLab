@@ -1,0 +1,21 @@
+{
+  "name": "PiLab",
+  "version": "0.0.1",
+  "description": "A device which controls up to 10 devices per Raspberry Pi",
+  "dependencies": {
+    "adbkit": "^2.2.0",
+    "firebase": "^2.2.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Raspberry",
+    "Pi",
+    "Device",
+    "Lab"
+  ],
+  "author": "Matt Gaunt <matt@gauntface.co.uk> (https://gauntface.com/)",
+  "license": "Apache 2.0"
+}

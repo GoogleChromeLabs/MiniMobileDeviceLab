@@ -1,0 +1,25 @@
+{
+  "name": "firebase",
+  "version": "2.2.3",
+  "dependencies": {
+    "faye-websocket": {
+      "version": "0.9.3",
+      "from": "faye-websocket@>=0.6.0",
+      "resolved": "https://registry.npmjs.org/faye-websocket/-/faye-websocket-0.9.3.tgz",
+      "dependencies": {
+        "websocket-driver": {
+          "version": "0.5.2",
+          "from": "websocket-driver@>=0.5.1",
+          "resolved": "https://registry.npmjs.org/websocket-driver/-/websocket-driver-0.5.2.tgz",
+          "dependencies": {
+            "websocket-extensions": {
+              "version": "0.1.1",
+              "from": "websocket-extensions@>=0.1.1",
+              "resolved": "https://registry.npmjs.org/websocket-extensions/-/websocket-extensions-0.1.1.tgz"
+            }
+          }
+        }
+      }
+    }
+  }
+}

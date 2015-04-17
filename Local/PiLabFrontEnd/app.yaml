@@ -1,0 +1,48 @@
+application: primal-gate-91117 
+version: 20150410-1
+runtime: python27
+threadsafe: yes
+api_version: 1
+
+
+handlers:
+- url: /scripts
+  static_dir: scripts
+  secure: always
+
+- url: /styles
+  static_dir: styles
+  secure: always
+
+- url: /images
+  static_dir: images
+  secure: always
+
+- url: /bower_components
+  static_dir: bower_components
+  secure: always
+
+- url: /displays
+  static_dir: displays
+  secure: always
+
+- url: /elements.html
+  static_files: elements.html
+  upload: elements.html
+  expiration: "0s"
+  secure: always
+
+- url: /config.html
+  static_files: config.html
+  upload: config.html
+  expiration: "0s"
+  secure: always
+
+- url: /.*
+  static_files: index.html
+  upload: index.html
+  expiration: "0s"
+  secure: always
+
+
+
