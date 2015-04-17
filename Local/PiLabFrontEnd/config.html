@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+
+        <title>Home Hub</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="import" href="elements.html">
+        <link rel="stylesheet" href="styles/app.css">
+
+        <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    </head>
+    <body fullbleed layout vertical>
+
+      <template is="auto-binding" id="tmpl">
+        <core-drawer-panel id="drawerPanel">
+          <core-header-panel drawer>
+            <core-toolbar>Menu</core-toolbar>
+            <core-menu selected="{{selected}}" valueattr="data-section-name">
+              <core-item label="Device Config" data-section-name="section-device-config"></core-item>
+            </core-menu>
+          </core-header-panel>
+
+          <core-header-panel main>
+            <core-toolbar>
+              <core-icon-button id="navIcon" icon="menu" on-tap="{{menuAction}}"></core-icon-button>
+              <div flex>{{appbarTitle}}</div>
+            </core-toolbar>
+
+            <core-pages selected="{{selected}}" on-core-select="{{onPageSelectionChange}}" class="content js-core-pages" valueattr="data-section-name">
+
+              <!-- Controls Section -->
+              <section data-section-name="section-device-config">
+                <p>Device ID: {{deviceId}}</p>
+                
+                <div layout vertical>
+                <paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="default">Default</paper-button>
+                </div>
+
+                <h2>PageSpeed</h2>
+
+                <div layout vertical>
+                <paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="ps-mobile-speed-score">Mobile Speed Score</paper-button>
+                <paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="ps-desktop-speed-score">Desktop Speed Score</paper-button>
+                <paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="ps-ux-score">UX Score</paper-button>
+
+                <h2>Web Page Test Score</h2>
+                <paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="wpt-first-render">Time to First Render</paper-button>
+                <paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="wpt-repeat-render">Time to Repeat Render</paper-button>
+                <paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="wpt-speed-index">Speed Index</paper-button>
+
+                <h2>Open Web Features</h2>
+                <paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="owp-https">HTTPS</paper-button>
+                <paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="owp-web-manifest">Web App Manifest</paper-button>
+                <paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="owp-sw">Service Worker</paper-button>
+                <paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="owp-add-homescreen">Add to Home Screen</paper-button>
+                </div>
+
+                <paper-toast class="js-toast"></paper-toast>
+              </section>
+            </core-pages>
+
+          </core-header-panel>
+        </core-drawer-panel>
+      </template>
+      
+      <script src="/bower_components/firebase/firebase.js"></script>
+      <script src="scripts/drawer-panel.js" type="text/javascript" ></script>
+      <script src="scripts/config.js" type="text/javascript"></script>
+    </body>
+</html>

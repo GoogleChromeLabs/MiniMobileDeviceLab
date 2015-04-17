@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+
+        <title>Home Hub</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="import" href="elements.html">
+        <link rel="stylesheet" href="styles/app.css">
+
+        <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    </head>
+    <body fullbleed layout vertical>
+
+      <template is="auto-binding" id="tmpl">
+        <core-drawer-panel id="drawerPanel">
+          <core-header-panel drawer>
+            <core-toolbar>Menu</core-toolbar>
+            <core-menu selected="{{selected}}" valueattr="data-section-name">
+              <core-item label="Controls" data-section-name="section-controls"></core-item>
+              <core-item label="Looper URLs" data-section-name="section-loopurls"></core-item>
+              <core-item label="Lab Setup" data-section-name="section-labsetup"></core-item>
+            </core-menu>
+          </core-header-panel>
+
+          <core-header-panel main>
+            <core-toolbar>
+              <core-icon-button id="navIcon" icon="menu" on-tap="{{menuAction}}"></core-icon-button>
+              <div flex>{{appbarTitle}}</div>
+            </core-toolbar>
+
+            <core-pages selected="{{selected}}" on-core-select="{{onPageSelectionChange}}" class="content js-core-pages" valueattr="data-section-name">
+
+              <!-- Controls Section -->
+              <section data-section-name="section-controls">
+                <h1>Controls</h1>
+
+                <div horizontal layout>
+                  <core-label for=".looptoggle">Loop</core-label>
+                  <paper-toggle-button class="looptoggle" checked?="{{isLooping}}" on-change="{{toggleLoop}}"></paper-toggle-button>
+                </div>
+
+                <div horizontal layout center>
+                  <paper-input-decorator flex label="URL to Send"  floatingLabel error="Value must be a URL" isInvalid="{{invalidURL}}">
+                    <input is="core-input" class="js-sendurltextfield" on-input="{{urlTextFieldChange}}" type="url">
+                  </paper-input-decorator>
+                  <paper-fab icon="arrow-forward" title="arrow-forward" mini=true on-tap="{{onSendUrl}}" disabled="{{!enableSender}}"></paper-fab>
+                </div>
+
+                <paper-toast class="js-toast"></paper-toast>
+              </section>
+              
+              <!-- Loop URLs -->
+              <section data-section-name="section-loopurls">
+                <h1>Loop URLs</h1>
+                
+                <div horizontal layout center>
+                  <paper-input-decorator flex label="URL to add"  floatingLabel error="Value must be a URL" isInvalid="{{invalidURL}}">
+                    <input is="core-input" class="js-addurltolooptextfield" on-input="{{addLoopUrlTextFieldChange}}" type="url">
+                  </paper-input-decorator>
+                  <paper-fab icon="add" title="Add" mini=true on-tap="{{onAddLoopUrl}}" disabled="{{!enableSender}}"></paper-fab>
+                </div>
+
+                <ul class="js-loopurlslist">
+                  <template repeat="{{loopUrl, i in loopUrls}}">
+                    <li horizontal layout>
+                      <div flex class="js-loopurlslist-url">{{loopUrl}}</div>
+                      <paper-fab icon="delete" data-url="{{loopUrl}}" data-index="{{i}}" title="remove-url" mini=true on-tap="{{onDeleteUrl}}"></paper-fab>
+                    </li>
+                  </template>
+                </ul>
+              </section>
+
+              <!-- Lab Setup -->
+              <section data-section-name="section-labsetup">
+                <h1>Lab Setup</h1>
+                
+              </section>
+            </core-pages>
+
+          </core-header-panel>
+        </core-drawer-panel>
+      </template>
+      
+      <script src="/bower_components/firebase/firebase.js"></script>
+      <script src="scripts/drawer-panel.js" type="text/javascript" ></script>
+      <script src="scripts/app.js" type="text/javascript"></script>
+    </body>
+</html>

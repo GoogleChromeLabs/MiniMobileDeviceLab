@@ -1,0 +1,28 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+[main] {
+  background-color: #f9f9f9;
+}
+
+[drawer] {
+  background-color: #ffffff;
+}
+
+core-drawer-panel:not([narrow]) #navicon {
+  display: none;
+}
+
+.drive-signInBtn {
+  display: none;
+}
+
+.drive-signInBtn.is-required {
+  display: inline-block;
+}
+
+paper-button.js-currently-selected {
+  background-color: #1243E8;
+  color: white;
+}
