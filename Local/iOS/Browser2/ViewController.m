@@ -69,6 +69,13 @@ static const CGFloat kAddressHeight = 22.0f;
     NSString *fbURL = [NSString stringWithFormat:@"https://%@.firebaseio.com/url", fbAppName];
 
     self.myRootRef = [[Firebase alloc] initWithUrl:fbURL];
+    [self.myRootRef authAnonymouslyWithCompletionBlock:^(NSError *error, FAuthData *authData) {
+        if (error) {
+            [self informError:error];
+        } else {
+            NSLog(@"Firebase authentication completed.");
+        }
+    }];
 }
 
 - (void)connectFirebase {
