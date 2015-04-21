@@ -55,7 +55,8 @@ document.querySelector("#butClear").addEventListener("click", function() {
 });
 
 chrome.storage.sync.get("settings", function(settings) {
-  if (settings.appID !== undefined) {
+  settings = settings.settings;
+  if (settings !== undefined) {
     inputAppID.value = settings.appID;
     inputKey.value = settings.key;
     inputOnByDefault.checked = settings.onByDefault;

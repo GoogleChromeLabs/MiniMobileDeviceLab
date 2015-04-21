@@ -41,8 +41,6 @@ function init() {
       console.log('[init]', settings);
     }
 
-    settings.testForServiceWorker = true;
-
     if (settings.onByDefault) {
       startFirebase();
     }
