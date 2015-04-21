@@ -1,30 +1,4 @@
-body {
-  font-family: 'Roboto', sans-serif;
-
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.title, .subtitle {
-  margin: 0;
-  padding: 0;
-
-  text-align: center;
-}
-
-.title {
-  font-size: 50px;
-}
-
-.subtitle {
-  font-size: 15px;
-}
-
-.center-score {
-  font-size: 108px;
-}
-
-.psi-desktop-speed-score {
+/**.psi-desktop-speed-score {
   background-color: #1abc9c;
   color: #ecf0f1;
 }
@@ -37,4 +11,4 @@ body {
 .psi-ux-score {
   background-color: #e74c3c;
   color: #ecf0f1;
-}
+}**/

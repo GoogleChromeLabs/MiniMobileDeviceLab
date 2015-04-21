@@ -7,20 +7,28 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="import" href="../elements.html">
-        <link rel="stylesheet" href="styles/pagespeed.css">
+        <link rel="stylesheet" href="styles/shared.css">
 
         <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     </head>
-    <body fullbleed layout vertical center class="psi-ux-score">
+    <body fullbleed class="psi-ux-score">
+      
+      <template id="tmpl" is="auto-binding">
+        <template if="{{!loaded}}">
+          <div layout vertical center center-justified class="full-wrapper">
+            <paper-progress indeterminate=""></paper-progress>
+          </div>
+        </template>
 
-      <template is="auto-binding" id="tmpl">
-        
-        <div flex layout vertical center center-justified>
-          <div class="center-score ">{{psi.scores.ux}}</div>
-        </div>
-        <h2 class="subtitle">PageSpeed Insights</h2>
-        <h1 class="title">UX Score</h1>
-
+        <template if="{{loaded}}">
+          <div layout vertical center class="full-wrapper {{psi.scoreGroups.ux}}">
+            <div flex layout vertical center center-justified>
+              <div class="center-score ">{{psi.scores.ux}}</div>
+            </div>
+            <h2 class="subtitle">PageSpeed Insights</h2>
+            <h1 class="title">UX Score</h1>
+          </div>
+        </template>
       </template>
       
       <script src="../bower_components/firebase/firebase.js"></script>

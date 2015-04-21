@@ -1,7 +1,7 @@
 'use strict';
 
 var template = document.querySelector('#tmpl');
-template.loadingOwp = true;
+template.loaded = false;
 
 var firebase = new Firebase('https://goog-lon-device-lab.firebaseio.com/');
 firebase.authWithCustomToken('vdRwF7OBMMhMvtxxETmqvcpdM9JztAFrR7Qlx5yZ', function(error) {
@@ -17,7 +17,7 @@ firebase.authWithCustomToken('vdRwF7OBMMhMvtxxETmqvcpdM9JztAFrR7Qlx5yZ', functio
   } else {
     console.error('Ooops, we really need a url here.');
     template.owp = null;
-    template.loadingOwp = false;
+    template.loaded = true;
     return;
   }
 
@@ -26,23 +26,35 @@ firebase.authWithCustomToken('vdRwF7OBMMhMvtxxETmqvcpdM9JztAFrR7Qlx5yZ', functio
     if (err) {
       console.error('Error get url key model: ', err);
       template.owp = null;
-      template.loadingOwp = false;
+      template.loaded = true;
       return;
     }
 
-    var owpResults = firebase.child('/tests/owp/' + urlKey + '/');
+    var owpResults = firebase.child('/tests/' + urlKey + '/owp/');
     owpResults.on('value', function(snapshot) {
       var data = snapshot.val();
       if (data) {
         template.owp = {};
-        template.owp.status = data.status;
-        template.owp.status.https = template.owp.status.https ? 'Yay' : 'Boo';
-        template.owp.status.webManifest = template.owp.status.webManifest ? 'Yay' : 'Nope';
+        template.owp.statusGroups = {};
+        template.owp.status = {};
+
+        template.owp.status.https = data.status.https ? 'Yay' : 'Boo';
+        template.owp.statusGroups.https = data.status.https ?
+          'positive-value' : 'negative-value';
+
+        template.owp.status.webManifest = data.status.webManifest ?
+          'Yay' : 'Nope';
+        template.owp.statusGroups.webManifest = data.status.webManifest ?
+          'positive-value' : 'even-value';
+
+        template.owp.status.themeColor = data.status.themeColor ?
+          'Yay' : 'Nope';
+        template.owp.statusGroups.themeColor = data.status.themeColor ?
+          'positive-value' : 'even-value';
+        template.loaded = true;
       } else {
         template.owp = null;
       }
-      
-      template.loadingOwp = false;
     }.bind(this));
   }.bind(this));
 });

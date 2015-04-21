@@ -7,20 +7,28 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="import" href="../elements.html">
-        <link rel="stylesheet" href="styles/wpt.css">
+        <link rel="stylesheet" href="styles/shared.css">
 
         <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     </head>
     <body fullbleed layout vertical center class="wpt-speed-index">
 
-      <template is="auto-binding" id="tmpl">
-        
-        <div flex layout vertical center center-justified>
-          <div class="center-score ">{{wpt.results.avg.firstView.speedIndex}}</div>
-        </div>
-        <h2 class="subtitle">WebPageTest</h2>
-        <h1 class="title">Speed Index</h1>
+      <template id="tmpl" is="auto-binding">
+        <template if="{{!loaded}}">
+          <div layout vertical center center-justified class="full-wrapper">
+            <paper-progress indeterminate=""></paper-progress>
+          </div>
+        </template>
 
+        <template if="{{loaded}}">
+          <div layout vertical center class="full-wrapper {{wpt.resultGroups.avg.firstView.speedIndex}}">
+            <div flex layout vertical center center-justified>
+              <div class="center-score ">{{wpt.results.avg.firstView.speedIndex}}</div>
+            </div>
+            <h2 class="subtitle">WebPageTest</h2>
+            <h1 class="title">Speed Index</h1>
+          </div>
+        </template>
       </template>
       
       <script src="../bower_components/firebase/firebase.js"></script>

@@ -22,7 +22,7 @@ function WebPageTestModel(fb, cModel) {
 
 WebPageTestModel.prototype.updateTests = function(urlKey, url) {
   var firebase = this.getFirebase();
-  var wptResults = firebase.child('/tests/wpt/' + urlKey + '/');
+  var wptResults = firebase.child('/tests/' + urlKey + '/wpt/');
   wptResults.once('value', function(snapshot) {
     var data = snapshot.val();
     if (data) {
@@ -71,7 +71,7 @@ WebPageTestModel.prototype.updateTests = function(urlKey, url) {
           }
         );
 
-        var historyRef = firebase.child('/tests/history/wpt/' + urlKey + '/');
+        var historyRef = firebase.child('/tests/history/' + urlKey + '/wpt/');
         historyRef.push(
           {
             url: url,
