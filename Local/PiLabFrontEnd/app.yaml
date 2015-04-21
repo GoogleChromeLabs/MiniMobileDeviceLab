@@ -38,6 +38,26 @@ handlers:
   expiration: "0s"
   secure: always
 
+- url: /ios/MMDLClient.ipa
+  mime_type: application/octet-stream
+  static_files: ios/MMDLClient.ipa
+  upload: ios/MMDLClient.ipa
+  expiration: "0s"
+
+- url: /ios/MMDLClient.plist
+  mime_type: application/xml
+  static_files: ios/MMDLClient.plist
+  upload: ios/MMDLClient.plist
+  expiration: "0s"
+
+- url: /ios/
+  static_files: ios/index.html
+  upload: ios/index.html
+
+- url: /ios/.*
+  static_files: ios/index.html
+  upload: ios/index.html
+
 - url: /.*
   static_files: index.html
   upload: index.html
