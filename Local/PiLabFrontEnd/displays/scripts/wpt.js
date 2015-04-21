@@ -126,11 +126,11 @@ firebase.authWithCustomToken('vdRwF7OBMMhMvtxxETmqvcpdM9JztAFrR7Qlx5yZ', functio
 
         template.wpt.results = filteredResults;
         template.wpt.resultGroups = groups;
+
+        template.loaded = true;
       } else {
         template.wpt = null;
       }
-
-      template.loaded = true;
     }.bind(this));
   }.bind(this));
 });

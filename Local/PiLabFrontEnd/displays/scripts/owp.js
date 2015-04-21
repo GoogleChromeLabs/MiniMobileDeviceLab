@@ -51,11 +51,10 @@ firebase.authWithCustomToken('vdRwF7OBMMhMvtxxETmqvcpdM9JztAFrR7Qlx5yZ', functio
           'Yay' : 'Nope';
         template.owp.statusGroups.themeColor = data.status.themeColor ?
           'positive-value' : 'even-value';
+        template.loaded = true;
       } else {
         template.owp = null;
       }
-
-      template.loaded = true;
     }.bind(this));
   }.bind(this));
 });

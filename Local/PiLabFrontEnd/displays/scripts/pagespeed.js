@@ -49,11 +49,11 @@ firebase.authWithCustomToken('vdRwF7OBMMhMvtxxETmqvcpdM9JztAFrR7Qlx5yZ', functio
           }
           template.psi.scoreGroups[keys[i]] = group;
         }
+
+        template.loaded = true;
       } else {
         template.psi = null;
       }
-
-      template.loaded = true;
     }.bind(this));
   }.bind(this));
 });
