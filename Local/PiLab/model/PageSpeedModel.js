@@ -22,7 +22,7 @@ function PageSpeedModel(fb, cModel) {
 
 PageSpeedModel.prototype.updateScores = function(urlKey, url) {
   var firebase = this.getFirebase();
-  var psiResults = firebase.child('/tests/psi/' + urlKey + '/');
+  var psiResults = firebase.child('/tests/' + urlKey + '/psi/');
   psiResults.once('value', function(snapshot) {
     var data = snapshot.val();
     if (data) {
@@ -62,7 +62,7 @@ PageSpeedModel.prototype.updateScores = function(urlKey, url) {
         lastUpdate: Firebase.ServerValue.TIMESTAMP
       });
 
-      var historyRef = firebase.child('/tests/history/psi/' + urlKey + '/');
+      var historyRef = firebase.child('/tests/history/' + urlKey + '/psi/');
       historyRef.push(
         {
           url: url,

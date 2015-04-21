@@ -1,36 +1,15 @@
-body {
-  font-family: 'Roboto', sans-serif;
-
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.title, .subtitle {
-  margin: 0;
-  padding: 0;
-
-  text-align: center;
-}
-
-.title {
-  font-size: 50px;
-}
-
-.subtitle {
-  font-size: 15px;
-}
-
-.center-score {
-  font-size: 108px;
-}
-
-.owp-https {
+/**.owp-https {
   background-color: #16a085;
   color: #ecf0f1;
 }
 
 .owp-web-manifest {
   background-color: #27ae60;
+  color: #ecf0f1;
+}
+
+.owp-theme-color {
+  background-color: #2980b9;
   color: #ecf0f1;
 }
 
@@ -42,4 +21,4 @@ body {
 .owp-add-homescreen {
   background-color: #8e44ad;
   color: #ecf0f1;
-}
+}**/

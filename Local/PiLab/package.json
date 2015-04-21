@@ -4,7 +4,8 @@
   "description": "A device which controls up to 10 devices per Raspberry Pi",
   "dependencies": {
     "adbkit": "^2.2.0",
-    "firebase": "^2.2.3"
+    "firebase": "^2.2.3",
+    "regex-theme-color": "^0.1.1"
   },
   "devDependencies": {},
   "scripts": {
