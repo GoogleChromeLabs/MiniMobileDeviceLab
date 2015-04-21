@@ -34,17 +34,14 @@ inputTestForSW.addEventListener("change", function(e) {
 });
 
 document.querySelector("#butSave").addEventListener("click", function() {
-  var fbCnxSettings = {
-    "fbCnxSettings": {
-      "appID": inputAppID.value,
-      "key": inputKey.value,
-      "onByDefault": inputOnByDefault.checked,
-      "testForServiceWorker": inputTestForSW.checked
-    }
-  };
-
-  chrome.storage.sync.set(fbCnxSettings, function() {
-    chrome.runtime.sendMessage({"setup": "ready"});
+  var settings = {
+    "appID": inputAppID.value,
+    "key": inputKey.value,
+    "testForServiceWorker": inputTestForSW.checked,
+    "onByDefault": inputOnByDefault.checked
+  }
+  chrome.storage.sync.set({"settings": settings}, function() {
+    chrome.runtime.sendMessage({"settings": settings});
   });
 });
 
@@ -57,9 +54,8 @@ document.querySelector("#butClear").addEventListener("click", function() {
   chrome.storage.sync.clear();
 });
 
-chrome.storage.sync.get("fbCnxSettings", function(settings) {
-  if (settings.fbCnxSettings !== undefined) {
-    settings = settings.fbCnxSettings;
+chrome.storage.sync.get("settings", function(settings) {
+  if (settings.appID !== undefined) {
     inputAppID.value = settings.appID;
     inputKey.value = settings.key;
     inputOnByDefault.checked = settings.onByDefault;

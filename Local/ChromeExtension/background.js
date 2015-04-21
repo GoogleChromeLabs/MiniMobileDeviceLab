@@ -20,47 +20,59 @@
  **/
 
 
-// is the extension enabled & running
-var isEnabled = false;
+/************************************************************************
+ * Settings and other initialization
+ ***********************************************************************/
+var settings;
 
-// handle to the current tab
-var currentTab;
-
-function openURL(url, testForServiceWorker) {
-  console.log("openURL", url, testForServiceWorker);
-  var tabOptions = {
-    url: url,
-    active: true
-  };
-  if (currentTab === undefined) {
-    tabOptions.index = 0;
-    console.log("[OpenURL] (New)", tabOptions);
-    chrome.tabs.create(tabOptions, function(newTab) {
-      currentTab = newTab;
-      if (testForServiceWorker) {
-        testPage(currentTab, url);
+function init() {
+  chrome.storage.sync.get("settings", function(mmdlStorageSettings) {
+    if (mmdlStorageSettings.appID === undefined) {
+      console.log("[init] No settings found, using defaults.");
+      settings = {
+        "appID": "goog-lon-device-lab",
+        "key": "",
+        "testForServiceWorker": false,
+        "onByDefault": true
       }
-    });
-  } else {
-    console.log("[OpenURL] (Existing)", tabOptions);
-    chrome.tabs.update(currentTab.id, tabOptions, function(newTab) {
-      // Checks if there was an error, if there was, attempt to reopen
-      // the url on a new tab.
-      if (chrome.runtime.lastError) {
-        currentTab = undefined;
-        openURL(url, testForServiceWorker);
-      } else {
-        // Updates the tab in case it changed due to preloading, etc
-        currentTab = newTab;
-        if (testForServiceWorker) {
-          testPage(currentTab, url);
-        }
-      }
-    });
-  }
+      chrome.storage.sync.set({"settings": settings});
+    } else {
+      settings = mmdlStorageSettings.mmdlSettings;
+      console.log("[init]", settings);
+    }
+    settings.testForServiceWorker = true;
+    if (settings.onByDefault) {
+      startFirebase();
+    }
+  });
 }
 
-function testPage(currentTab, url) {
+init();
+
+/************************************************************************
+ * Handle URLs
+ ***********************************************************************/
+
+function openURL(url) {
+  console.log("[openURL]", url);
+  chrome.tabs.query({"index": 0}, function(tab) {
+    var tabProperties = {
+      "url": url,
+      "active": true,
+      "highlighted": true
+    };
+    chrome.tabs.update(tab.id, tabProperties, function(tab) {
+      testForServiceWorker(tab, url);
+    });
+  });
+
+}
+
+function testForServiceWorker(tab, url) {
+  if (settings.testForServiceWorker === false) {
+    return;
+  }
+  console.log("[testForServiceWorker]", url);
   var testCode = [
     "var url = '[URL]';",
     "function mmdlTestForServiceWorker() {",
@@ -101,93 +113,87 @@ function testPage(currentTab, url) {
     "runAt": "document_idle"
   };
   setTimeout(function() {
-    chrome.tabs.executeScript(currentTab.id, obj);
+    chrome.tabs.executeScript(tab.id, obj);
   }, 2500);
 }
 
 
+/************************************************************************
+ * Firebase helper methods
+ ***********************************************************************/
+var fbRef;
 
-function init() {
-  console.warn("[INIT] TODO: handle case where save hit after already started");
-  console.log("[Init]");
-  chrome.storage.sync.get("fbCnxSettings", function(settings) {
-    if (settings.fbCnxSettings === undefined) {
-      console.log("[Init] Creating default settings");
-      var fbCnxSettings = {
-        "fbCnxSettings": {
-          "appID": "goog-lon-device-lab",
-          "key": "",
-          "onByDefault": true,
-          "testForServiceWorker": false
-        }
-      };
-      chrome.storage.sync.set(fbCnxSettings);
-      settings = fbCnxSettings;
-    }
+// Connects to Firebase with the appID and key. If no key is provided, it
+// simply uses anonymous authentication.
+function startFirebase() {
+  console.log("[startFirebase]");
+  if (fbRef) {
+    stopFirebase();
+  }
 
-    settings = settings.fbCnxSettings;
-    console.log("[Init] Settings: ", settings);
-    
-    try {
-      setEnabled(settings.onByDefault);
-      var fbURL = "https://" + settings.appID + ".firebaseio.com/";
-      var fb = new Firebase(fbURL);
-      if (settings.key === "") {
-        fb.authAnonymously(function(err, authToken) {
-          console.log("Anonymous Auth:", err, authToken);
-          if (err) {
-            openURL("setup.html");
-          }
-        });
-      } else {
-        fb.authWithCustomToken(settings.key, function(err, authToken) {
-          console.log("Custom Token Auth:", err, authToken);
-          if (err) {
-            openURL("setup.html");
-          }
-        });
-      }
-      fb.child("url").on("value", function(snapshot) {
-        if (isEnabled) {
-          openURL(snapshot.val(), settings.testForServiceWorker);
-        }
-      });
-    } catch (ex) {
-      openURL("setup.html");
-    }
-  });
+  var fbURL = "https://" + settings.appID + ".firebaseio.com/";
+  fbRef = new Firebase(fbURL);
+  if (settings.key) {
+    console.log("[Firebase] authWithCustomToken.");
+    fbRef.authWithCustomToken(settings.key, onFirebaseConnected);
+  } else {
+    fbRef.authAnonymously(onFirebaseConnected);
+  }
 }
 
+function stopFirebase() {
+  console.log("[stopFirebase]");
+  if (fbRef) {
+    fbRef.off();
+    fbRef.unauth();
+    fbRef = null;
+  }
+  chrome.browserAction.setBadgeText({"text": ""});
+  chrome.power.releaseKeepAwake();
+}
+
+function onFirebaseConnected(err, authToken) {
+  console.log("[onFirebaseConnect]", err, authToken);
+  if (err) {
+    
+  } else {
+    fbRef.child("url").on("value", function(snapshot) {
+      openURL(snapshot.val());
+    });
+    chrome.browserAction.setBadgeText({"text": "ON"});
+    chrome.power.requestKeepAwake("display");
+  }
+}
+
+function toggleFirebase() {
+  if (fbRef) {
+    stopFirebase();
+  } else {
+    startFirebase();
+  }
+}
+
+
+/************************************************************************
+ * Event Listeners
+ ***********************************************************************/
+
+chrome.browserAction.onClicked.addListener(function(tabs) {
+  toggleFirebase();
+});
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.serviceWorkerTest) {
+  console.log("onMessage", request);
+  if (request.settings) {
+    settings = request.settings;
+    chrome.tabs.remove(sender.tab.id);
+    if ((fbRef) || (settings.onByDefault)) {
+      stopFirebase();
+      startFirebase();
+    }
+  } else if (request.serviceWorkerTest) {
     console.warn("[ServiceWorker] TODO: save service worker status");
     console.warn("[ServiceWorker] see https://github.com/GoogleChrome/MiniMobileDeviceLab/blob/next/Local/PiLab/model/URLKeyModel.js");
     console.log("[ServiceWorker]", request.url, request.hasServiceWorker);
-  } else if (request.setup === "ready") {
-    currentTab = undefined;
-    chrome.tabs.remove(sender.tab.id);
-    init();
   }
 });
-
-function setEnabled(enabled) {
-  if (enabled === undefined) {
-    enabled = !isEnabled;
-  }
-  console.log("[SetEnabled]", enabled);
-  if (enabled === true) {
-    isEnabled = true;
-    chrome.browserAction.setBadgeText({"text": "ON"});
-    chrome.power.requestKeepAwake("display");
-  } else if (enabled === false) {
-    isEnabled = false;
-    chrome.browserAction.setBadgeText({"text": ""});
-    chrome.power.releaseKeepAwake();
-  }
-}
-
-chrome.browserAction.onClicked.addListener(function(tabs) {
-  setEnabled();
-});
-
-init();
