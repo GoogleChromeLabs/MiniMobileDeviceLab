@@ -27,12 +27,5 @@
     "setup.html"
   ],
   "content_security_policy": "script-src 'self' https://*.firebaseio.com; object-src 'self'",
-  "options_page": "setup.html",
-  "content_scripts": [
-    {
-      "matches": ["*://*/*"],
-      "js": ["swtest.js"],
-      "run_at": "document_start"
-    }
-  ]
+  "options_page": "setup.html"
 }

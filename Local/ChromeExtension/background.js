@@ -19,6 +19,7 @@
  *
  **/
 
+'use strict';
 
 /************************************************************************
  * Settings and other initialization
@@ -34,7 +35,7 @@ function init() {
         'key': '',
         'testForServiceWorker': false,
         'onByDefault': true
-      }
+      };
       chrome.storage.sync.set({'settings': settings});
     } else {
       settings = mmdlStorageSettings.settings;
