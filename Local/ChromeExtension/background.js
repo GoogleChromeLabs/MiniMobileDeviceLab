@@ -133,12 +133,22 @@ function saveServiceWorkerResult(url, hasServiceWorker) {
   fbRef.child('urlkeys').orderByValue().equalTo(url).on('value', function(snapshot) {
     var data = snapshot.val();
     if (data) {
-      var keys = Object.keys(data);
-      var key = 'tests/' + keys[0] + '/owp/status/serviceWorker';
-      fbRef.child(key).set(hasServiceWorker);
+      try {
+        var keys = Object.keys(data);
+        var key = 'tests/' + keys[0] + '/owp/status/serviceWorker';
+        fbRef.child(key).set(hasServiceWorker);
+        var historyKey = 'tests/history/' + keys[0] + '/serviceWorker';
+        var historyObj = {
+          'timestamp': Date.now(),
+          'hasServiceWorker': hasServiceWorker,
+          'url': url
+        };
+        fbRef.child(historyKey).push(historyObj);
+      } catch (ex) {
+        console.warn('[saveServiceWorkerResult] Error saving result:', ex);
+      }
     }
   });
-
 }
 
 
