@@ -14,7 +14,7 @@
   "undef"         : true,
   "unused"        : "vars",
   "strict"        : true,
-  "predef"        : [ "chrome", "Firebase" ],
+  "predef"        : [ "chrome", "Firebase", "moment"],
   "devel"         : true,
   "globalstrict"  : true
 }

@@ -34,11 +34,15 @@ function init() {
         'appID': 'goog-lon-device-lab',
         'key': '',
         'testForServiceWorker': false,
-        'onByDefault': true
+        'onByDefault': true,
+        'grabFocus': true
       };
       chrome.storage.sync.set({'settings': settings});
     } else {
       settings = mmdlStorageSettings.settings;
+      if (settings.grabFocus === undefined) {
+        settings.grabFocus = true;
+      }
       console.log('[init]', settings);
     }
 
@@ -46,38 +50,80 @@ function init() {
       startFirebase();
     }
   });
+
+  chrome.windows.onRemoved.addListener(function(windowID) {
+    if ((currentWindow) && (currentWindow.id === windowID)) {
+      currentTab = null;
+      currentWindow = null;
+      stopFirebase();
+    }
+  });
 }
 
 init();
 
 /************************************************************************
+ * Window & Tab Handlers
+ ***********************************************************************/
+var currentWindow, currentTab;
+
+function createWindow(urls, callback) {
+  var options = {
+    'focused': settings.grabFocus,
+    'url': urls
+  };
+  chrome.windows.create(options, function(win) {
+    currentWindow = win;
+    currentTab = null;
+    if (callback) {
+      callback(win);
+    }
+  });
+}
+
+function createTab(url, callback) {
+  var options = {
+    'url': url,
+    'active': settings.grabFocus,
+    'index': 0,
+    'windowId': currentWindow.id
+  };
+  chrome.tabs.create(options, function(tab) {
+    if (chrome.runtime.lastError) {
+      stopFirebase();
+    } else {
+      currentTab = tab;
+      testForServiceWorker(tab, url);
+      if (callback) {
+        callback(tab);
+      }  
+    }
+  });
+}
+
+
+/************************************************************************
  * Handle URLs
  ***********************************************************************/
-var currentWindow;
-var currentTab;
 
 function openURL(url) {
   console.log('[openURL]', url);
 
+  var options = {
+    'url': url,
+    'active': settings.grabFocus
+  };
   if (currentTab) {
-    chrome.tabs.update(currentTab.id, {
-      url: url
-    }, function(newTab) {
-      currentTab = newTab;
-      testForServiceWorker(currentTab, url);
+    chrome.tabs.update(currentTab.id, options, function(tab) {
+      if (chrome.runtime.lastError) {
+        createTab(url);
+      } else {
+        testForServiceWorker(tab, url);
+        currentTab = tab;
+      }
     });
-    currentTab = null;
   } else {
-    chrome.tabs.create({
-      url: url,
-      active: true,
-      index: 0,
-      windowId: currentWindow.id,
-      selected: true
-    }, function(newTab) {
-      currentTab = newTab;
-      testForServiceWorker(currentTab, url);
-    });
+    createTab(url);
   }
 }
 
@@ -131,7 +177,11 @@ function testForServiceWorker(tab, url) {
     'runAt': 'document_idle'
   };
   setTimeout(function() {
-    chrome.tabs.executeScript(tab.id, obj);
+    chrome.tabs.executeScript(tab.id, obj, function() {
+      if (chrome.runtime.lastError) {
+        /* NoOp - we don't care. */
+      }
+    });
   }, 2500);
 }
 
@@ -189,13 +239,15 @@ function stopFirebase() {
     fbRef.unauth();
     fbRef = null;
   }
+  chrome.runtime.sendMessage({'fbConnected': false});
   chrome.browserAction.setBadgeText({'text': ''});
   chrome.power.releaseKeepAwake();
 }
 
-function beginUrlTracking() {
+function startListening() {
   fbRef.child('url').on('value', function(snapshot) {
-    openURL(snapshot.val());
+   openURL(snapshot.val());
+   chrome.runtime.sendMessage({'url': snapshot.val()});
   });
   chrome.browserAction.setBadgeText({'text': 'ON'});
   chrome.power.requestKeepAwake('display');
@@ -206,19 +258,12 @@ function onFirebaseConnected(err, authToken) {
   if (err) {
     openURL('setup.html');
   } else {
-    if (!currentWindow) {
-      chrome.windows.create({
-        left: 0,
-        top: 0,
-        width: 1,
-        height: 1,
-        focused: false
-      }, function(newWindow) {
-        currentWindow = newWindow;
-        beginUrlTracking();
-      });
+    if (currentWindow) {
+      startListening();
     } else {
-      beginUrlTracking();
+      createWindow('status.html', function() {
+        startListening(); 
+      });
     }
   }
 }

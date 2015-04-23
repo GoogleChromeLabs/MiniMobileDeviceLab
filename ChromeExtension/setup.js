@@ -25,6 +25,7 @@ var inputAppID = document.querySelector('#appID');
 var inputKey = document.querySelector('#key');
 var inputOnByDefault = document.querySelector('#onByDefault');
 var inputTestForSW = document.querySelector('#testForServiceWorker');
+var inputGrabFocus = document.querySelector('#grabFocus');
 var divFBKey = document.querySelector('#divFBKey');
 
 inputTestForSW.addEventListener('change', function(e) {
@@ -40,7 +41,8 @@ document.querySelector('#butSave').addEventListener('click', function() {
     'appID': inputAppID.value,
     'key': inputKey.value,
     'testForServiceWorker': inputTestForSW.checked,
-    'onByDefault': inputOnByDefault.checked
+    'onByDefault': inputOnByDefault.checked,
+    'grabFocus': inputGrabFocus.checked
   };
   chrome.storage.sync.set({'settings': settings}, function() {
     chrome.runtime.sendMessage({'settings': settings});
@@ -52,6 +54,7 @@ document.querySelector('#butClear').addEventListener('click', function() {
   inputAppID.value = '';
   inputOnByDefault.checked = true;
   inputTestForSW.checked = false;
+  inputGrabFocus.checked = true;
   divFBKey.classList.add('hidden');
   chrome.storage.sync.clear();
 });
@@ -62,6 +65,7 @@ chrome.storage.sync.get('settings', function(settings) {
     inputAppID.value = settings.appID;
     inputKey.value = settings.key;
     inputOnByDefault.checked = settings.onByDefault;
+    inputGrabFocus.checked = settings.grabFocus;
     if (settings.testForServiceWorker) {
       inputTestForSW.checked = true;
       divFBKey.classList.remove('hidden');
