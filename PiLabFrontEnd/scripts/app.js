@@ -26,6 +26,10 @@ firebase.authWithCustomToken('vdRwF7OBMMhMvtxxETmqvcpdM9JztAFrR7Qlx5yZ', functio
 
   firebase.child('config/mode').on('value', function(snapshot) {
     var mode = snapshot.val();
+
+    var urlTextfield = document.querySelector('.js-sendurltextfield');
+    urlTextfield.disabled = mode !== 'static';
+
     if (mode === 'config') {
       // Don't change the state of loop switch for config
       // This way it can be used to set to loop or static
@@ -36,7 +40,6 @@ firebase.authWithCustomToken('vdRwF7OBMMhMvtxxETmqvcpdM9JztAFrR7Qlx5yZ', functio
       return;
     }
     template.isLooping = mode === 'loop';
-
     template.stateInitialised = true;
   }.bind(this));
 });

@@ -35,6 +35,11 @@ function ServerController() {
 
       // TODO: Handle config
     }.bind(this));
+
+    currentUrlModel.on('URLChange', function(url) {
+      var testController = this.getTestController();
+      testController.performTests(url);
+    }.bind(this));
   }.bind(this));
 
   this.getFirebase = function() {
@@ -96,9 +101,6 @@ ServerController.prototype.performLoopTick = function() {
     clearTimeout(currentTimeoutId);
   }
 
-  var testController = this.getTestController();
-  testController.performTests(loopUrls[loopIndex]);
-
   this.getCurrentUrlModel().setNewUrl(loopUrls[loopIndex]);
 
   var newTimeoutId = setTimeout(this.performLoopTick.bind(this), timeoutMs);
@@ -113,9 +115,6 @@ ServerController.prototype.stopLooping = function() {
     clearTimeout(currentTimeoutId);
   }
   this.setLoopTimeoutId(null);
-
-  var singleUrl = this.getCurrentUrlModel().getUrl();
-  
 };
 
 // TODO: Expose this via some sort of API or front end
