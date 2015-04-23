@@ -59,24 +59,26 @@ var currentTab;
 function openURL(url) {
   console.log('[openURL]', url);
 
-  var options = {
-    url: url,
-    active: true,
-    index: 0,
-    windowId: currentWindow.id,
-    active: false,
-    selected: false
-  };
-
   if (currentTab) {
-    chrome.tabs.remove(currentTab.id);
+    chrome.tabs.update(currentTab.id, {
+      url: url
+    }, function(newTab) {
+      currentTab = newTab;
+      testForServiceWorker(currentTab, url);
+    });
     currentTab = null;
+  } else {
+    chrome.tabs.create({
+      url: url,
+      active: true,
+      index: 0,
+      windowId: currentWindow.id,
+      selected: true
+    }, function(newTab) {
+      currentTab = newTab;
+      testForServiceWorker(currentTab, url);
+    });
   }
-
-  chrome.tabs.create(options, function(newTab) {
-    currentTab = newTab;
-    testForServiceWorker(currentTab, url);
-  });
 }
 
 /************************************************************************
