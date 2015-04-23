@@ -212,8 +212,7 @@ function onFirebaseConnected(err, authToken) {
         top: 0,
         width: 1,
         height: 1,
-        focused: false,
-        state: 'minimized'
+        focused: false
       }, function(newWindow) {
         currentWindow = newWindow;
         beginUrlTracking();
