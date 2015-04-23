@@ -51,6 +51,11 @@ firebase.authWithCustomToken('vdRwF7OBMMhMvtxxETmqvcpdM9JztAFrR7Qlx5yZ', functio
           'Yay' : 'Nope';
         template.owp.statusGroups.themeColor = data.status.themeColor ?
           'positive-value' : 'even-value';
+
+        template.owp.status.serviceWorker = data.status.serviceWorker ?
+          'Yay' : 'Nope';
+        template.owp.statusGroups.serviceWorker = data.status.serviceWorker ?
+          'positive-value' : 'negative-value';
         template.loaded = true;
       } else {
         template.owp = null;

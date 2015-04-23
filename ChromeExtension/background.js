@@ -53,16 +53,21 @@ init();
 /************************************************************************
  * Handle URLs
  ***********************************************************************/
+var currentWindow;
 var currentTab;
 
 function openURL(url) {
   console.log('[openURL]', url);
 
   var options = {
-    'url': url,
-    'active': true,
-    'index': 0
+    url: url,
+    active: true,
+    index: 0,
+    windowId: currentWindow.id,
+    active: false,
+    selected: false
   };
+
   if (currentTab) {
     chrome.tabs.remove(currentTab.id);
     currentTab = null;
@@ -191,11 +196,22 @@ function onFirebaseConnected(err, authToken) {
   if (err) {
     openURL('setup.html');
   } else {
-    fbRef.child('url').on('value', function(snapshot) {
-      openURL(snapshot.val());
+    chrome.windows.create({
+      left: 0,
+      top: 0,
+      width: 1,
+      height: 1,
+      focused: false,
+      state: 'minimized'
+    }, function(newWindow) {
+      currentWindow = newWindow;
+
+      fbRef.child('url').on('value', function(snapshot) {
+        openURL(snapshot.val());
+      });
+      chrome.browserAction.setBadgeText({'text': 'ON'});
+      chrome.power.requestKeepAwake('display');
     });
-    chrome.browserAction.setBadgeText({'text': 'ON'});
-    chrome.power.requestKeepAwake('display');
   }
 }
 
