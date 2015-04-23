@@ -88,12 +88,12 @@ ServerController.prototype.startLooping = function() {
 ServerController.prototype.performLoopTick = function() {
   var loopSettingsModel = this.getLoopSettingsModel();
   var loopUrls = loopSettingsModel.getLoopUrls();
-  if (loopUrls.length === 0) {
+  var loopIndex = loopSettingsModel.getLoopIndex();
+  if (loopUrls.length === 0 || loopIndex === null) {
     return setTimeout(this.performLoopTick.bind(this), 500);
   }
 
   var timeoutMs = loopSettingsModel.getLoopIntervalMs();
-  var loopIndex = this.getLoopIndex() % loopUrls.length;
 
   // Clear any current pending timeout
   var currentTimeoutId = this.getLoopTimeoutId();
@@ -105,7 +105,7 @@ ServerController.prototype.performLoopTick = function() {
 
   var newTimeoutId = setTimeout(this.performLoopTick.bind(this), timeoutMs);
   this.setLoopTimeoutId(newTimeoutId);
-  this.setLoopIndex(loopIndex + 1);
+  loopSettingsModel.setLoopIndex(loopIndex + 1);
 };
 
 ServerController.prototype.stopLooping = function() {

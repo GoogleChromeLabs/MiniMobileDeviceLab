@@ -193,27 +193,34 @@ function stopFirebase() {
   chrome.power.releaseKeepAwake();
 }
 
+function beginUrlTracking() {
+  fbRef.child('url').on('value', function(snapshot) {
+    openURL(snapshot.val());
+  });
+  chrome.browserAction.setBadgeText({'text': 'ON'});
+  chrome.power.requestKeepAwake('display');
+}
+
 function onFirebaseConnected(err, authToken) {
   console.log('[onFirebaseConnect]', err, authToken);
   if (err) {
     openURL('setup.html');
   } else {
-    chrome.windows.create({
-      left: 0,
-      top: 0,
-      width: 1,
-      height: 1,
-      focused: false,
-      state: 'minimized'
-    }, function(newWindow) {
-      currentWindow = newWindow;
-
-      fbRef.child('url').on('value', function(snapshot) {
-        openURL(snapshot.val());
+    if (!currentWindow) {
+      chrome.windows.create({
+        left: 0,
+        top: 0,
+        width: 1,
+        height: 1,
+        focused: false,
+        state: 'minimized'
+      }, function(newWindow) {
+        currentWindow = newWindow;
+        beginUrlTracking();
       });
-      chrome.browserAction.setBadgeText({'text': 'ON'});
-      chrome.power.requestKeepAwake('display');
-    });
+    } else {
+      beginUrlTracking();
+    }
   }
 }
 

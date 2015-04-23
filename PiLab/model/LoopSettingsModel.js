@@ -3,6 +3,7 @@
 function LoopSettingsModel(fb) {
   var firebase = fb;
   var loopUrls = [];
+  var loopIndex = null;
   var loopIntervalMs = 4000;
 
   firebase.child('loop/urls').on('value', function(snapshot) {
@@ -13,6 +14,13 @@ function LoopSettingsModel(fb) {
     console.log('LoopSettingsModel: Received loopintervalms from Firebase');
     loopIntervalMs = snapshot.val();
   });
+  firebase.child('loop/index').on('value', function(snapshot) {
+    console.log('LoopSettingsModel: Received index from Firebase');
+    loopIndex = snapshot.val();
+    if (!loopIndex) {
+      loopIndex = 0;
+    }
+  });
 
   this.getLoopUrls = function() {
     return loopUrls;
@@ -20,6 +28,18 @@ function LoopSettingsModel(fb) {
 
   this.getLoopIntervalMs = function() {
     return loopIntervalMs;
+  };
+
+  this.getLoopIndex = function() {
+    if (loopIndex === null) {
+      return null;
+    }
+
+    return loopIndex % loopUrls.length;
+  };
+
+  this.setLoopIndex = function(newIndex) {
+    firebase.child('loop/index').set(newIndex);
   };
 }
 
