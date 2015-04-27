@@ -24,7 +24,7 @@ module.exports.queueUpTest = function(options) {
 
     WebRequest.request(uri, undefined, function(error, result) {
       if (error) {
-        console.log('Error: ', err);
+        console.log('Error: ', error);
         return reject(new Error('WebPageTestLib: Error accessing API.', error));
       }
 
@@ -48,12 +48,14 @@ module.exports.queueUpTest = function(options) {
 function performanceTestStatusCheck(uri, cb) {
   WebRequest.request(uri, undefined, function(error, result) {
     if (error) {
-      console.log('WebPageTestLib: performanceTestStatusCheck() Error: ', error);
+      console.log('WebPageTestLib: performanceTestStatusCheck() ' +
+        'Error: ', error);
       return cb(new Error('WebPageTestLib: Error accessing API.', error));
     }
 
     if (!result.data) {
-      console.log('WebPageTestLib: performanceTestStatusCheck() No result data');
+      console.log('WebPageTestLib: performanceTestStatusCheck() ' +
+        'No result data');
       return cb(new Error('No result data returned.'));
     }
 
@@ -97,25 +99,30 @@ module.exports.waitForTestResults = function(options, data) {
 
     var cb = function(err, success) {
       if (err) {
-        console.error('WebPageTestLib: Error occured when checking test status.');
+        console.error('WebPageTestLib: Error occured when checking ' +
+          'test status.');
         return reject(new Error('Error occured when checking test status.'));
       }
 
       if (!success) {
-        console.error('WebPageTestLib: Couldn\'t get successful results for WPT.');
+        console.error('WebPageTestLib: Couldn\'t get successful results ' +
+          'for WPT.');
         return reject(new Error('Couldn\'t get successful results for WPT.'));
       }
 
       // Get the actual results YAY
       getResults(data.jsonUrl, function(err, results) {
         if (err) {
-          console.error('WebPageTestLib: Error occured when checking test status.');
+          console.error('WebPageTestLib: Error occured when checking test ' +
+            'status.');
           return reject(new Error('Error occured when checking test status.'));
         }
 
         if (!results.data) {
-          console.error('WebPageTestLib: Couldn\'t get results but test status is complete.');
-          return reject(new Error('Couldn\'t get results but test status is complete.'));
+          console.error('WebPageTestLib: Couldn\'t get results but test ' +
+            'status is complete.');
+          return reject(new Error('Couldn\'t get results but test status ' +
+            'is complete.'));
         }
 
         resolve(results);
