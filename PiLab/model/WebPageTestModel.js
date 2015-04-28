@@ -2,6 +2,7 @@
 
 var Firebase = require('firebase');
 var WebPageTestLib = require('./../helper/WebPageTestLib');
+var chalk = require('chalk');
 
 function WebPageTestModel(fb, cModel) {
   var firebase = fb;
@@ -81,9 +82,17 @@ WebPageTestModel.prototype.updateTests = function(urlKey, url) {
         );
       });
     }).catch(function(err) {
-      console.error('WebPageTestModel: Unable to get run results.', err);
-    });
+      this.error('WebPageTestModel: Unable to get run results.', err);
+    }.bind(this));
   }.bind(this));
+};
+
+WebPageTestModel.prototype.log = function(msg, arg) {
+  console.log(chalk.white('WebPageTestModel: ') + msg, arg);
+};
+
+WebPageTestModel.prototype.error = function(msg, arg) {
+  console.log(chalk.white('WebPageTestModel: ') + chalk.red(msg), arg);
 };
 
 module.exports = WebPageTestModel;

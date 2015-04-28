@@ -6,6 +6,7 @@ var LoopSettingsModel = require('./../model/LoopSettingsModel.js');
 var TestController = require('./TestController.js');
 var config = require('./../config.json');
 var Firebase = require('firebase');
+var chalk = require('chalk');
 
 function ServerController() {
   var configModel;
@@ -80,7 +81,7 @@ function ServerController() {
 }
 
 ServerController.prototype.startLooping = function() {
-  console.log('MainController: Start Looping');
+  this.log('Start Looping');
 
   this.performLoopTick();
 };
@@ -109,7 +110,7 @@ ServerController.prototype.performLoopTick = function() {
 };
 
 ServerController.prototype.stopLooping = function() {
-  console.log('MainController: Stop Looping');
+  console.log('Stop Looping');
   var currentTimeoutId = this.getLoopTimeoutId();
   if (currentTimeoutId) {
     clearTimeout(currentTimeoutId);
@@ -126,6 +127,14 @@ ServerController.prototype.setStaticUrl = function(url) {
   }
 
   this.getCurrentUrlModel().setNewUrl(url);
+};
+
+ServerController.prototype.log = function(msg, arg) {
+  console.log(chalk.green('ServerController: ') + msg, arg);
+};
+
+ServerController.prototype.error = function(msg, arg) {
+  console.log(chalk.green('ServerController: ') + chalk.red(msg), arg);
 };
 
 module.exports = ServerController;

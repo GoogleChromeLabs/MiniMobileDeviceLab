@@ -1,5 +1,7 @@
 'use strict';
 
+var chalk = require('chalk');
+
 function LoopSettingsModel(fb) {
   var firebase = fb;
   var loopUrls = [];
@@ -7,20 +9,20 @@ function LoopSettingsModel(fb) {
   var loopIntervalMs = 4000;
 
   firebase.child('loop/urls').on('value', function(snapshot) {
-    console.log('LoopSettingsModel: Received loopUrls from Firebase');
+    this.log('Received loopUrls from Firebase');
     loopUrls = snapshot.val();
-  });
+  }.bind(this));
   firebase.child('loop/loopintervalms').on('value', function(snapshot) {
-    console.log('LoopSettingsModel: Received loopintervalms from Firebase');
+    this.log('Received loopintervalms from Firebase');
     loopIntervalMs = snapshot.val();
-  });
+  }.bind(this));
   firebase.child('loop/index').on('value', function(snapshot) {
-    console.log('LoopSettingsModel: Received index from Firebase');
+    this.log('Received index from Firebase');
     loopIndex = snapshot.val();
     if (!loopIndex) {
       loopIndex = 0;
     }
-  });
+  }.bind(this));
 
   this.getLoopUrls = function() {
     return loopUrls;
@@ -42,5 +44,9 @@ function LoopSettingsModel(fb) {
     firebase.child('loop/index').set(newIndex);
   };
 }
+
+LoopSettingsModel.prototype.log = function(msg, arg) {
+  console.log(chalk.magenta('LoopSettingsModel: ') + msg, arg);
+};
 
 module.exports = LoopSettingsModel;
