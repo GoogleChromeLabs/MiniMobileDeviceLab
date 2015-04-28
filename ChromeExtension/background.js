@@ -70,7 +70,9 @@ var currentWindow, currentTab;
 function createWindow(urls, callback) {
   var options = {
     'focused': settings.grabFocus,
-    'url': urls
+    'url': urls,
+    'width': 10,
+    'height': 10 
   };
   chrome.windows.create(options, function(win) {
     currentWindow = win;
