@@ -5,6 +5,7 @@
   "dependencies": {
     "adbkit": "^2.2.0",
     "firebase": "^2.2.3",
+    "mkdirp": "^0.5.0",
     "regex-theme-color": "^0.1.1"
   },
   "devDependencies": {},

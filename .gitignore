@@ -42,3 +42,8 @@ DerivedData
 .DS_Store
 .AppleDouble
 .LSOverride
+
+#
+# Saving data (PiLab/stash.js)
+#
+test/
