@@ -5,6 +5,7 @@ var CurrentURLModel = require('./../model/CurrentURLModel.js');
 var DeviceModel = require('./../model/DeviceModel.js');
 var BrowserIntentHelper = require('./../helper/BrowserIntentHelper.js');
 var Firebase = require('firebase');
+var chalk = require('chalk');
 
 var config = require('./../config.json');
 
@@ -23,16 +24,17 @@ function ClientController() {
     configModel = new ConfigModel(firebase);
 
     currentUrlModel.on('URLChange', function(url) {
+      this.log('URLChange with URL - ', url);
       this.presentUrl(url);
     }.bind(this));
 
     configModel.on('ModeChange', function(mode) {
       switch (mode) {
         case 'loop':
-          
+          // NOOP
           break;
         case 'static':
-          
+          // NOOP
           break;
         case 'config':
           this.loadConfigPage();
@@ -70,6 +72,10 @@ ClientController.prototype.loadConfigPage = function() {
     var intentHandler = BrowserIntentHelper.getDeviceIntentHandler(specificUrl);
     this.getDeviceModel().launchIntentOnDevice(intentHandler, deviceId);
   }
+};
+
+ClientController.prototype.log = function(msg, arg) {
+  console.log(chalk.blue('ClientController: ') + msg, arg);
 };
 
 module.exports = ClientController;
