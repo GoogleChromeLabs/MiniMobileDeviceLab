@@ -46,7 +46,11 @@ function LoopSettingsModel(fb) {
 }
 
 LoopSettingsModel.prototype.log = function(msg, arg) {
-  console.log(chalk.magenta('LoopSettingsModel: ') + msg, arg);
+  if (arg) {
+    console.log(chalk.magenta('LoopSettingsModel: ') + msg, arg);
+  } else {
+    console.log(chalk.magenta('LoopSettingsModel: ') + msg);
+  }
 };
 
 module.exports = LoopSettingsModel;
