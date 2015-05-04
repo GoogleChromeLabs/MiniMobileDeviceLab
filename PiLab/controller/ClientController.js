@@ -73,7 +73,7 @@ ClientController.prototype.presentUrlToDevice = function(url, deviceId) {
   }
   var intentHandler = BrowserIntentHelper.getDeviceIntentHandler(launchedUrl);
   this.getDeviceModel().launchIntentOnDevice(intentHandler, deviceId);
-}
+};
 
 ClientController.prototype.loadConfigPage = function() {
   var deviceIds = this.getDeviceModel().getDeviceIds();
