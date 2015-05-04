@@ -2,6 +2,7 @@
 
 var Firebase = require('firebase');
 var PageSpeedLib = require('./../helper/PageSpeedLib');
+var chalk = require('chalk');
 
 function PageSpeedModel(fb, cModel) {
   var firebase = fb;
@@ -71,9 +72,17 @@ PageSpeedModel.prototype.updateScores = function(urlKey, url) {
         }
       );
     }).catch(function(err) {
-      console.error('PageSpeedModel: Unable to get Scores.', err);
-    });
+      this.error('PageSpeedModel: Unable to get Scores.', err);
+    }.bind(this));
   }.bind(this));
+};
+
+PageSpeedModel.prototype.log = function(msg, arg) {
+  console.log(chalk.gray('WebPageTestModel: ') + msg, arg);
+};
+
+PageSpeedModel.prototype.error = function(msg, arg) {
+  console.log(chalk.gray('WebPageTestModel: ') + chalk.red(msg), arg);
 };
 
 module.exports = PageSpeedModel;

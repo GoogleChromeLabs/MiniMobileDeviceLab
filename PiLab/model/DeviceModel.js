@@ -1,6 +1,7 @@
 'use strict';
 
 var adb = require('adbkit');
+var chalk = require('chalk');
 
 function DeviceModel(fb) {
   var deviceIds = [];
@@ -9,20 +10,20 @@ function DeviceModel(fb) {
   var adbClient = adb.createClient();
   adbClient.trackDevices(function(err, tracker) {
     if (err) {
-      console.log('DeviceModel: Could not set up adbkit', err);
+      this.log('DeviceModel: Could not set up adbkit', err);
       process.exit();
     }
 
     tracker.on('add', function(device) {
-      console.log('DeviceModel: Device %s was plugged in', device.id);
+      this.log('DeviceModel: Device %s was plugged in', device.id);
       this.addDevice(device);
     }.bind(this));
     tracker.on('remove', function(device) {
-      console.log('DeviceModel: Device %s was unplugged', device.id);
+      this.log('DeviceModel: Device %s was unplugged', device.id);
       this.removeDevice(device);
     }.bind(this));
     tracker.on('change', function(device) {
-      console.log('DeviceModel: Device %s changed', device.id);
+      this.log('DeviceModel: Device %s changed', device.id);
       if (device.type === 'device') {
         this.addDevice(device);
       } else if (device.type === 'offline') {
@@ -65,6 +66,7 @@ function DeviceModel(fb) {
 }
 
 DeviceModel.prototype.launchIntentOnAllDevices = function(intentHandler) {
+  this.log('launchIntentOnAllDevices with - ', intentHandler);
   var deviceIds = this.getDeviceIds();
   for (var i = 0; i < deviceIds.length; i++) {
     this.launchIntentOnDevice(intentHandler, deviceIds[i]);
@@ -72,7 +74,12 @@ DeviceModel.prototype.launchIntentOnAllDevices = function(intentHandler) {
 };
 
 DeviceModel.prototype.launchIntentOnDevice = function(intentHandler, deviceId) {
+  this.log('launchIntentOnDevice with - ', intentHandler);
   intentHandler(this.getAdbClient(), deviceId);
+};
+
+DeviceModel.prototype.log = function(msg, arg) {
+  console.log(chalk.red('DeviceModel: ') + msg, arg);
 };
 
 module.exports = DeviceModel;

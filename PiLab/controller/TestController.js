@@ -1,11 +1,11 @@
 'use strict';
 
-var Firebase = require('firebase');
 var URLKeyModel = require('./../model/URLKeyModel');
 var ConfigModel = require('./../model/ConfigModel');
 var PageSpeedModel = require('./../model/PageSpeedModel');
 var WebPageTestModel = require('./../model/WebPageTestModel');
 var OWPModel = require('./../model/OWPModel');
+var chalk = require('chalk');
 
 function TestController(fb) {
   var firebase = fb;
@@ -43,31 +43,35 @@ function TestController(fb) {
 }
 
 TestController.prototype.performTests = function(url) {
-  console.log('TestController: url = ', url);
   var urlKeyModel = this.getURLKeyModel();
   urlKeyModel.generateKey(url, function(err, urlKey) {
     if (err) {
-      console.error('Error generating url key', err);
+      this.error('Error generating url key', err);
       return;
     }
 
     if (!urlKey) {
-      console.error('We coudln\'t generate a key for this url');
+      this.error('We coudln\'t generate a key for this url');
       return;
     }
 
-    console.log('Performing PageSpeed Insights checks');
     var pagespeedModel = this.getPageSpeedModel();
     pagespeedModel.updateScores(urlKey, url);
 
-    console.log('Performing WebPageTest checks');
     var webPageTestModel = this.getWebPageTestModel();
     webPageTestModel.updateTests(urlKey, url);
 
-    console.log('Performing OWP checks');
     var owpModel = this.getOWPModel();
     owpModel.updateStatus(urlKey, url);
   }.bind(this));
+};
+
+TestController.prototype.log = function(msg, arg) {
+  console.log(chalk.cyan('TestController: ') + msg, arg);
+};
+
+TestController.prototype.error = function(msg, arg) {
+  console.log(chalk.cyan('TestController: ') + chalk.red(msg), arg);
 };
 
 module.exports = TestController;
