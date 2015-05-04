@@ -100,6 +100,7 @@ static const CGFloat kAddressHeight = 22.0f;
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     [self updateAddress:request];
+    //NSLog(@"shouldStartLoadWithRequest: %@", request.URL.absoluteString);
     return YES;
 }
 
@@ -117,11 +118,13 @@ static const CGFloat kAddressHeight = 22.0f;
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSLog(@"didFailLoadWithError: %@", error.description);
     if ([error code] == NSURLErrorCancelled) {
+        NSLog(@"didFailLoadWithError: (minor) %@", error.description);
         return;
     }
+    NSLog(@"didFailLoadWithError: (MAJOR) %@", error.description);
+    [self.webView stopLoading];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     [self updateButtons];
     [self informError:error];
@@ -187,13 +190,20 @@ static const CGFloat kAddressHeight = 22.0f;
 }
 
 - (void)loadRequestFromString:(NSString*)urlString {
+    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
+    
     NSURL *url = [NSURL URLWithString:urlString];
     if (!url.scheme) {
         NSString *modifiedURL = [NSString stringWithFormat:@"http://%@", urlString];
         url = [NSURL URLWithString:modifiedURL];
     }
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
-    [self.webView stopLoading];
+    //NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
+    NSURLRequestCachePolicy cachePol = NSURLRequestReloadIgnoringCacheData;
+    NSTimeInterval reqTimeout = 60;
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url cachePolicy:cachePol timeoutInterval:reqTimeout];
+    if (self.webView.loading) {
+        [self.webView stopLoading];
+    }
     [self.webView loadRequest:urlRequest];
 }
 
