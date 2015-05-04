@@ -26,13 +26,6 @@ BrowserIntentHelper.prototype.buildGenericBrowserIntent = function(url) {
     'wait': false,
     'action': 'android.intent.action.VIEW',
     'flags': [FLAG_ACTIVITY_NEW_TASK],
-    'extras': [
-      {
-        'key': 'com.android.browser.application_id',
-        'type': 'string',
-        'value': 'com.android.chrome'
-      }
-    ],
     'data': url
   };
   return intent;
@@ -45,7 +38,16 @@ BrowserIntentHelper.prototype.buildChromeIntent = function(url) {
 };
 
 BrowserIntentHelper.prototype.addChromeSpecifier = function(intent) {
-  return this.addSpecificBrowser(intent, 'com.android.chrome/com.google.android.apps.chrome.Main');
+  var newIntent = this.addSpecificBrowser(intent, 
+    'com.android.chrome/com.google.android.apps.chrome.Main');
+  newIntent.extras = [
+    {
+      'key': 'com.android.browser.application_id',
+      'type': 'string',
+      'value': 'com.android.chrome'
+    }
+  ];
+  return newIntent;
 };
 
 BrowserIntentHelper.prototype.addSpecificBrowser = function(intent, browser) {
