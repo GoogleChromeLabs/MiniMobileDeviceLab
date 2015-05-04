@@ -39,8 +39,13 @@ function DeviceModel(fb) {
   });
 
   this.addDevice = function(device) {
+    if (deviceIds.indexOf(device.id) !== -1) {
+      return;
+    }
+
     deviceIds.push(device.id);
     this.emit('DeviceAdded', device.id);
+    console.log('addDevice: ', deviceIds);
   };
 
   this.removeDevice = function(device) {
