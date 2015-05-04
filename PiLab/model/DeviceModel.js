@@ -2,6 +2,7 @@
 
 var adb = require('adbkit');
 var chalk = require('chalk');
+var events = require('events');
 
 function DeviceModel(fb) {
   var deviceIds = [];
@@ -39,6 +40,7 @@ function DeviceModel(fb) {
 
   this.addDevice = function(device) {
     deviceIds.push(device.id);
+    this.emit('DeviceAdded', device.id);
   };
 
   this.removeDevice = function(device) {
@@ -64,6 +66,8 @@ function DeviceModel(fb) {
     return null;
   };
 }
+
+DeviceModel.prototype = events.EventEmitter.prototype;
 
 DeviceModel.prototype.launchIntentOnAllDevices = function(intentHandler) {
   this.log('launchIntentOnAllDevices with - ', intentHandler);

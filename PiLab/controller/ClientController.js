@@ -44,7 +44,12 @@ function ClientController() {
   }.bind(this));
 
   deviceModel = new DeviceModel(firebase);
-
+  deviceModel.on('DeviceAdded', function(deviceId) {
+    var url = currentUrlModel.getUrl();
+    if (url) {
+      this.presentUrlToDevice(url, deviceId);
+    }
+  }.bind(this));
   this.getDeviceModel = function() {
     return deviceModel;
   };
@@ -53,15 +58,19 @@ function ClientController() {
 ClientController.prototype.presentUrl = function(url) {
   var deviceIds = this.getDeviceModel().getDeviceIds();
   for (var i = 0; i < deviceIds.length; i++) {
-    var displayType = this.getDeviceModel().getDeviceDisplayType(deviceIds[i]);
-    var launchedUrl = url;
-    if (displayType) {
-      launchedUrl = config.frontEndUrl + '/displays/' + displayType + '.html?url=' + encodeURI(url);
-    }
-    var intentHandler = BrowserIntentHelper.getDeviceIntentHandler(launchedUrl);
-    this.getDeviceModel().launchIntentOnDevice(intentHandler, deviceIds[i]);
+    this.presentUrlToDevice(url, deviceIds[i]);
   }
 };
+
+ClientController.prototype.presentUrlToDevice = function(url, deviceId) {
+  var displayType = this.getDeviceModel().getDeviceDisplayType(deviceId);
+  var launchedUrl = url;
+  if (displayType) {
+    launchedUrl = config.frontEndUrl + '/displays/' + displayType + '.html?url=' + encodeURI(url);
+  }
+  var intentHandler = BrowserIntentHelper.getDeviceIntentHandler(launchedUrl);
+  this.getDeviceModel().launchIntentOnDevice(intentHandler, deviceId);
+}
 
 ClientController.prototype.loadConfigPage = function() {
   var deviceIds = this.getDeviceModel().getDeviceIds();
