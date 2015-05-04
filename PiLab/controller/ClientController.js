@@ -45,6 +45,9 @@ function ClientController() {
 
   deviceModel = new DeviceModel(firebase);
   deviceModel.on('DeviceAdded', function(deviceId) {
+    if (!currentUrlModel) {
+      return;
+    }
     var url = currentUrlModel.getUrl();
     if (url) {
       this.presentUrlToDevice(url, deviceId);
