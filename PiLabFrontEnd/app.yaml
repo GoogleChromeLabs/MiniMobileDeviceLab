@@ -53,10 +53,17 @@ handlers:
 - url: /ios/
   static_files: ios/index.html
   upload: ios/index.html
+  expiration: "0s"
+
+- url: /ios
+  static_files: ios/index.html
+  upload: ios/index.html
+  expiration: "0s"
 
 - url: /ios/.*
   static_files: ios/index.html
   upload: ios/index.html
+  expiration: "0s"
 
 - url: /.*
   static_files: index.html
