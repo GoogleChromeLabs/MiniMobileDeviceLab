@@ -52,10 +52,8 @@ function init() {
   });
 
   chrome.windows.onRemoved.addListener(function(windowID) {
-    if ((currentWindow) && (currentWindow.id === windowID)) {
-      currentTab = null;
-      currentWindow = null;
-      stopFirebase();
+    if ((currentWindow) && (currentWindow.id === windowID) && (fbRef)) {
+      createWindow(currentURL);
     }
   });
 }
@@ -71,8 +69,8 @@ function createWindow(urls, callback) {
   var options = {
     'focused': settings.grabFocus,
     'url': urls,
-    'width': 10,
-    'height': 10 
+    'width': screen.width,
+    'height': screen.height
   };
   chrome.windows.create(options, function(win) {
     currentWindow = win;
@@ -189,25 +187,29 @@ function testForServiceWorker(tab, url) {
 
 function saveServiceWorkerResult(url, hasServiceWorker) {
   console.log('[saveServiceWorkerResult]', url, hasServiceWorker);
-  fbRef.child('urlkeys').orderByValue().equalTo(url).on('value', function(snapshot) {
-    var data = snapshot.val();
-    if (data) {
-      try {
-        var keys = Object.keys(data);
-        var key = 'tests/' + keys[0] + '/owp/status/serviceWorker';
-        fbRef.child(key).set(hasServiceWorker);
-        var historyKey = 'tests/history/' + keys[0] + '/serviceWorker';
-        var historyObj = {
-          'timestamp': Date.now(),
-          'hasServiceWorker': hasServiceWorker,
-          'url': url
-        };
-        fbRef.child(historyKey).push(historyObj);
-      } catch (ex) {
-        console.warn('[saveServiceWorkerResult] Error saving result:', ex);
+  try {
+    fbRef.child('urlkeys').orderByValue().equalTo(url).on('value', function(snapshot) {
+      var data = snapshot.val();
+      if (data) {
+        try {
+          var keys = Object.keys(data);
+          var key = 'tests/' + keys[0] + '/owp/status/serviceWorker';
+          fbRef.child(key).set(hasServiceWorker);
+          var historyKey = 'tests/history/' + keys[0] + '/serviceWorker';
+          var historyObj = {
+            'timestamp': Date.now(),
+            'hasServiceWorker': hasServiceWorker,
+            'url': url
+          };
+          fbRef.child(historyKey).push(historyObj);
+        } catch (ex) {
+          console.warn('[saveServiceWorkerResult] Error saving result:', ex);
+        }
       }
-    }
-  });
+    });
+  } catch (ex) {
+    // NoOp
+  }
 }
 
 
@@ -215,6 +217,7 @@ function saveServiceWorkerResult(url, hasServiceWorker) {
  * Firebase helper methods
  ***********************************************************************/
 var fbRef;
+var currentURL;
 
 // Connects to Firebase with the appID and key. If no key is provided, it
 // simply uses anonymous authentication.
@@ -241,6 +244,9 @@ function stopFirebase() {
     fbRef.unauth();
     fbRef = null;
   }
+  currentTab = null;
+  currentWindow = null;
+  currentURL = null;
   chrome.runtime.sendMessage({'fbConnected': false});
   chrome.browserAction.setBadgeText({'text': ''});
   chrome.power.releaseKeepAwake();
@@ -248,8 +254,9 @@ function stopFirebase() {
 
 function startListening() {
   fbRef.child('url').on('value', function(snapshot) {
-   openURL(snapshot.val());
-   chrome.runtime.sendMessage({'url': snapshot.val()});
+    currentURL = snapshot.val();
+    openURL(currentURL);
+    chrome.runtime.sendMessage({'action': 'open', 'url': currentURL});
   });
   chrome.browserAction.setBadgeText({'text': 'ON'});
   chrome.power.requestKeepAwake('display');
