@@ -1,37 +1,56 @@
 body {
   font-family: 'Roboto', sans-serif;
-
   box-sizing: border-box;
-
   color: #ecf0f1;
 }
 
 .full-wrapper {
   width: 100%;
   height: 100%;
-
   padding: 20px;
-
   box-sizing: border-box;
 }
 
 .title, .subtitle {
   margin: 0;
   padding: 0;
-
   text-align: center;
 }
 
-.title {
-  font-size: 50px;
+@media screen and (orientation: portrait) {
+  .title {
+    font-size: 12vw;
+  }
+  .subtitle {
+    font-size: 6vw;
+  }
+  .center-score {
+    font-size: 40vw;
+  }
+  .center-score.short {
+    font-size: 60vw;
+  }
+  .center-score.long {
+    font-size: 25vw;
+  }
 }
 
-.subtitle {
-  font-size: 15px;
-}
-
-.center-score {
-  font-size: 108px;
+@media screen and (orientation: landscape) {
+  .title {
+    font-size: 12vh;
+  }
+  .subtitle {
+    font-size: 6vh;
+  }
+  .center-score {
+    font-size: 55vh;
+  }
+  .center-score.short {
+    font-size: 60vh;
+  }
+  .center-score.long {
+    font-size: 40vh;
+  }
 }
 
 .positive-value {
