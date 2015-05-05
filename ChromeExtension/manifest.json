@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+  "browser_action": {
+    "default_icon": "128.png",
+    "default_title": "MMDL"
+  },
+  "name": "Mini Mobile Device Lab",
+  "description": "Mini Mobile Device Lab - Chrome Extension",
+  "version": "0.43",
+  "icons": {
+    "128": "128.png"
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "power",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": [
+      "firebase-2.2.4.min.js",
+      "background.js"
+    ]
+  },
+  "web_accessible_resources": [
+    "setup.js",
+    "setup.html"
+  ],
+  "content_security_policy": "script-src 'self' https://*.firebaseio.com; object-src 'self'",
+  "options_page": "setup.html"
+}

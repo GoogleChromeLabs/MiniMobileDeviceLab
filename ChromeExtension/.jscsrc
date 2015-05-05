@@ -1,0 +1,9 @@
+{
+  "preset": "google",
+  "validateLineBreaks": "LF",
+  "validateIndentation": 2,
+  "excludeFiles": [
+    "firebase-2.2.4.min.js",
+    "moment-2.10.2.min.js"
+  ]
+}

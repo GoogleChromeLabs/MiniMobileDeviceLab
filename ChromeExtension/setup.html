@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<!--
+ * Copyright 2015 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ *
+ * Mini Mobile Device Lab (Chrome Extension)
+ * https://github.com/GoogleChrome/MiniMobileDeviceLab
+ * setup.html
+ *
+-->
+<head>
+  <title>MMDL Settings</title>
+  <link rel="stylesheet" href="bootstrap-3.3.2.min.css">
+  <style type="text/css">
+    .panel {
+      margin: 2em auto;
+      max-width: 500px;
+    }
+    .btn {
+      min-width: 80px
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="panel panel-primary">
+      <div class="panel-heading">Device Lab Client</div>
+      <div class="panel-body">
+        <form>
+          <div class="form-group">
+            <label for="url">Firebase App ID</label>
+            <input type="text" class="form-control" id="appID" placeholder="Firebase App ID" value="goog-mtv-device-lab">
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" id="testForServiceWorker"> Test for ServiceWorker.
+            </label>
+          </div>
+          <div id="divFBKey" class="form-group hidden">
+            <label for="key">Firebase Key</label>
+            <input type="password" class="form-control" id="key" placeholder="Firebase Key">
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" id="grabFocus" checked> Grab Focus.
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" id="onByDefault" checked> On by default.
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="panel-footer clearfix">
+        <div class="pull-right">
+          <button type="button" id="butSave" class="btn btn-primary">Save</button>
+          <button type="button" id="butClear" class="btn btn-danger">Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="setup.js"></script>
+</body>
+</html>

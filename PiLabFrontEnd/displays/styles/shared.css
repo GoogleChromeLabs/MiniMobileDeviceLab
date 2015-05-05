@@ -1,0 +1,47 @@
+body {
+  font-family: 'Roboto', sans-serif;
+
+  box-sizing: border-box;
+
+  color: #ecf0f1;
+}
+
+.full-wrapper {
+  width: 100%;
+  height: 100%;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+}
+
+.title, .subtitle {
+  margin: 0;
+  padding: 0;
+
+  text-align: center;
+}
+
+.title {
+  font-size: 50px;
+}
+
+.subtitle {
+  font-size: 15px;
+}
+
+.center-score {
+  font-size: 108px;
+}
+
+.positive-value {
+  background-color: #2ecc71;
+}
+
+.even-value {
+  background-color: #f1c40f;
+}
+
+.negative-value {
+  background-color: #e74c3c;
+}

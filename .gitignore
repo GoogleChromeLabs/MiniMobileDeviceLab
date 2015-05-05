@@ -1,8 +1,53 @@
-MiniMobileDeviceLabAppEngine/src/main/webapp/WEB-INF/appengine-web.xml
-MiniMobileDeviceLabAppEngine/src/main/java/com/google/devrel/
-MiniMobileDeviceLabAppEngine/src/main/webapp/js/config.js
-mobiledevicelab/Constants.java
-.idea/
-MiniMobileDeviceLabAndroid/.gradle/
-MiniMobileDeviceLabAndroid/build/
-MiniMobileDeviceLabAndroid/app/*.apk
+#
+# Node and Bower Stuff
+#
+
+node_modules
+bower_components
+
+
+#
+# Config files
+#
+
+config.json
+config.js
+
+
+#
+# Xcode
+#
+
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.xcuserstate
+*.ipa
+
+# include the built & checked in MMDLClient App for iOS
+!PiLabFrontEnd/ios/MMDLClient.ipa
+
+#
+# OS X Stuff
+#
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+#
+# Saving data (PiLab/stash.js)
+#
+test/
+/PiLab/last_failure.txt
