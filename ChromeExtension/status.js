@@ -25,7 +25,7 @@ var tBody = document.querySelector('tbody');
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   console.log('onMessage', request);
-  if (request.url) {
+  if ((request.url) && (request.action === 'open')) {
     var tr = document.createElement('tr');
     var tdURL = document.createElement('td');
     tdURL.innerText = request.url;
