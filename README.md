@@ -1,3 +1,6 @@
+Mini Mobile Device Lab
+======================
+
 # Steps to Get Going
 
 1. Copy config.sample.json to config.json.
@@ -8,3 +11,4 @@
 3. Run the server somewhere with 'node server.js'.
 4. Run the client on the Pi or computer connected to the hub with the devices with 'node client.js'.
 5. Visit the PiLabFrontEnd to control everything.
+
