@@ -31,7 +31,7 @@ function init() {
     if (mmdlStorageSettings.settings === undefined) {
       console.log('[init] No settings found, using defaults.');
       settings = {
-        'appID': 'goog-lon-device-lab',
+        'appID': 'goog-mtv-device-lab',
         'key': '',
         'testForServiceWorker': false,
         'onByDefault': true,
