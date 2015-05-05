@@ -63,7 +63,7 @@ static const CGFloat kAddressHeight = 22.0f;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *fbAppName = [defaults stringForKey:@"fbAppName"];
     if (!fbAppName) {
-        fbAppName = [NSString stringWithFormat:@"goog-lon-device-lab"];
+        fbAppName = [NSString stringWithFormat:@"goog-mtv-device-lab"];
     }
 
     NSString *fbURL = [NSString stringWithFormat:@"https://%@.firebaseio.com/url", fbAppName];
@@ -141,7 +141,7 @@ static const CGFloat kAddressHeight = 22.0f;
     [readyBody appendString:@"h1 { font-size: 55vw; } "];
     [readyBody appendString:@"</style><head><body><div>"];
     [readyBody appendString:@"<h1>:P</h1><div>"];
-    [readyBody appendString:@"hello, world."];
+    [readyBody appendString:@"goog-mtv-device-lab"];
     [readyBody appendString:@"</div></div></body></html>"];
     [self.webView loadHTMLString:readyBody baseURL:nil];
     

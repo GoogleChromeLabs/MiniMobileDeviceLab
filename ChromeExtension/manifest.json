@@ -2,11 +2,11 @@
   "manifest_version": 2,
   "browser_action": {
     "default_icon": "128.png",
-    "default_title": "DevLab Listener"
+    "default_title": "MMDL"
   },
-  "name": "DevLab",
-  "description": "DevLab",
-  "version": "0.42",
+  "name": "Mini Mobile Device Lab",
+  "description": "Mini Mobile Device Lab - Chrome Extension",
+  "version": "0.43",
   "icons": {
     "128": "128.png"
   },

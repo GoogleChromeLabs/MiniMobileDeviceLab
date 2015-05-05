@@ -35,6 +35,8 @@ DerivedData
 *.xcuserstate
 *.ipa
 
+# include the built & checked in MMDLClient App for iOS
+!PiLabFrontEnd/ios/MMDLClient.ipa
 
 #
 # OS X Stuff
@@ -48,3 +50,4 @@ DerivedData
 # Saving data (PiLab/stash.js)
 #
 test/
+/PiLab/last_failure.txt
