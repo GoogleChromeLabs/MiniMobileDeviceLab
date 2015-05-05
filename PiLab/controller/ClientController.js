@@ -4,6 +4,7 @@ var ConfigModel = require('./../model/ConfigModel.js');
 var CurrentURLModel = require('./../model/CurrentURLModel.js');
 var DeviceModel = require('./../model/DeviceModel.js');
 var BrowserIntentHelper = require('./../helper/BrowserIntentHelper.js');
+var KeepScreenOnIntentHelper = require('./../helper/KeepScreenOnIntentHelper.js');
 var Firebase = require('firebase');
 var chalk = require('chalk');
 
@@ -45,13 +46,20 @@ function ClientController() {
 
   deviceModel = new DeviceModel(firebase);
   deviceModel.on('DeviceAdded', function(deviceId) {
-    if (!currentUrlModel) {
-      return;
-    }
-    var url = currentUrlModel.getUrl();
-    if (url) {
-      this.presentUrlToDevice(url, deviceId);
-    }
+    // Launch keep screen on
+    setTimeout(function() {
+      var intentHandler =
+        KeepScreenOnIntentHelper.getKeepScreenOnIntentHandler();
+      this.getDeviceModel().launchIntentOnDevice(intentHandler, deviceId);
+      if (!currentUrlModel) {
+        return;
+      }
+
+      var url = currentUrlModel.getUrl();
+      if (url) {
+        this.presentUrlToDevice(url, deviceId);
+      }
+    }.bind(this), 1000);
   }.bind(this));
   this.getDeviceModel = function() {
     return deviceModel;
@@ -87,6 +95,9 @@ ClientController.prototype.loadConfigPage = function() {
 };
 
 ClientController.prototype.log = function(msg, arg) {
+  if (!arg) {
+    arg = '';
+  }
   console.log(chalk.blue('ClientController: ') + msg, arg);
 };
 
