@@ -47,3 +47,4 @@ DerivedData
 # Saving data (PiLab/stash.js)
 #
 test/
+/PiLab/last_failure.txt
