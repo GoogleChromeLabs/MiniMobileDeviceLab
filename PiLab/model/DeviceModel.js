@@ -35,6 +35,9 @@ function DeviceModel(fb) {
 
   fb.child('device-display-types').on('value', function(snapshot) {
     var value = snapshot.val();
+    if (!value) {
+      value = {};
+    }
     deviceDisplayTypes = value;
   });
 
