@@ -82,7 +82,7 @@ WebPageTestModel.prototype.updateTests = function(urlKey, url) {
         );
       });
     }).catch(function(err) {
-      this.error('WebPageTestModel: Unable to get run results.', err);
+      this.error('Unable to get run results.', err);
     }.bind(this));
   }.bind(this));
 };

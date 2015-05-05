@@ -24,6 +24,9 @@ function ConfigModel(fb) {
   }.bind(this));
 
   this.getApiKey = function(apiKeyName) {
+    if (!apiKeys) {
+      return null;
+    }
     return apiKeys[apiKeyName];
   };
 

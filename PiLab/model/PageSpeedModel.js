@@ -72,17 +72,17 @@ PageSpeedModel.prototype.updateScores = function(urlKey, url) {
         }
       );
     }).catch(function(err) {
-      this.error('PageSpeedModel: Unable to get Scores.', err);
+      this.error('Unable to get Scores.', err);
     }.bind(this));
   }.bind(this));
 };
 
 PageSpeedModel.prototype.log = function(msg, arg) {
-  console.log(chalk.gray('WebPageTestModel: ') + msg, arg);
+  console.log(chalk.gray('PageSpeedModel: ') + msg, arg);
 };
 
 PageSpeedModel.prototype.error = function(msg, arg) {
-  console.log(chalk.gray('WebPageTestModel: ') + chalk.red(msg), arg);
+  console.log(chalk.gray('PageSpeedModel: ') + chalk.red(msg), arg);
 };
 
 module.exports = PageSpeedModel;

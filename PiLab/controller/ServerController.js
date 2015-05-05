@@ -90,7 +90,7 @@ ServerController.prototype.performLoopTick = function() {
   var loopSettingsModel = this.getLoopSettingsModel();
   var loopUrls = loopSettingsModel.getLoopUrls();
   var loopIndex = loopSettingsModel.getLoopIndex();
-  if (loopUrls.length === 0 || loopIndex === null) {
+  if (!loopUrls || loopUrls.length === 0 || loopIndex === null) {
     return setTimeout(this.performLoopTick.bind(this), 500);
   }
 

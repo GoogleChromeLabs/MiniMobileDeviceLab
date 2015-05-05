@@ -1,4 +1,4 @@
-application: primal-gate-91117 
+application: goog-mtv-device-lab
 version: 20150410-1
 runtime: python27
 threadsafe: yes
@@ -24,6 +24,12 @@ handlers:
 
 - url: /displays
   static_dir: displays
+  secure: always
+
+- url: /config.js
+  static_files: config.js
+  upload: config.js
+  expiration: "0s"
   secure: always
 
 - url: /elements.html

@@ -8,15 +8,15 @@ template.enableSender = false;
 template.invalidURL = false;
 template.stateInitialised = false;
 
-var firebase = new Firebase('https://goog-lon-device-lab.firebaseio.com/');
-firebase.authWithCustomToken('vdRwF7OBMMhMvtxxETmqvcpdM9JztAFrR7Qlx5yZ', function(error) {
+var firebase = new Firebase(window.PiLab.config.firebaseUrl);
+firebase.authWithCustomToken(window.PiLab.config.firebaseKey, function(error) {
   if (error) {
     throw new Error('Unable to auth with Firebase', error);
   }
 
   firebase.child('loop/urls').on('value', function(snapshot) {
     var loopUrls = snapshot.val();
-    if (loopUrls.constructor !== Array) {
+    if (!loopUrls || loopUrls.constructor !== Array) {
       loopUrls = [];
     }
     console.log('loopUrls = ', loopUrls);

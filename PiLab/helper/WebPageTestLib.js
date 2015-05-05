@@ -29,7 +29,6 @@ module.exports.queueUpTest = function(options) {
       }
 
       if (!result.data) {
-        console.log('No result data');
         return reject(new Error('No result data returned.'));
       }
 

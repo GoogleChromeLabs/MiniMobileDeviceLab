@@ -3,8 +3,8 @@
 var template = document.querySelector('#tmpl');
 template.loaded = false;
 
-var firebase = new Firebase('https://goog-lon-device-lab.firebaseio.com/');
-firebase.authWithCustomToken('vdRwF7OBMMhMvtxxETmqvcpdM9JztAFrR7Qlx5yZ', function(error) {
+var firebase = new Firebase(window.PiLab.config.firebaseUrl);
+firebase.authWithCustomToken(window.PiLab.config.firebaseKey, function(error) {
   if (error) {
     throw new Error('Unable to auth with Firebase', error);
   }
