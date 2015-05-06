@@ -38,9 +38,9 @@ handlers:
   expiration: "0s"
   secure: always
 
-- url: /config.html
-  static_files: config.html
-  upload: config.html
+- url: /setup.html
+  static_files: setup.html
+  upload: setup.html
   expiration: "0s"
   secure: always
 

@@ -24,21 +24,12 @@ firebase.authWithCustomToken(window.PiLab.config.firebaseKey, function(error) {
     template.loopUrls = loopUrls;
   });
 
-  firebase.child('config/mode').on('value', function(snapshot) {
+  firebase.child('config/useMode').on('value', function(snapshot) {
     var mode = snapshot.val();
 
     var urlTextfield = document.querySelector('.js-sendurltextfield');
     urlTextfield.disabled = mode !== 'static';
 
-    if (mode === 'config') {
-      // Don't change the state of loop switch for config
-      // This way it can be used to set to loop or static
-      // afterwards
-      if (!template.stateInitialised) {
-        firebase.child('config/mode').set('static');
-      }
-      return;
-    }
     template.isLooping = mode === 'loop';
     template.stateInitialised = true;
   }.bind(this));
@@ -47,7 +38,7 @@ firebase.authWithCustomToken(window.PiLab.config.firebaseKey, function(error) {
 template.toggleLoop = function(event) {
   var mode = event.target.checked ? 'loop' : 'static';
 
-  firebase.child('config/mode').set(mode);
+  firebase.child('config/useMode').set(mode);
 };
 
 template.onSendUrl = function(event) {
@@ -125,7 +116,12 @@ template.onPageSelectionChange = function(event) {
   var corePages = document.querySelector('.js-core-pages');
   var mode = template.isLooping ? 'loop' : 'static';
   if (corePages.selected === 'section-labsetup') {
-    mode = 'config';
+    firebase.child('config/globalMode').set('config');
+  } else {
+    firebase.child('config/globalMode').set('use');
   }
-  firebase.child('config/mode').set(mode);
+};
+
+template.onResetDisplaysClick = function(event) {
+  firebase.child('device-display-types').remove();
 };

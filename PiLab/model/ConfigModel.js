@@ -6,20 +6,31 @@ var chalk = require('chalk');
 function ConfigModel(fb) {
   var firebase = fb;
   var apiKeys = {};
-  var mode = null;
+  var useMode = null;
+  var globalMode = null;
 
   firebase.child('config/apiKeys').on('value', function(snapshot) {
     this.log('Received api keys from Firebase');
     apiKeys = snapshot.val();
   }.bind(this));
 
-  firebase.child('config/mode').on('value', function(snapshot) {
-    this.log('Received mode from Firebase');
+  firebase.child('config/useMode').on('value', function(snapshot) {
+    this.log('Received useMode from Firebase');
     var newMode = snapshot.val();
-    var shouldEmitChange = newMode !== mode;
-    mode = newMode;
+    var shouldEmitChange = newMode !== useMode;
+    useMode = newMode;
     if (shouldEmitChange) {
-      this.emit('ModeChange', mode);
+      this.emit('UseModeChange', this.getUseMode());
+    }
+  }.bind(this));
+
+  firebase.child('config/globalMode').on('value', function(snapshot) {
+    this.log('Received globalMode from Firebase');
+    var newMode = snapshot.val();
+    var shouldEmitChange = newMode !== globalMode;
+    globalMode = newMode;
+    if (shouldEmitChange) {
+      this.emit('GlobalModeChange', this.getGlobalMode());
     }
   }.bind(this));
 
@@ -30,14 +41,24 @@ function ConfigModel(fb) {
     return apiKeys[apiKeyName];
   };
 
-  this.getMode = function() {
-    if (mode !== 'loop' && mode !== 'config' && mode !== 'static') {
-      this.log('mode should be \'loop\', \'config\' or \'static\'. Currently it\'s: ',
-        mode);
+  this.getUseMode = function() {
+    if (useMode !== 'loop' && useMode !== 'static') {
+      this.log('mode should be \'loop\' or \'static\'. Currently it\'s: ',
+        useMode);
       return 'static';
     }
 
-    return mode;
+    return useMode;
+  };
+
+  this.getGlobalMode = function() {
+    if (globalMode !== 'use' && globalMode !== 'config') {
+      this.log('globalMode should be \'config\' or \'use\'. Currently it\'s: ',
+        globalMode);
+      return 'use';
+    }
+
+    return globalMode;
   };
 }
 
