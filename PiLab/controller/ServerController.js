@@ -27,14 +27,22 @@ function ServerController() {
     currentUrlModel = new CurrentURLModel(firebase);
     configModel = new ConfigModel(firebase);
 
-    configModel.on('ModeChange', function(mode) {
+    configModel.on('UseModeChange', function(mode) {
       if (mode === 'loop') {
         this.startLooping();
       } else {
         this.stopLooping();
       }
+    }.bind(this));
 
-      // TODO: Handle config
+    configModel.on('GlobalModeChange', function(mode) {
+      if (mode === 'config') {
+        this.stopLooping();
+      } else {
+        if (configModel.getUseMode() === 'loop') {
+          this.startLooping();
+        }
+      }
     }.bind(this));
 
     currentUrlModel.on('URLChange', function(url) {

@@ -29,13 +29,13 @@ function ClientController() {
       this.presentUrl(url);
     }.bind(this));
 
-    configModel.on('ModeChange', function(mode) {
+    configModel.on('GlobalModeChange', function(mode) {
       switch (mode) {
-        case 'loop':
-          // NOOP
-          break;
-        case 'static':
-          // NOOP
+        case 'use':
+          var url = currentUrlModel.getUrl();
+          if (url) {
+            this.presentUrl(url);
+          }
           break;
         case 'config':
           this.loadConfigPage();
@@ -84,12 +84,19 @@ ClientController.prototype.presentUrlToDevice = function(url, deviceId) {
 };
 
 ClientController.prototype.loadConfigPage = function() {
-  var deviceIds = this.getDeviceModel().getDeviceIds();
-  var url = config.frontEndUrl + '/config.html?deviceId=';
+  var deviceModel = this.getDeviceModel();
+  var deviceIds = deviceModel.getDeviceIds();
+  var url = config.frontEndUrl + '/setup.html#deviceId=';
   for (var i = 0; i < deviceIds.length; i++) {
     var deviceId = deviceIds[i];
-    var specificUrl = url + deviceId;
-    var intentHandler = BrowserIntentHelper.getDeviceIntentHandler(specificUrl);
+    var displayType = deviceModel.getDeviceDisplayType(deviceId);
+    if (!displayType) {
+      displayType = 'default';
+    }
+
+    var specificConfigUrl = url + deviceId + '&displayTypeId=' + displayType;
+
+    var intentHandler = BrowserIntentHelper.getDeviceIntentHandler(specificConfigUrl);
     this.getDeviceModel().launchIntentOnDevice(intentHandler, deviceId);
   }
 };
