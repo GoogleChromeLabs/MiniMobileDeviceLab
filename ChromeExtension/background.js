@@ -32,8 +32,6 @@ function init() {
       console.log('[init] No settings found, using defaults.');
       settings = {
         'appID': 'goog-mtv-device-lab',
-        'key': '',
-        'testForServiceWorker': false,
         'onByDefault': true,
         'grabFocus': true
       };
@@ -93,7 +91,6 @@ function createTab(url, callback) {
       stopFirebase();
     } else {
       currentTab = tab;
-      testForServiceWorker(tab, url);
       if (callback) {
         callback(tab);
       }  
@@ -118,7 +115,6 @@ function openURL(url) {
       if (chrome.runtime.lastError) {
         createTab(url);
       } else {
-        testForServiceWorker(tab, url);
         currentTab = tab;
       }
     });
@@ -126,92 +122,6 @@ function openURL(url) {
     createTab(url);
   }
 }
-
-/************************************************************************
- * Test for ServiceWorkers
- ***********************************************************************/
-
-function testForServiceWorker(tab, url) {
-  if (settings.testForServiceWorker === false) {
-    return;
-  }
-  console.log('[testForServiceWorker]', url);
-  var testCode = [
-    'var url = \'[URL]\';',
-    'function mmdlTestForServiceWorker() {',
-    '  console.log(\'running serviceWorker test...\');',
-    '  if (\'serviceWorker\' in navigator) {',
-    '    navigator.serviceWorker.getRegistration().then(function(registration) {',
-    '      if (registration) {',
-    '        // A service worker is registered for the page.',
-    '        chrome.runtime.sendMessage({',
-    '          \'serviceWorkerTest\': true,',
-    '          \'hasServiceWorker\': true,',
-    '          \'url\': url',
-    '        });',
-    '      } else {',
-    '        // No service worker is registered',
-    '        chrome.runtime.sendMessage({',
-    '          \'serviceWorkerTest\': true,',
-    '          \'hasServiceWorker\': false,',
-    '          \'url\': url',
-    '        });',
-    '      }',
-    '    }).catch(function(err) {',
-    '      // No service worker registered because of an error',
-    '      chrome.runtime.sendMessage({',
-    '        \'serviceWorkerTest\': true,',
-    '        \'hasServiceWorker\': false,',
-    '        \'error\': err,',
-    '        \'url\': url',
-    '      });',
-    '    });',
-    '  }',
-    '}',
-    'mmdlTestForServiceWorker();'
-  ];
-  var code = testCode.join('\n');
-  code = code.replace('[URL]', url);
-  var obj = {
-    'code': code,
-    'runAt': 'document_idle'
-  };
-  setTimeout(function() {
-    chrome.tabs.executeScript(tab.id, obj, function() {
-      if (chrome.runtime.lastError) {
-        /* NoOp - we don't care. */
-      }
-    });
-  }, 2500);
-}
-
-function saveServiceWorkerResult(url, hasServiceWorker) {
-  console.log('[saveServiceWorkerResult]', url, hasServiceWorker);
-  try {
-    fbRef.child('urlkeys').orderByValue().equalTo(url).on('value', function(snapshot) {
-      var data = snapshot.val();
-      if (data) {
-        try {
-          var keys = Object.keys(data);
-          var key = 'tests/' + keys[0] + '/owp/status/serviceWorker';
-          fbRef.child(key).set(hasServiceWorker);
-          var historyKey = 'tests/history/' + keys[0] + '/serviceWorker';
-          var historyObj = {
-            'timestamp': Date.now(),
-            'hasServiceWorker': hasServiceWorker,
-            'url': url
-          };
-          fbRef.child(historyKey).push(historyObj);
-        } catch (ex) {
-          console.warn('[saveServiceWorkerResult] Error saving result:', ex);
-        }
-      }
-    });
-  } catch (ex) {
-    // NoOp
-  }
-}
-
 
 /************************************************************************
  * Firebase helper methods
@@ -253,7 +163,7 @@ function stopFirebase() {
 }
 
 function startListening() {
-  fbRef.child('url').on('value', function(snapshot) {
+  fbRef.child('currenturl/url').on('value', function(snapshot) {
     currentURL = snapshot.val();
     openURL(currentURL);
     chrome.runtime.sendMessage({'action': 'open', 'url': currentURL});
@@ -303,7 +213,5 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       stopFirebase();
       startFirebase();
     }
-  } else if (request.serviceWorkerTest) {
-    saveServiceWorkerResult(request.url, request.hasServiceWorker);
   }
 });
