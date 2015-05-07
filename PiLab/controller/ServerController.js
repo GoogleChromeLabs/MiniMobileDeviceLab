@@ -91,20 +91,27 @@ function ServerController() {
 ServerController.prototype.startLooping = function() {
   this.log('Start Looping');
 
-  this.performLoopTick();
+  var loopSettingsModel = this.getLoopSettingsModel();
+  var timeoutMs = loopSettingsModel.getLoopIntervalMs();
+  var loopIndex = loopSettingsModel.getLoopIndex();
+  if (loopIndex) {
+    loopSettingsModel.setLoopIndex(loopIndex + 1);
+  }
+  var newTimeoutId = setTimeout(this.performLoopTick.bind(this), timeoutMs);
+  this.setLoopTimeoutId(newTimeoutId);
 };
 
 ServerController.prototype.performLoopTick = function() {
   var loopSettingsModel = this.getLoopSettingsModel();
   var loopUrls = loopSettingsModel.getLoopUrls();
   var loopIndex = loopSettingsModel.getLoopIndex();
-  if (!loopUrls || loopUrls.length === 0 || loopIndex === null) {
+  var timeoutMs = loopSettingsModel.getLoopIntervalMs();
+  if (!loopUrls || loopUrls.length === 0 || loopIndex === null ||
+    !timeoutMs) {
     var newTimeoutId =  setTimeout(this.performLoopTick.bind(this), 500);
     this.setLoopTimeoutId(newTimeoutId);
     return;
   }
-
-  var timeoutMs = loopSettingsModel.getLoopIntervalMs();
 
   // Clear any current pending timeout
   var currentTimeoutId = this.getLoopTimeoutId();

@@ -1,7 +1,7 @@
 'use strict';
 
 var chalk = require('chalk');
-var DEFAULT_LOOP_INTERVAL_MS = 40000;
+var DEFAULT_LOOP_INTERVAL_MS = 60000;
 function LoopSettingsModel(fb) {
   var firebase = fb;
   var loopUrls = [];

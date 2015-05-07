@@ -3,8 +3,10 @@
 var URLKeyModel = require('./../model/URLKeyModel');
 var ConfigModel = require('./../model/ConfigModel');
 var CurrentURLModel = require('./../model/CurrentURLModel.js');
+var TestDeviceModel = require('./../model/TestDeviceModel.js');
 var PageSpeedModel = require('./../model/PageSpeedModel');
 var WebPageTestModel = require('./../model/WebPageTestModel');
+var DeviceController = require('./DeviceController.js');
 var OWPModel = require('./../model/OWPModel');
 var chalk = require('chalk');
 
@@ -16,6 +18,8 @@ function TestController(fb) {
   var pageSpeedModel;
   var webPageTestModel;
   var owpModel;
+  var deviceController;
+  var testDevice;
 
   urlKeyModel = new URLKeyModel(firebase);
   configModel = new ConfigModel(firebase);
@@ -23,6 +27,7 @@ function TestController(fb) {
   pageSpeedModel = new PageSpeedModel(firebase, configModel);
   webPageTestModel = new WebPageTestModel(firebase, configModel);
   owpModel = new OWPModel(firebase);
+  deviceController = new DeviceController();
 
   this.getFirebase = function() {
     return firebase;
@@ -47,6 +52,36 @@ function TestController(fb) {
   this.getCurrentURLModel = function() {
     return currentUrlModel;
   };
+
+  this.setUpTestDevice = function() {
+    if (testDevice) {
+      // Already got one
+      return;
+    }
+
+    var deviceIds = deviceController.getDeviceIds();
+    if (deviceIds.length === 0) {
+      return;
+    }
+
+    testDevice = new TestDeviceModel(deviceIds[0], deviceController.getAdbClient());
+  };
+
+  this.getTestDevice = function() {
+    return testDevice;
+  };
+
+  deviceController.on('DeviceAdded', function(device) {
+    this.setUpTestDevice();
+  }.bind(this));
+
+  deviceController.on('DeviceRemoved', function(device) {
+    if (testDevice) {
+      testDevice.disconnected();
+    }
+    testDevice = null;
+    this.setUpTestDevice();
+  }.bind(this));
 }
 
 TestController.prototype.performTests = function(url) {
@@ -69,7 +104,7 @@ TestController.prototype.performTests = function(url) {
     webPageTestModel.updateTests(urlKey, url);
 
     var owpModel = this.getOWPModel();
-    owpModel.updateStatus(urlKey, url);
+    owpModel.updateStatus(urlKey, url, this.getTestDevice());
   }.bind(this));
 };
 

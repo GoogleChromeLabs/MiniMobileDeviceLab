@@ -1,15 +1,12 @@
 'use strict';
 
-var DeviceModel = require('./../model/DeviceModel');
-
 var adb = require('adbkit');
 var chalk = require('chalk');
+var events = require('events');
 
-function DeviceController(fb) {
-  var firebase = fb;
+function DeviceController() {
   var deviceIds = [];
-  var wrappedDevices = {};
-
+  
   var adbClient = adb.createClient();
   adbClient.trackDevices(function(err, tracker) {
     if (err) {
@@ -41,7 +38,7 @@ function DeviceController(fb) {
     }
 
     deviceIds.push(device.id);
-    wrappedDevices[device.id] = new DeviceModel(firebase, adbClient, device.id);
+    this.emit('DeviceAdded', device);
   };
 
   this.removeDevice = function(device) {
@@ -49,10 +46,23 @@ function DeviceController(fb) {
     if (index >= 0) {
       deviceIds.splice(index, 1);
     }
-    wrappedDevices[device.id].disconnected();
-    wrappedDevices[device.id] = null;
+    this.emit('DeviceRemoved', device);
+  };
+
+  this.getAdbClient = function() {
+    return adbClient;
+  };
+
+  this.getDeviceIds = function() {
+    if (!deviceIds) {
+      return [];
+    }
+
+    return deviceIds;
   };
 }
+
+DeviceController.prototype = events.EventEmitter.prototype;
 
 DeviceController.prototype.log = function(msg, arg) {
   if (!arg) {
