@@ -73,27 +73,45 @@ CurrentURLModel.prototype.setNewUrl = function(url) {
 };
 
 CurrentURLModel.prototype.setPSI = function(url, results) {
-  if (url !== this.getUrl() || !results) {
+  console.log('CurrentURLModel.setPSI', results);
+  if (url !== this.getUrl()) {
     return;
   }
 
-  this.getFirebase().child('currenturl/psi').set(results);
+  var fbChild = this.getFirebase().child('currenturl/psi');
+  if (results) {
+    fbChild.set(results);
+  } else {
+    fbChild.remove();
+  }
 };
 
 CurrentURLModel.prototype.setWPT = function(url, results) {
-  if (url !== this.getUrl() || !results) {
+  console.log('CurrentURLModel.setWPT', results);
+  if (url !== this.getUrl()) {
     return;
   }
 
-  this.getFirebase().child('currenturl/wpt').set(results);
+  var fbChild = this.getFirebase().child('currenturl/wpt');
+  if (results) {
+    fbChild.set(results);
+  } else {
+    fbChild.remove();
+  }
 };
 
 CurrentURLModel.prototype.setOWP = function(url, results) {
-  if (url !== this.getUrl() || !results) {
+  console.log('CurrentURLModel.setWPT', results);
+  if (url !== this.getUrl()) {
     return;
   }
 
-  this.getFirebase().child('currenturl/owp').set(results);
+  var fbChild = this.getFirebase().child('currenturl/owp');
+  if (results) {
+    fbChild.set(results);
+  } else {
+    fbChild.remove();
+  }
 };
 
 module.exports = CurrentURLModel;

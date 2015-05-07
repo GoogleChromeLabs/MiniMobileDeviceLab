@@ -66,7 +66,6 @@ function ClientController() {
       if (!currentUrlModel) {
         return;
       }
-
       this.updateDeviceDisplay(deviceId);
     }.bind(this), 1000);
   }.bind(this));
@@ -218,11 +217,6 @@ ClientController.prototype.handleDisplayingResults = function(displayType, devic
       }
       break;
     case 'owp':
-      console.log('----------------------------------');
-      console.log('');
-      console.log(data.owp);
-      console.log('');
-      console.log('----------------------------------');
       results = [4];
       results[0] = {
         title: 'HTTPS'

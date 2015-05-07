@@ -78,12 +78,15 @@ function DeviceModel(fb) {
     if (!deviceIntentQueues[deviceId]) {
       deviceIntentQueues[deviceId] = {};
     }
+
     deviceIntentQueues[deviceId].busy = isBusy;
+
     if (!isBusy && deviceIntentQueues[deviceId].pending) {
-      this.log('Launching a pending intent', deviceId);
       this.launchIntentOnDevice(deviceIntentQueues[deviceId].pending, deviceId);
+      deviceIntentQueues[deviceId].pending = null;
+    } else if (!isBusy) {
+      deviceIntentQueues[deviceId] = null;
     }
-    deviceIntentQueues[deviceId] = null;
   };
 
   this.isDeviceBusy = function(deviceId) {
@@ -109,16 +112,13 @@ DeviceModel.prototype.launchIntentOnAllDevices = function(intentHandler) {
 DeviceModel.prototype.launchIntentOnDevice = function(intentHandler, deviceId) {
   if (this.isDeviceBusy(deviceId)) {
     // Busy - stash intent for later
-    this.log('Device is busy', deviceId);
     this.setPendingIntent(deviceId, intentHandler);
     return;
   }
 
   this.setDeviceBusy(deviceId, true);
 
-  this.log('launchIntentOnDevice on ' + deviceId);
-
-  intentHandler(this.getAdbClient(), deviceId)
+  return intentHandler(this.getAdbClient(), deviceId)
     .then(function() {
       this.setDeviceBusy(deviceId, false);
     }.bind(this)).catch(function() {
