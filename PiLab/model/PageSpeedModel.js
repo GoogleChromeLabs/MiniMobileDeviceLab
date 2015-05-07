@@ -32,7 +32,7 @@ PageSpeedModel.prototype.updateScores = function(urlKey, url, cb) {
 
       if (difference <= this.getResultValidExpiration()) {
         if (cb) {
-          this.log('Returning reused scores');
+          this.log('Returning reused scores (' + url + ')', data);
           cb(data);
         }
         return;
@@ -83,7 +83,7 @@ PageSpeedModel.prototype.updateScores = function(urlKey, url, cb) {
           results: scores
         });
       }
-    }).catch(function(err) {
+    }.bind(this)).catch(function(err) {
       this.error('Unable to get Scores.', err);
     }.bind(this));
   }.bind(this));

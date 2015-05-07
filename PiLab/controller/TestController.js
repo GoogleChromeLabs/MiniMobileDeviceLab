@@ -63,19 +63,13 @@ TestController.prototype.performTests = function(url) {
     }
 
     var pagespeedModel = this.getPageSpeedModel();
-    pagespeedModel.updateScores(urlKey, url, function(results) {
-      this.getCurrentURLModel().setPSI(results.url, results.results);
-    }.bind(this));
+    pagespeedModel.updateScores(urlKey, url);
 
     var webPageTestModel = this.getWebPageTestModel();
-    webPageTestModel.updateTests(urlKey, url, function(results) {
-      this.getCurrentURLModel().setWPT(results.url, results.results);
-    }.bind(this));
+    webPageTestModel.updateTests(urlKey, url);
 
     var owpModel = this.getOWPModel();
-    owpModel.updateStatus(urlKey, url, function(results) {
-      this.getCurrentURLModel().setOWP(results.url, results.results);
-    }.bind(this));
+    owpModel.updateStatus(urlKey, url);
   }.bind(this));
 };
 

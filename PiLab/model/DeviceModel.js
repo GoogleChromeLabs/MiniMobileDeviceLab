@@ -1,129 +1,362 @@
 'use strict';
 
-var adb = require('adbkit');
+var BrowserIntentHelper = require('./../helper/BrowserIntentHelper.js');
+var URLKeyModel = require('./URLKeyModel');
+var CurrentURLModel = require('./CurrentURLModel.js');
+var ConfigModel = require('./ConfigModel.js');
+var config = require('./../config.json');
+
 var chalk = require('chalk');
-var events = require('events');
 
-function DeviceModel(fb) {
-  var deviceIds = [];
-  var deviceDisplayTypes = {};
-  var deviceIntentQueues = {};
+function DeviceModel(fb, adb, id) {
+  var firebase = fb;
+  var adbClient = adb;
+  var deviceId = id;
+  var deviceDisplayType;
+  var isBusy = false;
+  var pendingIntent = null;
+  var openFirebaseRefs = [];
+  var urlKeyModel = new URLKeyModel(firebase);
+  var currentUrlModel = new CurrentURLModel(firebase);
+  var configModel = new ConfigModel(firebase);
 
-  var adbClient = adb.createClient();
-  adbClient.trackDevices(function(err, tracker) {
-    if (err) {
-      this.log('DeviceModel: Could not set up adbkit', err);
-      process.exit();
-    }
-
-    tracker.on('add', function(device) {
-      this.log('DeviceModel: Device %s was plugged in', device.id);
-      this.addDevice(device);
-    }.bind(this));
-    tracker.on('remove', function(device) {
-      this.log('DeviceModel: Device %s was unplugged', device.id);
-      this.removeDevice(device);
-    }.bind(this));
-    tracker.on('change', function(device) {
-      this.log('DeviceModel: Device %s changed', device.id);
-      if (device.type === 'device') {
-        this.addDevice(device);
-      } else if (device.type === 'offline') {
-        this.removeDevice(device);
-      }
-    }.bind(this));
-  }.bind(this));
-
-  fb.child('device-display-types').on('value', function(snapshot) {
-    var value = snapshot.val();
-    if (!value) {
-      value = {};
-    }
-    deviceDisplayTypes = value;
-  });
-
-  this.addDevice = function(device) {
-    if (deviceIds.indexOf(device.id) !== -1) {
-      return;
-    }
-
-    deviceIds.push(device.id);
-    this.emit('DeviceAdded', device.id);
+  this.getFirebase = function() {
+    return firebase;
   };
 
-  this.removeDevice = function(device) {
-    var index = deviceIds.indexOf(device.id);
-    if (index >= 0) {
-      deviceIds.splice(index, 1);
+  this.getDeviceId = function() {
+    return deviceId;
+  };
+
+  this.getDisplayType = function() {
+    return deviceDisplayType;
+  };
+
+  this.setDeviceBusy = function(busy) {
+    isBusy = busy;
+
+    if (!isBusy && pendingIntent) {
+      this.launchIntent(pendingIntent);
+      pendingIntent = null;
     }
+  };
+
+  this.isDeviceBusy = function(deviceId) {
+    return isBusy;
+  };
+
+  this.setPendingIntent = function(intentHandler) {
+    pendingIntent = intentHandler;
   };
 
   this.getAdbClient = function() {
     return adbClient;
   };
 
-  this.getDeviceIds = function() {
-    return deviceIds;
+  this.addFirebaseRef = function(ref) {
+    openFirebaseRefs.push(ref);
   };
 
-  this.getDeviceDisplayType = function(deviceId) {
-    if (deviceDisplayTypes[deviceId]) {
-      return deviceDisplayTypes[deviceId];
+  this.clearFirebaseRefs = function() {
+    for (var i = 0; i < openFirebaseRefs.length; i++) {
+      openFirebaseRefs[i].off();
     }
-
-    return null;
+    openFirebaseRefs = [];
   };
 
-  this.setDeviceBusy = function(deviceId, isBusy) {
-    if (!deviceIntentQueues[deviceId]) {
-      deviceIntentQueues[deviceId] = {};
-    }
-
-    deviceIntentQueues[deviceId].busy = isBusy;
-
-    if (!isBusy && deviceIntentQueues[deviceId].pending) {
-      this.launchIntentOnDevice(deviceIntentQueues[deviceId].pending, deviceId);
-      deviceIntentQueues[deviceId].pending = null;
-    } else if (!isBusy) {
-      deviceIntentQueues[deviceId] = null;
-    }
+  this.getURLKeyModel = function() {
+    return urlKeyModel;
   };
 
-  this.isDeviceBusy = function(deviceId) {
-    return deviceIntentQueues[deviceId] ?
-      deviceIntentQueues[deviceId].busy : false;
+  this.getCurrentURLModel = function() {
+    return currentUrlModel;
   };
 
-  this.setPendingIntent = function(deviceId, intentHandler) {
-    deviceIntentQueues[deviceId].pending = intentHandler;
+  this.getConfigModel = function() {
+    return configModel;
   };
+
+  firebase.child('device-display-types/' + deviceId)
+    .on('value', function(snapshot) {
+      var value = snapshot.val();
+      deviceDisplayType = value;
+
+      this.updateDisplay();
+    }.bind(this));
+
+  currentUrlModel.on('URLChange', function(url) {
+      this.updateDisplay();
+    }.bind(this));
+
+  configModel.on('GlobalModeChange', function() {
+    this.updateDisplay();
+  }.bind(this));
 }
 
-DeviceModel.prototype = events.EventEmitter.prototype;
+DeviceModel.prototype.updateDisplay = function() {
+  this.clearFirebaseRefs();
 
-DeviceModel.prototype.launchIntentOnAllDevices = function(intentHandler) {
-  this.log('launchIntentOnAllDevices with - ', intentHandler);
-  var deviceIds = this.getDeviceIds();
-  for (var i = 0; i < deviceIds.length; i++) {
-    this.launchIntentOnDevice(intentHandler, deviceIds[i]);
-  }
-};
+  var displayType = this.getDisplayType();
 
-DeviceModel.prototype.launchIntentOnDevice = function(intentHandler, deviceId) {
-  if (this.isDeviceBusy(deviceId)) {
-    // Busy - stash intent for later
-    this.setPendingIntent(deviceId, intentHandler);
+  if (this.getConfigModel().getGlobalMode() === 'config') {
+    var url = config.frontEndUrl + '/setup.html#deviceId=' + this.getDeviceId();
+
+    if (!displayType) {
+      displayType = 'default';
+    }
+    url += '&displayTypeId=' + displayType;
+    var intentHandler = BrowserIntentHelper.getDeviceIntentHandler(url);
+    this.launchIntent(intentHandler);
     return;
   }
 
-  this.setDeviceBusy(deviceId, true);
+  switch (displayType) {
+    case 'psi':
+      this.displayPSIResults();
+      break;
+    case 'wpt':
+      this.displayWPTResults();
+      break;
+    case 'owp':
+      this.displayOWPResults();
+      break;
+    default:
+      this.displayCurrentURL();
+      break;
+  }
+};
 
-  return intentHandler(this.getAdbClient(), deviceId)
-    .then(function() {
-      this.setDeviceBusy(deviceId, false);
-    }.bind(this)).catch(function() {
-      this.setDeviceBusy(deviceId, false);
+DeviceModel.prototype.displayCurrentURL = function() {
+  var url = this.getCurrentURLModel().getUrl();
+  var intentHandler = BrowserIntentHelper.getDeviceIntentHandler(url);
+  this.launchIntent(intentHandler);
+};
+
+DeviceModel.prototype.displayWPTResults = function() {
+  this.displayResultsUI('wpt', this.generateWPTUrl.bind(this));
+};
+
+DeviceModel.prototype.displayPSIResults = function() {
+  this.displayResultsUI('psi', this.generatePSIUrl.bind(this));
+};
+
+DeviceModel.prototype.displayOWPResults = function() {
+  this.displayResultsUI('owp', this.generateOWPUrl.bind(this));
+};
+
+DeviceModel.prototype.displayResultsUI = function(resultSet, cb) {
+  var url = this.getCurrentURLModel().getUrl();
+  var urlKeyModel = this.getURLKeyModel();
+
+  urlKeyModel.getKey(url, function(err, urlKey) {
+    if (err) {
+      return;
+    }
+
+    var firebase = this.getFirebase();
+    var resultsRef = firebase.child('/tests/' + urlKey + '/' + resultSet + '/');
+
+    this.addFirebaseRef(resultsRef);
+
+    resultsRef.on('value', function(snapshot) {
+      var snapshotValue = snapshot.val();
+      if (!snapshotValue) {
+        snapshotValue = {
+          url: url
+        };
+      }
+
+      var launchUrl = cb(snapshotValue);
+      var intentHandler = BrowserIntentHelper.getDeviceIntentHandler(launchUrl);
+      this.launchIntent(intentHandler);
     }.bind(this));
+  }.bind(this));
+};
+
+DeviceModel.prototype.generatePSIUrl = function(testData) {
+  var data = {
+    url: testData.url
+  };
+
+  var testResults = testData.results;
+  var results = [3];
+  results[0] = {
+    result: testResults ? testResults.mobile : null,
+    title: 'Mobile Speed'
+  };
+  results[1] = {
+    result: testResults ? testResults.desktop : null,
+    title: 'Desktop Speed'
+  };
+  results[2] = {
+    result: testResults ? testResults.ux : null,
+    title: 'UX Score'
+  };
+
+  for (var i = 0; i < results.length; i++) {
+    if (results[i].result) {
+      var bg = 'ok';
+      if (results[i].result >= 85) {
+        bg = 'good';
+      } else if (results[i] < 65) {
+        bg = 'bad';
+      }
+      results[i].bg = bg;
+    }
+  }
+  data.results = results;
+  return this.generateResultsUrl(data);
+};
+
+DeviceModel.prototype.generateWPTUrl = function(testData) {
+  var data = {
+    url: testData.url
+  };
+
+  var testResults = testData.results;
+  var results = [3];
+  var speedIndex = null;
+  var firstFullyLoaded = null;
+  var secondFullyLoaded = null;
+  try {
+    speedIndex = testResults.avg.firstView.speedIndex;
+  } catch (e) { }
+
+  try {
+    firstFullyLoaded = testResults.avg.firstView.fullyLoaded;
+  } catch (e) { }
+
+  try {
+    secondFullyLoaded = testResults.avg.repeatView.fullyLoaded;
+  } catch (e) { }
+
+  // WPT Speed Index
+  results[0] = {
+    result: speedIndex ? speedIndex : null,
+    title: 'Speed Index'
+  };
+  if (results[0].result) {
+    results[0].bg = 'ok';
+    if (results[0].result < 2191) {
+      results[0].bg = 'good';
+    } else if (results[0].result > 4493) {
+      results[0].bg = 'bad';
+    }
+  }
+
+  // WPT First Load
+  results[1] = {
+    result: firstFullyLoaded ? (firstFullyLoaded / 1000) + 's' : null,
+    title: 'First Load'
+  };
+  if (results[1].result) {
+    results[1].bg = 'ok';
+    if (firstFullyLoaded < 2000) {
+      results[1].bg = 'good';
+    } else if (firstFullyLoaded > 4000) {
+      results[1].bg = 'bad';
+    }
+  }
+
+  // WPT Second Load
+  results[2] = {
+    result: secondFullyLoaded ? (secondFullyLoaded / 1000) + 's' : null,
+    title: 'Second Load'
+  };
+  if (results[2].result) {
+    results[2].bg = 'ok';
+    if (firstFullyLoaded < 1000) {
+      results[2].bg = 'good';
+    } else if (firstFullyLoaded > 2000) {
+      results[2].bg = 'bad';
+    }
+  }
+  data.results = results;
+  return this.generateResultsUrl(data);
+};
+
+DeviceModel.prototype.generateOWPUrl = function(testData) {
+  var data = {
+    url: testData.url
+  };
+
+  var testResults = testData.results;
+  var results = [4];
+  results[0] = {
+    title: 'HTTPS'
+  };
+  if (testResults && testResults.https !== null) {
+    results[0].result = testResults.https ? 'Yay' : 'Boo';
+    results[0].bg = testResults.https ? 'good' : 'bad';
+  }
+
+  results[1] = {
+    title: 'Service Worker'
+  };
+  if (testResults && testResults.sw !== null) {
+    results[1].result = testResults.sw ? 'Yay' : 'Boo';
+    results[1].bg = testResults.sw ? 'good' : 'bad';
+  }
+
+  results[2] = {
+    title: 'Theme Color'
+  };
+  if (testResults && testResults.themeColor !== null) {
+    results[2].result = testResults.themeColor ? 'Yay' : 'Boo';
+    results[2].bg = testResults.themeColor ? 'good' : 'bad';
+  }
+
+  results[3] = {
+    title: 'Web App Manifest'
+  };
+  if (testResults && testResults.webManifest !== null) {
+    results[3].result = testResults.webManifest ? 'Yay' : 'Boo';
+    results[3].bg = testResults.webManifest ? 'good' : 'bad';
+  }
+
+  data.results = results;
+  return this.generateResultsUrl(data);
+};
+
+DeviceModel.prototype.generateResultsUrl = function(data) {
+  var displayUrl = config.frontEndUrl + '/displays/index.html#' +
+    'url=' + encodeURI(data.url) +
+    '&displays=' + encodeURI(data.results.length);
+  for (var j = 0; j < data.results.length; j++) {
+    var result = data.results[j];
+    if (result.bg) {
+      displayUrl += '&bg-' + j + '=' +  encodeURI(result.bg);
+    }
+    if (result.result) {
+      displayUrl += '&result-' + j + '=' +  encodeURI(result.result);
+    }
+    if (result.title) {
+      displayUrl += '&title-' + j + '=' +  encodeURI(result.title);
+    }
+  }
+  return displayUrl;
+};
+
+DeviceModel.prototype.launchIntent = function(intentHandler) {
+  if (this.isDeviceBusy()) {
+    // Busy - stash intent for later
+    this.setPendingIntent(intentHandler);
+    return;
+  }
+
+  this.setDeviceBusy(true);
+
+  return intentHandler(this.getAdbClient(), this.getDeviceId())
+    .then(function() {
+      this.setDeviceBusy(false);
+    }.bind(this)).catch(function(err) {
+      console.err('DeviceModel: Unable to fire intent', err);
+      this.setDeviceBusy(false);
+    }.bind(this));
+};
+
+DeviceModel.prototype.disconnected = function() {
+  this.clearFirebaseRefs();
 };
 
 DeviceModel.prototype.log = function(msg, arg) {
