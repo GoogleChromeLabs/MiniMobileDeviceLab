@@ -34,6 +34,9 @@ function CurrentURLModel(fb) {
   };
 
   this.getData = function() {
+    if (!currentUrlData) {
+      return {};
+    }
     return currentUrlData;
   };
 }
