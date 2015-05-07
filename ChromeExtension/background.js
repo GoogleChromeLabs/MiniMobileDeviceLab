@@ -163,7 +163,7 @@ function stopFirebase() {
 }
 
 function startListening() {
-  fbRef.child('currenturl/url').on('value', function(snapshot) {
+  fbRef.child('url').on('value', function(snapshot) {
     currentURL = snapshot.val();
     openURL(currentURL);
     chrome.runtime.sendMessage({'action': 'open', 'url': currentURL});

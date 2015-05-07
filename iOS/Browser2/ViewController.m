@@ -66,7 +66,7 @@ static const CGFloat kAddressHeight = 22.0f;
         fbAppName = [NSString stringWithFormat:@"goog-mtv-device-lab"];
     }
 
-    NSString *fbURL = [NSString stringWithFormat:@"https://%@.firebaseio.com/currenturl/url", fbAppName];
+    NSString *fbURL = [NSString stringWithFormat:@"https://%@.firebaseio.com/url", fbAppName];
 
     self.myRootRef = [[Firebase alloc] initWithUrl:fbURL];
     [self.myRootRef authAnonymouslyWithCompletionBlock:^(NSError *error, FAuthData *authData) {
