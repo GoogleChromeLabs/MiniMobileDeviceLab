@@ -1,0 +1,46 @@
+paper-button {
+  min-width: 100px;
+  min-height: 48px;
+  background-color: white;
+  text-transform: none;
+  margin: 8px;
+  border: 1px solid #e0e0e0;
+}
+paper-button[colored] {
+  /*background: #4285f4;*/
+  background-color: #03a9f4;
+  color: #fff;
+  border: 1px solid #03a9f4;
+}
+
+paper-button[pushed] {
+  background-color: #0288d1 !important;
+  color: #fff;
+  border: 1px solid #0288d1 !important;
+}
+
+@media screen and (min-width: 500px) {
+  paper-button:not(.small) {
+    min-width: 128px;
+  }
+}
+@media screen and (min-width: 700px) {
+  paper-button:not(.small) {
+    min-width: 150px;
+    min-height: 84px;
+    font-size: 1.2em;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  paper-button {
+    font-size: 1.4em;
+    min-height: 96px;
+  }
+  paper-button.small {
+    min-width: 156px;
+  }
+  paper-button:not(.small) {
+    min-width: 228px;
+  }
+}

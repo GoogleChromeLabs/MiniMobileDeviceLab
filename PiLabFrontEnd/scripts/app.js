@@ -3,10 +3,13 @@
 var template = document.querySelector('#tmpl');
 template.appbarTitle = 'PiLab';
 template.selected = 'section-controls';
+template.pageHeader = '';
 template.isLooping = false;
 template.enableSender = false;
 template.invalidURL = false;
 template.stateInitialised = false;
+
+var x;
 
 var firebase = new Firebase(window.PiLab.config.firebaseUrl);
 firebase.authWithCustomToken(window.PiLab.config.firebaseKey, function(error) {
@@ -72,6 +75,13 @@ template.urlTextFieldChange = function(event) {
   }
 };
 
+template.addLoopUrlKeyPress = function(event) {
+  var urlTextfield = document.querySelector('.js-addurltolooptextfield');
+  if ((event.keyCode === 13) && (urlTextfield.validity.valid === true)) {
+    template.onAddLoopUrl(event);
+  }
+}
+
 template.addLoopUrlTextFieldChange = function(event) {
   var urlTextfield = document.querySelector('.js-addurltolooptextfield');
   if (urlTextfield.value === '') {
@@ -104,14 +114,17 @@ template.onDeleteUrl = function(event) {
   firebase.child('loop/urls/').set(loopUrls);
 };
 
-template.onPageSelectionChange = function(event) {
+template.onPageSelectionChange = function(event, b, c) {
   console.log('On Page Selection Change', event);
+  if (event.detail.isSelected === true) {
+    template.pageHeader = event.detail.item.getAttribute('header');
+  } else {
+    return;
+  }
   if (template.stateInitialised === false) {
     return;
   }
-  if (event.detail.isSelected === false) {
-    return;
-  }
+
 
   var corePages = document.querySelector('.js-core-pages');
   var mode = template.isLooping ? 'loop' : 'static';

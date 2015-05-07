@@ -1,0 +1,72 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input-decorator.html">
+
+<polymer-element name="loop-config" attributes="devices">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/styles/main.css">
+    <style type="text/css">
+      li {
+        min-height: 40px;
+        margin-bottom: 1vw;      }
+      ul {
+        padding-left: 0;
+        margin-top: 0;
+        list-style-type: none;
+      }
+    </style>
+
+    <div horizontal layout center>
+      <paper-input-decorator flex required autoValidate label="URL to add"  floatingLabel error="Value must be a URL" isInvalid="{{invalidURL}}">
+        <input is="core-input" id="newLoopURL" on-keypress="{{loopInputListener}}" type="url">
+      </paper-input-decorator>
+      <paper-icon-button class="lm" on-tap="{{addItem}}" icon="add"></paper-icon-button>
+    </div>
+
+    <ul vertical layout>
+      <template repeat="{{url, i in urls}}">
+        <li horizontal layout center>
+          <span flex>{{url}}</span>
+          <paper-icon-button class="lm" on-tap="{{deleteItem}}" icon="delete"></paper-icon-button>
+        </li>
+      </template>
+    </ul>
+  </template>
+  <script type="text/javascript">
+    Polymer({
+      created: function() {
+        this.urls = [];
+        var self = this;
+        fb.child("loop/urls").on("value", function(snapshot) {
+          var newURLs = [];
+          snapshot.forEach(function(snap) {
+            newURLs.push(snap.val());
+          });
+          self.urls = newURLs;
+        });
+      },
+      deleteItem: function(event, details, sender) {
+        var item = sender.templateInstance.model;
+        this.urls.splice(item.i, 1);
+        fb.child("loop/urls").set(this.urls);
+      },
+      addItem: function(event, details, sender) {
+        if ((this.$.newLoopURL.validity.valid === true) && (this.$.newLoopURL.value !== "")) {
+          var url = this.$.newLoopURL.value;
+          this.urls.push(url);
+          fb.child("loop/urls").set(this.urls);
+          this.$.newLoopURL.value = "";
+          showToast("Added " + url);
+        } else {
+          showErrorToast("Must be a valid URL");
+        }
+      },
+      loopInputListener: function(event, details, sender) {
+        if (event.keyCode === 13) {
+          this.addItem(event, details, sender);
+        }
+      }
+    });
+  </script>
+</polymer-element>

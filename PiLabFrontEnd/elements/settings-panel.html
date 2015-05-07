@@ -1,0 +1,145 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input-decorator.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/core-menu/core-menu.html">
+
+
+<polymer-element name="settings-panel" attributes="devices">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/styles/main.css">
+    <style type="text/css" media="screen">
+      #settingsContainer {
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    </style>
+
+    <div id="settingsContainer">
+  
+      <div horizontal layout center>
+        <span flex>Mode</span>
+        <paper-dropdown-menu>
+          <paper-dropdown class="dropdown">
+            <core-menu id="coreMenu" selected="{{mode}}" class="menu" valueattr="mode" on-core-select="{{changeMode}}">
+              <paper-item mode="loop">Loop</paper-item>
+              <paper-item mode="loopPaused">Loop (Paused)</paper-item>
+              <paper-item mode="static">Static</paper-item>
+              <paper-item mode="config">Config</paper-item>
+            </core-menu>
+          </paper-dropdown>
+        </paper-dropdown-menu>
+      </div>
+
+      <div horizontal layout center>
+        <span flex>Loop Interval (seconds)</span>
+        <paper-input-decorator required autoValidate label="Loop interval"  floatingLabel error="Value must be a number">
+          <input is="core-input" id="loopInterval" min="10" max="600" on-change="{{loopIntervalChange}}" value="{{loopInterval}}" type="number">
+        </paper-input-decorator>
+      </div>
+
+      <div horizontal layout center>
+        <span flex>Web Page Test</span>
+        <paper-input-decorator required autoValidate label="API Key" >
+          <input is="core-input" id="wptAPIKey" value="{{wptAPIKey}}" type="password">
+        </paper-input-decorator>
+      </div>
+
+      <div horizontal layout center>
+        <span flex>Page Speed Insights</span>
+        <paper-input-decorator required autoValidate label="API Key" >
+          <input is="core-input" id="psiAPIKey" value="{{psiAPIKey}}" type="password">
+        </paper-input-decorator>
+      </div>
+
+    </div>
+
+
+
+  </template>
+  <script type="text/javascript">
+    Polymer({
+      created: function() {
+        this.mode = 'loop';
+        this.globalMode = '';
+        this.useMode = '';
+        this.loopInterval = 10;
+        this.wptAPIKey = '';
+        this.psiAPIKey = '';
+        var self = this;
+        fb.child('loop/loopintervalms').on('value', function(snapshot) {
+          self.loopInterval = snapshot.val() / 1000;
+        });
+        fb.child('config/apiKeys/PageSpeedInsights').on('value', function(snapshot) {
+          self.psiAPIKey = snapshot.val();
+        });
+        fb.child('config/apiKeys/WebPageTest').on('value', function(snapshot) {
+          self.wptAPIKey = snapshot.val();
+        });
+        fb.child('config/globalMode').on('value', function(snapshot) {
+          self.globalMode = snapshot.val();
+          self.updateMode();
+        });
+        fb.child('config/useMode').on('value', function(snapshot) {
+          self.useMode = snapshot.val();
+          self.updateMode();
+        });
+      },
+      updateMode: function() {
+        if (this.globalMode === 'config') {
+          this.mode = 'config';
+        } else if (this.globalMode === 'use') {
+          this.mode = this.useMode;
+        }
+      },
+      loopIntervalChange: function(event, details, sender) {
+        try {
+          var val = parseInt(this.$.loopInterval.value, 10);
+          if (val < 10) {
+            val = 10;
+            this.$.loopInterval.value = val;
+          }
+          if (val > 600) {
+            val = 600;
+            this.$.loopInterval.value = val; 
+          }
+          val = val * 1000;
+          fb.child('loop/loopintervalms').set(val);
+        } catch (ex) {
+          console.log("EEP!", ex);
+        }
+      },
+      changeMode: function(event, details, sender) {
+        if (details.isSelected === true) {
+          var m = this.$.coreMenu.selected;
+          var gm, um, doIt = false;
+          if (m === 'loop') {
+            gm = 'use';
+            um = 'loop';
+            doIt = true;
+          } else if (m === 'loopPaused') {
+            gm = 'use';
+            um = 'loopPaused';
+            doIt = true;
+          } else if (m === 'static') {
+            gm = 'use';
+            um = 'static';
+            doIt = true;
+          } else if (m === 'config') {
+            gm = 'config';
+            um = this.useMode;
+            doIt = true;
+          }
+          if (doIt === true) {
+            fb.child('config/globalMode').set(gm);
+            fb.child('config/useMode').set(um);
+          }
+        }
+      }
+    });
+  </script>
+</polymer-element>

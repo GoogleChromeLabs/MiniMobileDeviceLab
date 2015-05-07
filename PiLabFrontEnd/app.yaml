@@ -26,6 +26,10 @@ handlers:
   static_dir: displays
   secure: always
 
+- url: /elements
+  static_dir: elements
+  secure: always
+
 - url: /config.js
   static_files: config.js
   upload: config.js
