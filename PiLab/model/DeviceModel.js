@@ -7,6 +7,7 @@ var events = require('events');
 function DeviceModel(fb) {
   var deviceIds = [];
   var deviceDisplayTypes = {};
+  var deviceIntentQueues = {};
 
   var adbClient = adb.createClient();
   adbClient.trackDevices(function(err, tracker) {
@@ -73,6 +74,27 @@ function DeviceModel(fb) {
 
     return null;
   };
+
+  this.setDeviceBusy = function(deviceId, isBusy) {
+    if (!deviceIntentQueues[deviceId]) {
+      deviceIntentQueues[deviceId] = {};
+    }
+    deviceIntentQueues[deviceId].busy = isBusy;
+    if (!isBusy && deviceIntentQueues[deviceId].pending) {
+      this.log('Launching a pending intent', deviceId);
+      this.launchIntentOnDevice(deviceIntentQueues[deviceId].pending, deviceId);
+    }
+    deviceIntentQueues[deviceId] = null;
+  };
+
+  this.isDeviceBusy = function(deviceId) {
+    return deviceIntentQueues[deviceId] ?
+      deviceIntentQueues[deviceId].busy : false;
+  };
+
+  this.setPendingIntent = function(deviceId, intentHandler) {
+    deviceIntentQueues[deviceId].pending = intentHandler;
+  };
 }
 
 DeviceModel.prototype = events.EventEmitter.prototype;
@@ -86,8 +108,21 @@ DeviceModel.prototype.launchIntentOnAllDevices = function(intentHandler) {
 };
 
 DeviceModel.prototype.launchIntentOnDevice = function(intentHandler, deviceId) {
-  this.log('launchIntentOnDevice with - ', intentHandler);
-  intentHandler(this.getAdbClient(), deviceId);
+  this.log('launchIntentOnDevice');
+  if (this.isDeviceBusy(deviceId)) {
+    // Busy - stash intent for later
+    this.log('Device is busy', deviceId);
+    this.setPendingIntent(deviceId, intentHandler);
+    return;
+  }
+
+  this.setDeviceBusy(deviceId, true);
+  intentHandler(this.getAdbClient(), deviceId)
+    .then(function() {
+      this.setDeviceBusy(deviceId, false);
+    }.bind(this)).catch(function() {
+      this.setDeviceBusy(deviceId, false);
+    }.bind(this));
 };
 
 DeviceModel.prototype.log = function(msg, arg) {

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
 
-        <title>Mini Mobile Device Lab - Single Display</title>
+        <title>Mini Mobile Device Lab - Display</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="import" href="../elements.html">
@@ -21,17 +21,27 @@
         </template>
 
         <template if="{{loaded}}">
-          <div class="result-container">
+          <div class="result-container displays-{{displays}}">
           <template repeat="{{result in results}}">
-          <div layout vertical center class="single-result {{result.bg}}">
-            <div flex layout vertical center center-justified>
-              <div class="center-score ">{{result.result}}</div>
-            </div>
-            <h1 class="title">{{result.title}}</h1>
-            <p class="subtitle">{{url}}</p>
-          </div>
+            <template if="{{!result.display}}">
+              <div layout vertical center class="single-result loading">
+                <div flex layout vertical center center-justified>
+                  <paper-progress indeterminate=""></paper-progress>
+                </div>
+                <h1 class="title">{{result.title}}</h1>
+              </div>
+            </template>
+            <template if="{{result.display}}">
+              <div layout vertical center class="single-result {{result.bg}}">
+                <div flex layout vertical center center-justified>
+                  <div class="center-score ">{{result.result}}</div>
+                </div>
+                <h1 class="title">{{result.title}}</h1>
+              </div>
+            </template>
           </template>
           </div>
+          <div class="bottom-url">{{url}}</div>
         </template>
       </template>
       

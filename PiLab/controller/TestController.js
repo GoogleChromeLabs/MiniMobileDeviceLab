@@ -2,6 +2,7 @@
 
 var URLKeyModel = require('./../model/URLKeyModel');
 var ConfigModel = require('./../model/ConfigModel');
+var CurrentURLModel = require('./../model/CurrentURLModel.js');
 var PageSpeedModel = require('./../model/PageSpeedModel');
 var WebPageTestModel = require('./../model/WebPageTestModel');
 var OWPModel = require('./../model/OWPModel');
@@ -11,12 +12,14 @@ function TestController(fb) {
   var firebase = fb;
   var urlKeyModel;
   var configModel;
+  var currentUrlModel;
   var pageSpeedModel;
   var webPageTestModel;
   var owpModel;
 
   urlKeyModel = new URLKeyModel(firebase);
   configModel = new ConfigModel(firebase);
+  currentUrlModel = new CurrentURLModel(firebase);
   pageSpeedModel = new PageSpeedModel(firebase, configModel);
   webPageTestModel = new WebPageTestModel(firebase, configModel);
   owpModel = new OWPModel(firebase);
@@ -40,6 +43,10 @@ function TestController(fb) {
   this.getOWPModel = function() {
     return owpModel;
   };
+
+  this.getCurrentURLModel = function() {
+    return currentUrlModel;
+  };
 }
 
 TestController.prototype.performTests = function(url) {
@@ -56,13 +63,19 @@ TestController.prototype.performTests = function(url) {
     }
 
     var pagespeedModel = this.getPageSpeedModel();
-    pagespeedModel.updateScores(urlKey, url);
+    pagespeedModel.updateScores(urlKey, url, function(results) {
+      this.getCurrentURLModel().setPSI(results.url, results.results);
+    }.bind(this));
 
     var webPageTestModel = this.getWebPageTestModel();
-    webPageTestModel.updateTests(urlKey, url);
+    webPageTestModel.updateTests(urlKey, url, function(results) {
+      this.getCurrentURLModel().setWPT(results.url, results.results);
+    }.bind(this));
 
     var owpModel = this.getOWPModel();
-    owpModel.updateStatus(urlKey, url);
+    owpModel.updateStatus(urlKey, url, function(results) {
+      this.getCurrentURLModel().setOWP(results.url, results.results);
+    }.bind(this));
   }.bind(this));
 };
 

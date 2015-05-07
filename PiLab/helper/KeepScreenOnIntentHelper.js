@@ -7,7 +7,7 @@ function KeepScreenOnIntentHelper() {
 KeepScreenOnIntentHelper.prototype.getKeepScreenOnIntentHandler = function() {
   return function(adbclient, deviceId) {
     var intent = this.getKeepScreenOnIntent();
-    adbclient.startActivity(deviceId, intent)
+    return adbclient.startActivity(deviceId, intent)
       .catch(function(err) {
         console.log('KeepScreenOnIntentHelper.js App not installed?', err);
         /**var intent = this.getInstallIntent();

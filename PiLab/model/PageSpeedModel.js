@@ -21,7 +21,7 @@ function PageSpeedModel(fb, cModel) {
   };
 }
 
-PageSpeedModel.prototype.updateScores = function(urlKey, url) {
+PageSpeedModel.prototype.updateScores = function(urlKey, url, cb) {
   var firebase = this.getFirebase();
   var psiResults = firebase.child('/tests/' + urlKey + '/psi/');
   psiResults.once('value', function(snapshot) {
@@ -31,6 +31,9 @@ PageSpeedModel.prototype.updateScores = function(urlKey, url) {
       var difference = Date.now() - dataAddedDate.getTime();
 
       if (difference <= this.getResultValidExpiration()) {
+        if (cb) {
+          cb(data);
+        }
         return;
       }
     }
@@ -59,7 +62,7 @@ PageSpeedModel.prototype.updateScores = function(urlKey, url) {
 
       psiResults.update({
         url: url,
-        scores: scores,
+        results: scores,
         lastUpdate: Firebase.ServerValue.TIMESTAMP
       });
 
@@ -67,10 +70,17 @@ PageSpeedModel.prototype.updateScores = function(urlKey, url) {
       historyRef.push(
         {
           url: url,
-          scores: scores,
+          results: scores,
           timestamp: Firebase.ServerValue.TIMESTAMP
         }
       );
+
+      if (cb) {
+        cb({
+          url: url,
+          results: scores
+        });
+      }
     }).catch(function(err) {
       this.error('Unable to get Scores.', err);
     }.bind(this));

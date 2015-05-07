@@ -26,16 +26,18 @@ function ClientController() {
 
     currentUrlModel.on('URLChange', function(url) {
       this.log('URLChange with URL - ', url);
-      this.presentUrl(url);
+      this.updateAllDisplays();
+    }.bind(this));
+
+    currentUrlModel.on('URLResultsChange', function(data) {
+      this.log('URLResultsChange');
+      this.updateResultsDisplays();
     }.bind(this));
 
     configModel.on('GlobalModeChange', function(mode) {
       switch (mode) {
         case 'use':
-          var url = currentUrlModel.getUrl();
-          if (url) {
-            this.presentUrl(url);
-          }
+          this.updateAllDisplays();
           break;
         case 'config':
           this.loadConfigPage();
@@ -55,30 +57,218 @@ function ClientController() {
         return;
       }
 
-      var url = currentUrlModel.getUrl();
-      if (url) {
-        this.presentUrlToDevice(url, deviceId);
-      }
+      this.updateDeviceDisplay(deviceId);
     }.bind(this), 1000);
   }.bind(this));
+
   this.getDeviceModel = function() {
     return deviceModel;
   };
+
+  this.getFirebase = function() {
+    return firebase;
+  };
+
+  this.getCurrentURLModel = function() {
+    return currentUrlModel;
+  };
+
+  this.getConfigModel = function() {
+    return configModel;
+  };
 }
 
-ClientController.prototype.presentUrl = function(url) {
-  var deviceIds = this.getDeviceModel().getDeviceIds();
+ClientController.prototype.updateAllDisplays = function() {
+  var deviceModel = this.getDeviceModel();
+  var deviceIds = deviceModel.getDeviceIds();
   for (var i = 0; i < deviceIds.length; i++) {
-    this.presentUrlToDevice(url, deviceIds[i]);
+    this.updateDeviceDisplay(deviceIds[i]);
   }
 };
 
-ClientController.prototype.presentUrlToDevice = function(url, deviceId) {
-  var displayType = this.getDeviceModel().getDeviceDisplayType(deviceId);
-  var launchedUrl = url;
-  if (displayType) {
-    launchedUrl = config.frontEndUrl + '/displays/' + displayType + '.html?url=' + encodeURI(url);
+ClientController.prototype.updateDeviceDisplay = function(deviceId) {
+  if (this.getConfigModel().getGlobalMode() !== 'use') {
+    return;
   }
+
+  var deviceModel = this.getDeviceModel();
+  var displayType = deviceModel.getDeviceDisplayType(deviceId);
+  if (displayType) {
+    this.handleDisplayingResults(displayType, deviceId);
+  } else {
+    var url = this.getCurrentURLModel().getUrl();
+    this.presentUrlToDevice(url, deviceId);
+  }
+};
+
+ClientController.prototype.updateResultsDisplays = function() {
+  if (this.getConfigModel().getGlobalMode() !== 'use') {
+    return;
+  }
+
+  var deviceModel = this.getDeviceModel();
+  var deviceIds = deviceModel.getDeviceIds();
+
+  for (var i = 0; i < deviceIds.length; i++) {
+    var displayType = deviceModel.getDeviceDisplayType(deviceIds[i]);
+    if (displayType) {
+      this.handleDisplayingResults(displayType, deviceIds[i]);
+    }
+  }
+};
+
+ClientController.prototype.handleDisplayingResults = function(displayType, deviceId) {
+  var currentURLModel = this.getCurrentURLModel();
+  var data = currentURLModel.getData();
+
+  var results = [];
+
+  switch (displayType) {
+    case 'psi':
+      results = [3];
+      results[0] = {
+        result: data.psi ? data.psi.mobile : null,
+        title: 'Mobile Speed'
+      };
+      results[1] = {
+        result: data.psi ? data.psi.desktop : null,
+        title: 'Desktop Speed'
+      };
+      results[2] = {
+        result: data.psi ? data.psi.ux : null,
+        title: 'UX Score'
+      };
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].result) {
+          var bg = 'ok';
+          if (results[i].result >= 85) {
+            bg = 'good';
+          } else if (results[i] < 65) {
+            bg = 'bad';
+          }
+          results[i].bg = bg;
+        }
+      }
+      break;
+    case 'wpt':
+      results = [3];
+      var speedIndex = null;
+      var firstFullyLoaded = null;
+      var secondFullyLoaded = null;
+      try {
+        speedIndex = data.wpt.avg.firstView.speedIndex;
+      } catch (e) { }
+      try {
+        firstFullyLoaded = data.wpt.avg.firstView.fullyLoaded;
+      } catch (e) { }
+      try {
+        secondFullyLoaded = data.wpt.avg.repeatView.fullyLoaded;
+      } catch (e) { }
+
+      // WPT Speed Index
+      results[0] = {
+        result: speedIndex ? speedIndex : null,
+        title: 'Speed Index'
+      };
+      if (results[0].result) {
+        results[0].bg = 'ok';
+        if (results[0].result < 2191) {
+          results[0].bg = 'good';
+        } else if (results[0].result > 4493) {
+          results[0].bg = 'bad';
+        }
+      }
+
+      // WPT First Load
+      results[1] = {
+        result: firstFullyLoaded ? (firstFullyLoaded / 1000) + 's' : null,
+        title: 'First Load'
+      };
+      if (results[1].result) {
+        results[1].bg = 'ok';
+        if (firstFullyLoaded < 2000) {
+          results[1].bg = 'good';
+        } else if (firstFullyLoaded > 4000) {
+          results[1].bg = 'bad';
+        }
+      }
+
+      // WPT Second Load
+      results[2] = {
+        result: secondFullyLoaded ? (secondFullyLoaded / 1000) + 's' : null,
+        title: 'Second Load'
+      };
+      if (results[2].result) {
+        results[2].bg = 'ok';
+        if (firstFullyLoaded < 1000) {
+          results[2].bg = 'good';
+        } else if (firstFullyLoaded > 2000) {
+          results[2].bg = 'bad';
+        }
+      }
+      break;
+    case 'owp':
+      results = [4];
+      results[0] = {
+        title: 'HTTPS'
+      };
+      if (data.owp && data.owp.https !== null) {
+        results[0].result = data.owp.https ? 'Yay' : 'Boo';
+        results[0].bg = data.owp.https ? 'good' : 'bad';
+      }
+
+      results[1] = {
+        title: 'Service Worker'
+      };
+      if (data.owp && data.owp.sw !== null) {
+        results[1].result = data.owp.sw ? 'Yay' : 'Boo';
+        results[1].bg = data.owp.sw ? 'good' : 'bad';
+      }
+
+      results[2] = {
+        title: 'Theme Color'
+      };
+      if (data.owp && data.owp.themeColor !== null) {
+        results[2].result = data.owp.themeColor ? 'Yay' : 'Boo';
+        results[2].bg = data.owp.themeColor ? 'good' : 'bad';
+      }
+
+      results[3] = {
+        title: 'Web App Manifest'
+      };
+      if (data.owp && data.owp.webManifest !== null) {
+        results[3].result = data.owp.webManifest ? 'Yay' : 'Boo';
+        results[3].bg = data.owp.webManifest ? 'good' : 'bad';
+      }
+      break;
+    default:
+      console.error('ClientController: Unknown display type.', displayType);
+      return;
+  }
+
+  var displayUrl = config.frontEndUrl + '/displays/index.html#' +
+    'url=' + encodeURI(currentURLModel.getUrl()) +
+    '&displays=' + encodeURI(results.length);
+  for (var j = 0; j < results.length; j++) {
+    var result = results[j];
+    if (result.bg) {
+      displayUrl += '&bg-' + j + '=' +  encodeURI(result.bg);
+    }
+    if (result.result) {
+      displayUrl += '&result-' + j + '=' +  encodeURI(result.result);
+    }
+    if (result.title) {
+      displayUrl += '&title-' + j + '=' +  encodeURI(result.title);
+    }
+  }
+
+  this.log('Updating Displays for = ' + currentURLModel.getUrl());
+  this.presentUrlToDevice(displayUrl, deviceId);
+};
+
+ClientController.prototype.presentUrlToDevice = function(url, deviceId) {
+  var launchedUrl = url;
+
   var intentHandler = BrowserIntentHelper.getDeviceIntentHandler(launchedUrl);
   this.getDeviceModel().launchIntentOnDevice(intentHandler, deviceId);
 };

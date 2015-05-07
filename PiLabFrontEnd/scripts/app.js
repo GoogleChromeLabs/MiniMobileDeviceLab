@@ -50,7 +50,7 @@ template.onSendUrl = function(event) {
   }
   var urlTextfield = document.querySelector('.js-sendurltextfield');
 
-  firebase.child('url').set(urlTextfield.value);
+  firebase.child('currenturl').set({url: urlTextfield.value});
 
   toast.text = urlTextfield.value + ' sent.';
   toast.show();

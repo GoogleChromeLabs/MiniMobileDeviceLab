@@ -7,10 +7,10 @@ function BrowserIntentHelper() {
 BrowserIntentHelper.prototype.getDeviceIntentHandler = function(url) {
   return function(adbclient, deviceId) {
     var intent = this.buildChromeIntent(url);
-    adbclient.startActivity(deviceId, intent)
+    return adbclient.startActivity(deviceId, intent)
       .catch(function(err) {
         var intent = this.buildGenericBrowserIntent(url);
-        adbclient.startActivity(deviceId, intent)
+        return adbclient.startActivity(deviceId, intent)
           .catch(function(err) {
             // NOOP
           }.bind(this));

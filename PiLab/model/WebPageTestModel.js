@@ -21,7 +21,7 @@ function WebPageTestModel(fb, cModel) {
   };
 }
 
-WebPageTestModel.prototype.updateTests = function(urlKey, url) {
+WebPageTestModel.prototype.updateTests = function(urlKey, url, cb) {
   var firebase = this.getFirebase();
   var wptResults = firebase.child('/tests/' + urlKey + '/wpt/');
   wptResults.once('value', function(snapshot) {
@@ -31,6 +31,9 @@ WebPageTestModel.prototype.updateTests = function(urlKey, url) {
       var difference = Date.now() - dataAddedDate.getTime();
 
       if (difference <= this.getResultValidExpiration()) {
+        if (cb) {
+          cb(data);
+        }
         return;
       }
     }
@@ -80,6 +83,13 @@ WebPageTestModel.prototype.updateTests = function(urlKey, url) {
             timestamp: Firebase.ServerValue.TIMESTAMP
           }
         );
+
+        if (cb) {
+          cb({
+            url: url,
+            results: strippedDownResults
+          });
+        }
       });
     }).catch(function(err) {
       this.error('Unable to get run results.', err);

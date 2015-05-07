@@ -35,7 +35,7 @@ OWPModel.prototype.testForThemeColor = function(pageText) {
   return this.getThemeColorRegex().test(pageText);
 };
 
-OWPModel.prototype.updateStatus = function(urlKey, url) {
+OWPModel.prototype.updateStatus = function(urlKey, url, cb) {
   var firebase = this.getFirebase();
   var owpResults = firebase.child('/tests/' + urlKey + '/owp/');
   owpResults.once('value', function(snapshot) {
@@ -45,6 +45,10 @@ OWPModel.prototype.updateStatus = function(urlKey, url) {
       var difference = Date.now() - dataAddedDate.getTime();
 
       if (difference <= this.getResultValidExpiration()) {
+        if (cb) {
+          cb(data);
+        }
+
         return;
       }
     }
@@ -85,7 +89,7 @@ OWPModel.prototype.updateStatus = function(urlKey, url) {
       owpResults.update(
         {
           url: url,
-          status: status,
+          results: status,
           lastUpdate: Firebase.ServerValue.TIMESTAMP
         }
       );
@@ -94,10 +98,17 @@ OWPModel.prototype.updateStatus = function(urlKey, url) {
       historyRef.push(
         {
           url: url,
-          status: status,
+          results: status,
           timestamp: Firebase.ServerValue.TIMESTAMP
         }
       );
+
+      if (cb) {
+        cb({
+          url: url,
+          results: status
+        });
+      }
     });
   }.bind(this));
 };

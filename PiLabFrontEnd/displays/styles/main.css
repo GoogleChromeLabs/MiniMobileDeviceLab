@@ -17,26 +17,63 @@ body {
   width: 100%;
   height: 100%;
   
-  flex-direct: horizontal;
+  flex-direction: row;
   flex-wrap: wrap;
-
-  background-color: #bdc3c7;
+  align-items: stretch;
 }
 
-.single-result {
-  width: 0;
-  min-width: 50%;
+.single-result {  
   flex: 1;
 
   padding: 20px;
+  padding-bottom: 60px;
 
   box-sizing: border-box;
+}
+
+.single-result.loading {
+  color: #bdc3c7;
 }
 
 .title, .subtitle {
   margin: 0;
   padding: 0;
   text-align: center;
+}
+
+.bottom-url {
+  position: fixed;
+  
+  width: 100%;
+
+  left: 0;
+  bottom: 0;
+
+  line-height: 20px;
+  text-align: center;
+
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.displays-4.result-container {
+  flex-direction: row;
+
+  flex-wrap: wrap;
+}
+
+.displays-4 .single-result {
+  width: 0;
+  height: 0;
+
+  min-width: 50%;
+  min-height: 50%;
+}
+
+/** Template element accounts for a child **/
+.displays-4 .single-result:nth-child(4), 
+.displays-4 .single-result:nth-child(5) {
+  padding-bottom: 60px;
 }
 
 @media screen and (orientation: portrait) {
@@ -49,11 +86,33 @@ body {
   .center-score {
     font-size: 40vw;
   }
-  .center-score.short {
-    font-size: 60vw;
+
+  .result-container {
+    flex-direction: column;
   }
-  .center-score.long {
-    font-size: 25vw;
+  
+  .result-container .single-result {
+    padding-bottom: 20px;
+  }
+
+  .result-container .single-result:last-child {
+    padding-bottom: 60px;
+  }
+
+  .displays-3 .center-score {
+    font-size: 22vw;
+  }
+
+  .displays-3 .title {
+    font-size: 8vw;
+  }
+  
+  .displays-4 .center-score {
+    font-size: 20vw;
+  }
+
+  .displays-4 .title {
+    font-size: 6vw;
   }
 }
 
@@ -67,11 +126,37 @@ body {
   .center-score {
     font-size: 55vh;
   }
-  .center-score.short {
-    font-size: 60vh;
+
+  .result-container {
+    flex-direction: row;
   }
-  .center-score.long {
-    font-size: 40vh;
+  
+  .result-container .single-result {
+    padding-bottom: 60px;
+  }
+
+  .displays-2 .center-score {
+    font-size: 22vh;
+  }
+
+  .displays-2 .title {
+    font-size: 6vh;
+  }
+
+  .displays-3 .center-score {
+    font-size: 16vh;
+  }
+
+  .displays-3 .title {
+    font-size: 4vh;
+  }
+
+  .displays-4 .center-score {
+    font-size: 16vh;
+  }
+
+  .displays-4 .title {
+    font-size: 4vh;
   }
 }
 
