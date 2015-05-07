@@ -72,12 +72,14 @@ function TestController(fb) {
   };
 
   deviceController.on('DeviceAdded', function(device) {
-    this.setUpTestDevice();
+    setTimeout(function() {
+      this.setUpTestDevice();
+    }.bind(this), 2000);
   }.bind(this));
 
   deviceController.on('DeviceRemoved', function(device) {
     if (testDevice) {
-      testDevice.disconnected();
+      testDevice.cancelTest();
     }
     testDevice = null;
     this.setUpTestDevice();

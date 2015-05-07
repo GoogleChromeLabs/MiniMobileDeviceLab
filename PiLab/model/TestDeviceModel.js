@@ -40,13 +40,16 @@ function TestDeviceModel(deviceId, adb) {
   };
   var promiseCb;
   var isCurrentlyTesting = false;
+
   var chromeConnection;
-  new ChromeRemoteInterface(function(chrome) {
+  setTimeout(function() {
+    new ChromeRemoteInterface(function(chrome) {
       chromeConnection = chrome;
       this.prepareChrome();
     }.bind(this)).on('error', function(e) {
       console.error('Error connecting to Chrome.', e);
     });
+  }.bind(this), 1000);
 
   this.checkStatus = function() {
     if (results.themeColor !== null &&
@@ -94,7 +97,10 @@ function TestDeviceModel(deviceId, adb) {
   };
 
   this.cancelTest = function() {
-    promiseCb.reject();
+    if (promiseCb && promiseCb.reject) {
+      promiseCb.reject();
+    }
+    this.resetTests();
   };
 
   this.resetTests = function() {
