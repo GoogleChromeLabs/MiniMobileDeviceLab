@@ -272,7 +272,7 @@ ClientController.prototype.handleDisplayingResults = function(displayType, devic
     }
   }
 
-  this.log('Updating Displays for = ' + currentURLModel.getUrl());
+  this.log('Updating Displays ' + displayType + ' for ' + currentURLModel.getUrl());
   this.presentUrlToDevice(displayUrl, deviceId);
 };
 
