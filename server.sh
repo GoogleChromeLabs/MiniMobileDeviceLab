@@ -11,6 +11,10 @@ echo "${current_commit}" > version.txt
 cd PiLab
 
 echo ""
+echo Starting ADB Server with sudo
+sudo adb start-server
+
+echo ""
 echo Installing and updating node modules
 npm install
 

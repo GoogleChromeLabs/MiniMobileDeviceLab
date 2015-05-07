@@ -22,25 +22,12 @@
 'use strict';
 
 var inputAppID = document.querySelector('#appID');
-var inputKey = document.querySelector('#key');
 var inputOnByDefault = document.querySelector('#onByDefault');
-var inputTestForSW = document.querySelector('#testForServiceWorker');
 var inputGrabFocus = document.querySelector('#grabFocus');
-var divFBKey = document.querySelector('#divFBKey');
-
-inputTestForSW.addEventListener('change', function(e) {
-  if (inputTestForSW.checked) {
-    divFBKey.classList.remove('hidden');
-  } else {
-    divFBKey.classList.add('hidden');
-  }
-});
 
 document.querySelector('#butSave').addEventListener('click', function() {
   var settings = {
     'appID': inputAppID.value,
-    'key': inputKey.value,
-    'testForServiceWorker': inputTestForSW.checked,
     'onByDefault': inputOnByDefault.checked,
     'grabFocus': inputGrabFocus.checked
   };
@@ -50,12 +37,9 @@ document.querySelector('#butSave').addEventListener('click', function() {
 });
 
 document.querySelector('#butClear').addEventListener('click', function() {
-  inputKey.value = '';
   inputAppID.value = '';
   inputOnByDefault.checked = true;
-  inputTestForSW.checked = false;
   inputGrabFocus.checked = true;
-  divFBKey.classList.add('hidden');
   chrome.storage.sync.clear();
 });
 
@@ -63,15 +47,7 @@ chrome.storage.sync.get('settings', function(settings) {
   settings = settings.settings;
   if (settings !== undefined) {
     inputAppID.value = settings.appID;
-    inputKey.value = settings.key;
     inputOnByDefault.checked = settings.onByDefault;
     inputGrabFocus.checked = settings.grabFocus;
-    if (settings.testForServiceWorker) {
-      inputTestForSW.checked = true;
-      divFBKey.classList.remove('hidden');
-    } else {
-      inputTestForSW.checked = false;
-      divFBKey.classList.add('hidden');
-    }
   }
 });
