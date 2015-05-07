@@ -74,6 +74,9 @@ ConfigModel.prototype.getAPIKey = function(name) {
 };
 
 ConfigModel.prototype.log = function(msg, arg) {
+  if (!arg) {
+    arg = '';
+  }
   console.log(chalk.yellow('ConfigModel: ') + msg, arg);
 };
 

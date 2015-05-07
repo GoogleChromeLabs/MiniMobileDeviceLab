@@ -98,10 +98,16 @@ WebPageTestModel.prototype.updateTests = function(urlKey, url, cb) {
 };
 
 WebPageTestModel.prototype.log = function(msg, arg) {
+  if (!arg) {
+    arg = '';
+  }
   console.log(chalk.white('WebPageTestModel: ') + msg, arg);
 };
 
 WebPageTestModel.prototype.error = function(msg, arg) {
+  if (!arg) {
+    arg = '';
+  }
   console.log(chalk.white('WebPageTestModel: ') + chalk.red(msg), arg);
 };
 

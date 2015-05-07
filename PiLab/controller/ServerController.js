@@ -138,10 +138,16 @@ ServerController.prototype.setStaticUrl = function(url) {
 };
 
 ServerController.prototype.log = function(msg, arg) {
+  if (!arg) {
+    arg = '';
+  }
   console.log(chalk.green('ServerController: ') + msg, arg);
 };
 
 ServerController.prototype.error = function(msg, arg) {
+  if (!arg) {
+    arg = '';
+  }
   console.log(chalk.green('ServerController: ') + chalk.red(msg), arg);
 };
 

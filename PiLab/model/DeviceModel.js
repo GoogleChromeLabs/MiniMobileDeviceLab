@@ -49,7 +49,6 @@ function DeviceModel(fb) {
 
     deviceIds.push(device.id);
     this.emit('DeviceAdded', device.id);
-    console.log('addDevice: ', deviceIds);
   };
 
   this.removeDevice = function(device) {
@@ -108,7 +107,6 @@ DeviceModel.prototype.launchIntentOnAllDevices = function(intentHandler) {
 };
 
 DeviceModel.prototype.launchIntentOnDevice = function(intentHandler, deviceId) {
-  this.log('launchIntentOnDevice');
   if (this.isDeviceBusy(deviceId)) {
     // Busy - stash intent for later
     this.log('Device is busy', deviceId);
@@ -117,6 +115,9 @@ DeviceModel.prototype.launchIntentOnDevice = function(intentHandler, deviceId) {
   }
 
   this.setDeviceBusy(deviceId, true);
+
+  this.log('launchIntentOnDevice on ' + deviceId);
+
   intentHandler(this.getAdbClient(), deviceId)
     .then(function() {
       this.setDeviceBusy(deviceId, false);
@@ -126,6 +127,9 @@ DeviceModel.prototype.launchIntentOnDevice = function(intentHandler, deviceId) {
 };
 
 DeviceModel.prototype.log = function(msg, arg) {
+  if (!arg) {
+    arg = '';
+  }
   console.log(chalk.red('DeviceModel: ') + msg, arg);
 };
 

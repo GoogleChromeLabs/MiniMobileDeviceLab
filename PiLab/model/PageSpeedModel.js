@@ -88,10 +88,16 @@ PageSpeedModel.prototype.updateScores = function(urlKey, url, cb) {
 };
 
 PageSpeedModel.prototype.log = function(msg, arg) {
+  if (!arg) {
+    arg = '';
+  }
   console.log(chalk.gray('PageSpeedModel: ') + msg, arg);
 };
 
 PageSpeedModel.prototype.error = function(msg, arg) {
+  if (!arg) {
+    arg = '';
+  }
   console.log(chalk.gray('PageSpeedModel: ') + chalk.red(msg), arg);
 };
 

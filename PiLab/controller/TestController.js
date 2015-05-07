@@ -80,10 +80,16 @@ TestController.prototype.performTests = function(url) {
 };
 
 TestController.prototype.log = function(msg, arg) {
+  if (!arg) {
+    arg = '';
+  }
   console.log(chalk.cyan('TestController: ') + msg, arg);
 };
 
 TestController.prototype.error = function(msg, arg) {
+  if (!arg) {
+    arg = '';
+  }
   console.log(chalk.cyan('TestController: ') + chalk.red(msg), arg);
 };
 
