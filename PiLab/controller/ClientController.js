@@ -220,7 +220,7 @@ ClientController.prototype.handleDisplayingResults = function(displayType, devic
     case 'owp':
       console.log('----------------------------------');
       console.log('');
-      console.log(data.owpg);
+      console.log(data.owp);
       console.log('');
       console.log('----------------------------------');
       results = [4];
