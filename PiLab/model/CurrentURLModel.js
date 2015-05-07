@@ -73,7 +73,7 @@ CurrentURLModel.prototype.setNewUrl = function(url) {
 };
 
 CurrentURLModel.prototype.setPSI = function(url, results) {
-  if (url !== this.getUrl()) {
+  if (url !== this.getUrl() || !results) {
     return;
   }
 
@@ -81,7 +81,7 @@ CurrentURLModel.prototype.setPSI = function(url, results) {
 };
 
 CurrentURLModel.prototype.setWPT = function(url, results) {
-  if (url !== this.getUrl()) {
+  if (url !== this.getUrl() || !results) {
     return;
   }
 
@@ -89,7 +89,7 @@ CurrentURLModel.prototype.setWPT = function(url, results) {
 };
 
 CurrentURLModel.prototype.setOWP = function(url, results) {
-  if (url !== this.getUrl()) {
+  if (url !== this.getUrl() || !results) {
     return;
   }
 
