@@ -218,6 +218,11 @@ ClientController.prototype.handleDisplayingResults = function(displayType, devic
       }
       break;
     case 'owp':
+      console.log('----------------------------------');
+      console.log('');
+      console.log(data.owp);
+      console.log('');
+      console.log('----------------------------------');
       results = [4];
       results[0] = {
         title: 'HTTPS'
