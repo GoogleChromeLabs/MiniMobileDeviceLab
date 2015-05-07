@@ -29,9 +29,19 @@ function ClientController() {
       this.updateAllDisplays();
     }.bind(this));
 
-    currentUrlModel.on('URLResultsChange', function(data) {
-      this.log('URLResultsChange');
-      this.updateResultsDisplays();
+    currentUrlModel.on('OWPResultsChange', function(data) {
+      this.log('OWPResultsChange');
+      this.updateResultsDisplays('owp');
+    }.bind(this));
+
+    currentUrlModel.on('PSIResultsChange', function(data) {
+      this.log('PSIResultsChange');
+      this.updateResultsDisplays('psi');
+    }.bind(this));
+
+    currentUrlModel.on('WPTResultsChange', function(data) {
+      this.log('WPTResultsChange');
+      this.updateResultsDisplays('wpt');
     }.bind(this));
 
     configModel.on('GlobalModeChange', function(mode) {
@@ -101,7 +111,7 @@ ClientController.prototype.updateDeviceDisplay = function(deviceId) {
   }
 };
 
-ClientController.prototype.updateResultsDisplays = function() {
+ClientController.prototype.updateResultsDisplays = function(updateFilter) {
   if (this.getConfigModel().getGlobalMode() !== 'use') {
     return;
   }
@@ -111,7 +121,7 @@ ClientController.prototype.updateResultsDisplays = function() {
 
   for (var i = 0; i < deviceIds.length; i++) {
     var displayType = deviceModel.getDeviceDisplayType(deviceIds[i]);
-    if (displayType) {
+    if (displayType && (!updateFilter || displayType === updateFilter)) {
       this.handleDisplayingResults(displayType, deviceIds[i]);
     }
   }
