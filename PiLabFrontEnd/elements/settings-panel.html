@@ -45,15 +45,17 @@
       <div horizontal layout center>
         <span flex>Web Page Test</span>
         <paper-input-decorator required autoValidate label="API Key" >
-          <input is="core-input" id="wptAPIKey" value="{{wptAPIKey}}" type="password">
+          <input is="core-input" id="wptAPIKey" on-input="{{apiKeyInput}}" value="{{wptAPIKey}}" type="password">
         </paper-input-decorator>
+        <paper-icon-button class="lm" on-tap="{{saveWPT}}" disabled?="{{!wptDirty}}" icon="save"></paper-icon-button>
       </div>
 
       <div horizontal layout center>
         <span flex>Page Speed Insights</span>
         <paper-input-decorator required autoValidate label="API Key" >
-          <input is="core-input" id="psiAPIKey" value="{{psiAPIKey}}" type="password">
+          <input is="core-input" id="psiAPIKey" on-input="{{apiKeyInput}}" value="{{psiAPIKey}}" type="password">
         </paper-input-decorator>
+        <paper-icon-button class="lm" on-tap="{{savePSI}}" disabled?="{{!psiDirty}}" icon="save"></paper-icon-button>
       </div>
 
     </div>
@@ -69,7 +71,9 @@
         this.useMode = '';
         this.loopInterval = 10;
         this.wptAPIKey = '';
+        this.wptDirty = false;
         this.psiAPIKey = '';
+        this.psiDirty = false;
         var self = this;
         fb.child('loop/loopintervalms').on('value', function(snapshot) {
           self.loopInterval = snapshot.val() / 1000;
@@ -139,6 +143,23 @@
             fb.child('config/useMode').set(um);
           }
         }
+      },
+      apiKeyInput: function(event, details, sender) {
+        if (sender.id === 'wptAPIKey') {
+          this.wptDirty = true;
+        } else if (sender.id === 'psiAPIKey') {
+          this.psiDirty = true;
+        }
+      },
+      savePSI: function(event, details, sender) {
+        var key = this.$.psiAPIKey.value;
+        fb.child('config/apiKeys/PageSpeedInsights').set(key);
+        this.psiDirty = false;
+      },
+      saveWPT: function(event, details, sender) {
+        var key = this.$.wptAPIKey.value;
+        fb.child('config/apiKeys/WebPageTest').set(key);
+        this.wptDirty = false;
       }
     });
   </script>

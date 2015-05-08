@@ -8,11 +8,11 @@
 <link rel="import" href="/elements/loopConfig.html">
 <link rel="import" href="/elements/single-panel.html">
 <link rel="import" href="/elements/settings-panel.html">
+<link rel="import" href="/elements/history-panel.html">
 
 <polymer-element name="primary-panel">
   <template>
     <link rel="stylesheet" type="text/css" href="/styles/main.css">
-    <link no-shim href="/styles/pbutton.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/styles/toolbar.css">
     <style>
       [drawer] {
@@ -37,7 +37,6 @@
       <core-header-panel main flex>
 
         <core-toolbar class="no-select text-upper">
-          <paper-icon-button core-drawer-toggle icon="menu"></paper-icon-button>
           <paper-tabs id="tabs" selected="{{selectedTab}}" on-core-activate="{{tabChanged}}" self-end>
             <paper-tab name="single">Home</paper-tab>
             <paper-tab name="loopConfig">Loop</paper-tab>
@@ -57,6 +56,9 @@
 
             <settings-panel name="settings">
             </settings-panel>
+
+            <history-panel name="history">
+            </history-panel>
           </core-pages>
 
         </div>

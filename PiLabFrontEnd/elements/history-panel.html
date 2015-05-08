@@ -1,0 +1,44 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input-decorator.html">
+
+<polymer-element name="history-panel">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/styles/main.css">
+    <style type="text/css">
+      li {
+        min-height: 40px;
+        margin-bottom: 1vw;      }
+      ul {
+        padding-left: 0;
+        margin-top: 0;
+        list-style-type: none;
+      }
+    </style>
+
+    <ul vertical layout>
+      <template repeat="{{item in history}}">
+        <li horizontal layout center>
+          <span flex>{{item.url}}</span>
+          <span>{{item.time}}</span>
+        </li>
+      </template>
+    </ul>
+  </template>
+  <script type="text/javascript">
+    Polymer({
+      created: function() {
+        this.history = [];
+        var self = this;
+        fb.child("url").on("value", function(snapshot) {
+          var item = {
+            "url": snapshot.val(),
+            "time": moment().format('LTS')
+          };
+          self.history.unshift(item);
+        });
+      }
+    });
+  </script>
+</polymer-element>
