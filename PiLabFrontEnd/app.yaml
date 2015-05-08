@@ -9,38 +9,46 @@ handlers:
 - url: /scripts
   static_dir: scripts
   secure: always
+  login: required
 
 - url: /styles
   static_dir: styles
   secure: always
+  login: required
 
 - url: /images
   static_dir: images
   secure: always
+  login: required
 
 - url: /bower_components
   static_dir: bower_components
   secure: always
+  login: required
 
 - url: /displays
   static_dir: displays
   secure: always
+  login: required
 
 - url: /elements
   static_dir: elements
   secure: always
+  login: required
 
 - url: /config.js
   static_files: config.js
   upload: config.js
   expiration: "0s"
   secure: always
+  login: required
 
-- url: /elements.html
-  static_files: elements.html
-  upload: elements.html
+- url: /admin
+  static_files: admin.html
+  upload: admin.html
   expiration: "0s"
   secure: always
+  login: admin
 
 - url: /setup.html
   static_files: setup.html
@@ -80,6 +88,7 @@ handlers:
   upload: index.html
   expiration: "0s"
   secure: always
+  login: required
 
 
 

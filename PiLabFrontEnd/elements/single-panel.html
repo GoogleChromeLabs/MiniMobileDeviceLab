@@ -6,7 +6,7 @@
 <polymer-element name="single-panel" attributes="devices">
   <template>
     <link rel="stylesheet" type="text/css" href="/styles/main.css">
-
+    
     <div horizontal layout center>
       <paper-input-decorator flex required autoValidate label="URL to send"  floatingLabel error="Value must be a URL" isInvalid="{{invalidURL}}">
         <input is="core-input" id="newLoopURL" on-keypress="{{loopInputListener}}" type="url">
