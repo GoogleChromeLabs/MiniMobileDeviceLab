@@ -13,8 +13,18 @@
   <link rel="import" href="/elements/single-panel.html">
   <link rel="stylesheet" type="text/css" href="/styles/main.css">
   <style type="text/css" media="screen">
+    header {
+      height: 64px;
+      background-color: #03A9ED;
+      color: white;
+    }
+    header p {
+      font-size: 1.25em;
+      margin-left: 5%;
+    }
     section {
       max-width: 800px;
+      margin-top: 64px;
       margin-left: auto;
       margin-right: auto;
       padding: 16px;
@@ -23,6 +33,9 @@
 </head>
 
 <body unresolved fullbleed layout vertical>
+  <header id="header" class="">
+    <p>PiLab</p>  
+  </header><!-- /header -->
 
   <core-animated-pages selected="primary" fit>
     <section name="primary" fit>
