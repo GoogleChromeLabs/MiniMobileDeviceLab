@@ -9,32 +9,26 @@ handlers:
 - url: /scripts
   static_dir: scripts
   secure: always
-  login: required
 
 - url: /styles
   static_dir: styles
   secure: always
-  login: required
 
 - url: /images
   static_dir: images
   secure: always
-  login: required
 
 - url: /bower_components
   static_dir: bower_components
   secure: always
-  login: required
 
 - url: /displays
   static_dir: displays
   secure: always
-  login: required
 
 - url: /elements
   static_dir: elements
   secure: always
-  login: required
 
 - url: /config.js
   static_files: config.js
