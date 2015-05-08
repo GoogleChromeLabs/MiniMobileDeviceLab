@@ -30,6 +30,11 @@ function ServerController() {
     configModel.on('UseModeChange', function(mode) {
       if (mode === 'loop') {
         this.startLooping();
+      } else if (mode === 'loopPaused') {
+        this.stopLooping();
+        setTimeout(function() {
+          this.startLooping();
+        }, 90*1000);
       } else {
         this.stopLooping();
       }
