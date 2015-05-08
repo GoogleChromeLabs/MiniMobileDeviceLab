@@ -92,7 +92,6 @@ handlers:
   upload: index.html
   expiration: "0s"
   secure: always
-  login: required
 
 
 

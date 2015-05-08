@@ -6,7 +6,7 @@
   },
   "name": "Mini Mobile Device Lab",
   "description": "Mini Mobile Device Lab - Chrome Extension",
-  "version": "0.45",
+  "version": "0.46",
   "icons": {
     "128": "128.png"
   },
