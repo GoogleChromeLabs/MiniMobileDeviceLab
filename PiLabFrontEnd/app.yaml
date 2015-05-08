@@ -50,6 +50,16 @@ handlers:
   expiration: "0s"
   secure: always
 
+- url: /manifest.json
+  static_files: manifest.json
+  upload: manifest.json
+  expiration: "0s"
+
+- url: /manifest-admin.json
+  static_files: manifest-admin.json
+  upload: manifest-admin.json
+  expiration: "0s"
+
 - url: /ios/MMDLClient.ipa
   mime_type: application/octet-stream
   static_files: ios/MMDLClient.ipa
