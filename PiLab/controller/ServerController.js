@@ -31,10 +31,7 @@ function ServerController() {
       if (mode === 'loop') {
         this.startLooping();
       } else if (mode === 'loopPaused') {
-        this.stopLooping();
-        setTimeout(function() {
-          this.startLooping();
-        }, 90*1000);
+        this.pauseLooping();
       } else {
         this.stopLooping();
       }
@@ -51,6 +48,11 @@ function ServerController() {
     }.bind(this));
 
     currentUrlModel.on('URLChange', function(url) {
+      this.log('URLChange: ' + url);
+      var configModel = this.getConfigModel();
+      if (configModel.getUseMode() === 'loopPaused') {
+        this.pauseLooping();
+      }
       var testController = this.getTestController();
       testController.performTests(url);
     }.bind(this));
@@ -93,8 +95,30 @@ function ServerController() {
   };
 }
 
+ServerController.prototype.pauseLooping = function() {
+  this.stopLooping();
+  var loopSettingsModel = this.getLoopSettingsModel();
+  var timeoutMs = loopSettingsModel.getLoopPauseMs();
+  this.log('Loop Paused - restarting in ' + timeoutMs / 1000 + ' seconds');
+  var newTimeoutId = setTimeout(this.resumeLooping.bind(this), timeoutMs);
+  this.setLoopTimeoutId(newTimeoutId);
+};
+
+ServerController.prototype.resumeLooping = function() {
+  this.log('Resuming loop');
+  var configModel = this.getConfigModel();
+  this.setLoopTimeoutId(null);
+  configModel.setUseMode('loop');
+};
+
 ServerController.prototype.startLooping = function() {
-  this.log('Start Looping');
+  this.log('Starting Loop');
+
+  var currentTimeoutId = this.getLoopTimeoutId();
+  if (currentTimeoutId) {
+    this.log('Loop already running. Sad Trombone.');
+    return;
+  }
 
   var loopSettingsModel = this.getLoopSettingsModel();
   var timeoutMs = loopSettingsModel.getLoopIntervalMs();
@@ -132,7 +156,7 @@ ServerController.prototype.performLoopTick = function() {
 };
 
 ServerController.prototype.stopLooping = function() {
-  console.log('Stop Looping');
+  this.log('Clearing loop timeouts');
   var currentTimeoutId = this.getLoopTimeoutId();
   if (currentTimeoutId) {
     clearTimeout(currentTimeoutId);
@@ -142,6 +166,7 @@ ServerController.prototype.stopLooping = function() {
 
 // TODO: Expose this via some sort of API or front end
 ServerController.prototype.setStaticUrl = function(url) {
+  this.log('setStaticURL: ' + url);
   var configModel = this.getConfigModel();
   if (configModel.getMode() === 'loop') {
     console.log('Can\'t set the url while the lab is looping');
