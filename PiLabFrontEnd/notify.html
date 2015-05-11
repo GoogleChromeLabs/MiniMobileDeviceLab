@@ -16,11 +16,13 @@
 <body>
 
   <h1>Mini Mobile Device Lab Notifier</h1>
-  <ul></ul>
+  <div>Current Site: <span id="currentURL"></span></div>
 
   <script src="/bower_components/firebase/firebase.js"></script>
   <script type="text/javascript">
-    var ulElem = document.querySelector('ul');
+    'use strict';
+    
+    var spanURL = document.querySelector('#currentURL');
 
     var fb = new Firebase('https://goog-mtv-device-lab.firebaseio.com/');
     fb.authAnonymously(function(error) {
@@ -30,9 +32,7 @@
         console.log('[FIREBASE] Auth success.');
         fb.child('url').on('value', function(snapshot) {
           var url = snapshot.val();
-          var li = document.createElement('li');
-          li.innerText = url;
-          ulElem.insertBefore(li, ulElem.childNodes[0]);
+          spanURL.innerText = url;
           try {
             window.external.notify(url);
             console.log('Notify', 'PASS', url);
