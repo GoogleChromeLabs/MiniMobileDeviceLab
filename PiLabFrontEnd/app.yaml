@@ -50,6 +50,12 @@ handlers:
   expiration: "0s"
   secure: always
 
+- url: /notify.html
+  static_files: notify.html
+  upload: notify.html
+  expiration: "0s"
+  secure: always
+
 - url: /manifest.json
   static_files: manifest.json
   upload: manifest.json
