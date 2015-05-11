@@ -19,12 +19,11 @@
   <ul></ul>
 
   <script src="/bower_components/firebase/firebase.js"></script>
-  <script src="/config.js"></script>
   <script type="text/javascript">
     var ulElem = document.querySelector('ul');
 
-    var fb = new Firebase(PiLab.config.firebaseUrl);
-    fb.authWithCustomToken(PiLab.config.firebaseKey, function(error) {
+    var fb = new Firebase('https://goog-mtv-device-lab.firebaseio.com/');
+    fb.authAnonymously(function(error) {
       if(error) {
         console.error('[FIREBASE] Auth failed. ' + error.toString());
       } else {
@@ -35,7 +34,7 @@
           li.innerText = url;
           ulElem.insertBefore(li, ulElem.childNodes[0]);
           try {
-            window.external.notify('NEW_URL: ' + url);
+            window.external.notify(url);
             console.log('Notify', 'PASS', url);
           } catch (ex) {
             console.debug('Notify', 'FAIL', url);
