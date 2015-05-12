@@ -26,23 +26,45 @@ handlers:
   static_dir: displays
   secure: always
 
+- url: /elements
+  static_dir: elements
+  secure: always
+
 - url: /config.js
   static_files: config.js
   upload: config.js
   expiration: "0s"
   secure: always
+  login: required
 
-- url: /elements.html
-  static_files: elements.html
-  upload: elements.html
+- url: /admin
+  static_files: admin.html
+  upload: admin.html
   expiration: "0s"
   secure: always
+  login: admin
 
 - url: /setup.html
   static_files: setup.html
   upload: setup.html
   expiration: "0s"
   secure: always
+
+- url: /notify.html
+  static_files: notify.html
+  upload: notify.html
+  expiration: "0s"
+  secure: always
+
+- url: /manifest.json
+  static_files: manifest.json
+  upload: manifest.json
+  expiration: "0s"
+
+- url: /manifest-admin.json
+  static_files: manifest-admin.json
+  upload: manifest-admin.json
+  expiration: "0s"
 
 - url: /ios/MMDLClient.ipa
   mime_type: application/octet-stream

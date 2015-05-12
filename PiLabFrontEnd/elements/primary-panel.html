@@ -1,0 +1,77 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/core-drawer-panel/core-drawer-panel.html">
+<link rel="import" href="/bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="/bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="/bower_components/core-pages/core-pages.html">
+<link rel="import" href="/elements/loopConfig.html">
+<link rel="import" href="/elements/single-panel.html">
+<link rel="import" href="/elements/settings-panel.html">
+<link rel="import" href="/elements/history-panel.html">
+
+<polymer-element name="primary-panel">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/styles/main.css">
+    <link rel="stylesheet" type="text/css" href="/styles/toolbar.css">
+    <style>
+      [drawer] {
+        background-color: #efefef;
+      }
+      paper-tabs {
+        width: 100%;
+      }
+      core-pages {
+        margin: 16px;
+      }
+      paper-toggle-button::shadow #toggleContainer[disabled] {
+        opacity: 0.7 !important;
+      }
+    </style>
+
+    <core-drawer-panel id="drawer" forceNarrow="true">
+      <core-header-panel drawer>
+        <nav-drawer></nav-drawer>
+      </core-header-panel>
+
+      <core-header-panel main flex>
+
+        <core-toolbar class="no-select text-upper">
+          <paper-tabs id="tabs" selected="{{selectedTab}}" on-core-activate="{{tabChanged}}" self-end>
+            <paper-tab name="single">Home</paper-tab>
+            <paper-tab name="loopConfig">Loop</paper-tab>
+            <paper-tab name="settings">Settings</paper-tab>
+            <paper-tab name="history">History</paper-tab>
+          </paper-tabs>
+        </core-toolbar>
+
+        <div class="container" fit>
+          <core-pages selected="{{selectedTab}}" fit>
+
+            <single-panel name="single">
+            </single-panel>
+
+            <loop-config name="loopConfig">
+            </loop-config>
+
+            <settings-panel name="settings">
+            </settings-panel>
+
+            <history-panel name="history">
+            </history-panel>
+          </core-pages>
+
+        </div>
+
+      </core-header-panel>
+    </core-drawer-panel>
+  </template>
+  <script type="text/javascript">
+    Polymer({
+      created: function() {
+        this.selectedTab = "single";
+        this.pages = document.querySelector("core-animated-pages");
+      }
+    });
+  </script>
+</polymer-element>

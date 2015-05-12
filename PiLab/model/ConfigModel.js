@@ -42,14 +42,23 @@ function ConfigModel(fb) {
   };
 
   this.getUseMode = function() {
-    if (useMode !== 'loop' && useMode !== 'static') {
-      this.log('mode should be \'loop\' or \'static\'. Currently it\'s: ',
+    if (useMode !== 'loop' && useMode !== 'static' && useMode !== 'loopPaused') {
+      this.log('mode should be \'loop\', \'loopPaused\',  or \'static\'. Currently it\'s: ',
         useMode);
       return 'static';
     }
 
     return useMode;
   };
+
+  this.setUseMode = function(mode) {
+    if (mode !== 'loop' && mode !== 'static' && mode !== 'loopPaused') {
+      this.log('mode MUST be \'loop\', \'loopPaused\',  or \'static\'.');
+      return useMode;
+    }
+    firebase.child('config/useMode').set(mode);
+    return mode;
+  }
 
   this.getGlobalMode = function() {
     if (globalMode !== 'use' && globalMode !== 'config') {

@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <title>MMDL</title>
+  <link rel="manifest" href="manifest-admin.json">
+  <meta name="theme-color" content="#2196f3">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <script src="/bower_components/webcomponentsjs/webcomponents.js"></script>
+  <link rel="import" href="/bower_components/font-roboto/roboto.html">
+  <link rel="import" href="/bower_components/core-animated-pages/core-animated-pages.html">
+  <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+  <link rel="import" href="/elements/error-toast.html">
+  <link rel="import" href="/elements/primary-panel.html">
+  <link rel="stylesheet" type="text/css" href="/styles/main.css">
+  <link rel="icon" sizes="96x96" href="/images/dev_lab_logo_96.png">
+  <link rel="icon" sizes="48x48" href="/images/dev_lab_logo_48.png">
+</head>
+
+<body unresolved fullbleed layout vertical>
+
+  <core-animated-pages selected="primary" fit>
+    <section name="primary" fit>
+      <primary-panel></primary-panel>
+    </section>
+  </core-animated-pages>
+
+  <paper-toast id="toast"></paper-toast>
+  <error-toast id="errorToast" role="error">
+  </error-toast>
+
+
+  <script src="/bower_components/moment/moment.js"></script>
+  <script src="/bower_components/firebase/firebase.js"></script>
+  <script src="/config.js"></script>
+  <script src="/scripts/main.js"></script>
+
+
+</body>
+</html>

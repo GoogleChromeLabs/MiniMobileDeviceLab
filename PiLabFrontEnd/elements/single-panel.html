@@ -1,0 +1,43 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input-decorator.html">
+
+<polymer-element name="single-panel" attributes="devices">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/styles/main.css">
+    
+    <div horizontal layout center>
+      <paper-input-decorator flex required autoValidate label="URL to send"  floatingLabel error="Value must be a URL" isInvalid="{{invalidURL}}">
+        <input is="core-input" id="newLoopURL" on-keypress="{{loopInputListener}}" type="url">
+      </paper-input-decorator>
+      <paper-icon-button class="lm" on-tap="{{sendItem}}" icon="arrow-forward"></paper-icon-button>
+    </div>
+
+  </template>
+  <script type="text/javascript">
+    Polymer({
+      created: function() {
+
+      },
+      sendItem: function(event, details, sender) {
+        if ((this.$.newLoopURL.validity.valid === true) && (this.$.newLoopURL.value !== "")) {
+          var url = this.$.newLoopURL.value;
+          if (PiLabMode === 'loop') {
+            fb.child('config/useMode').set('loopPaused');
+          }
+          fb.child('url').set(url);
+          this.$.newLoopURL.value = "";
+          showToast('Sent ' + url);
+        } else {
+          showErrorToast('Must be a valid URL');
+        }
+      },
+      loopInputListener: function(event, details, sender) {
+        if (event.keyCode === 13) {
+          this.sendItem(event, details, sender);
+        }
+      }
+    });
+  </script>
+</polymer-element>

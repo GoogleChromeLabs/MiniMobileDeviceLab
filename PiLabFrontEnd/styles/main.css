@@ -1,0 +1,87 @@
+html,body {
+  font-family: 'RobotoDraft', 'Roboto', sans-serif;
+  background-color: #efefef;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.colorDarkPrimary {
+  background-color: #0288d1;
+  color: #ffffff;
+}
+.colorPrimary {
+  background-color: #03a9f4;
+  color: #ffffff;
+}
+.colorLightPrimary {
+  background-color: #b3e5fc;
+  color: #000000;
+}
+.colorAccent {
+  background-color: #ffeb3b;
+  color: white;
+}
+.colorSecondaryText {
+  color: #727272;
+}
+.colorDivider {
+  color: #b6b6b6;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-upper {
+  text-transform: uppercase;
+}
+
+.text-plain {
+  text-decoration: none;
+  text-transform: inherit;
+  color: inherit;
+}
+
+.text-medium {
+  font-size: 2vw;
+}
+
+.text-large {
+  font-size: 3vw;
+}
+
+.text-very-large {
+  font-size: 6vw;
+}
+
+.text-extra-large {
+  font-size: 15vw;
+}
+
+@media screen and (max-width: 600px) {
+  .text-medium {
+    font-size: 4vw;
+  }
+  .text-large {
+    font-size: 6vw;
+  }
+  .text-very-large {
+    font-size: 12vw;
+  }
+  .text-extra-large {
+    font-size: 16vw;
+  }
+}
+
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
