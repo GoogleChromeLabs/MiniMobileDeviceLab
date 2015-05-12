@@ -34,6 +34,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
 using Windows.System.Display;
+using Windows.Phone.UI.Input;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -78,18 +79,17 @@ namespace MMDL_uni
             DisplayRequest dRequest = new DisplayRequest();
             dRequest.RequestActive();
 
-            // TODO: Verify this code!
-            // HardwareButtons.BackPressed -= this.MainPage_BackPressed;
+            HardwareButtons.BackPressed += this.MainPage_BackPressed;
         }
 
-        // TODO: Verify this code!
-        // private void MainPage_BackPressed(object sender, BackPressedEventArgs e)
-        // {
-        //     if (wvMain.CanGoBack) 
-        //     {
-        //         wvMain.GoBack();
-        //         e.Handled = true;
-        //     }
-        // }
+         private void MainPage_BackPressed(object sender, BackPressedEventArgs e)
+         {
+             Debug.WriteLine("[MainPage_BackPressed]");
+             if (wvMain.CanGoBack) 
+             {
+                 wvMain.GoBack();
+                 e.Handled = true;
+             }
+         }
     }
 }
