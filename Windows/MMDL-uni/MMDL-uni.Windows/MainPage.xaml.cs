@@ -45,18 +45,26 @@ namespace MMDL_uni
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        // Boolean isWinRT = true;
         public MainPage()
         {
             this.InitializeComponent();
             wvListener.ScriptNotify += wvListener_ScriptNotify;
             DisplayRequest dRequest = new DisplayRequest();
             dRequest.RequestActive();
+            // var model = away WindowsStoreSystemInfo.GetDeviceModelAsync();
+            // Debug.WriteLine("Model: " + model);
+            // if (model.IndexOf("Windows RT") == -1) {
+            //   Debug.WriteLine("[MainPage] this is NOT Windows RT");
+            //   isWinRT = false;
+            // }
         }
 
         async void wvListener_ScriptNotify(object sender, NotifyEventArgs e)
         {
             String newURL = e.Value;
             Debug.WriteLine("[wvListener_ScriptNotify] " + newURL);
+            // if (!isWinRT)
             if (true)
             {
                 var options = new Windows.System.LauncherOptions();
