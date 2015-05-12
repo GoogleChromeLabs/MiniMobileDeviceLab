@@ -12,7 +12,8 @@ bower_components
 
 config.json
 config.js
-
+config.*.json
+config.*.js
 
 #
 # Xcode
