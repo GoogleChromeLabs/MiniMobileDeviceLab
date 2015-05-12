@@ -77,6 +77,19 @@ namespace MMDL_uni
             Debug.WriteLine("[OnNavigatedTo]");
             DisplayRequest dRequest = new DisplayRequest();
             dRequest.RequestActive();
+
+            // TODO: Verify this code!
+            // HardwareButtons.BackPressed -= this.MainPage_BackPressed;
         }
+
+        // TODO: Verify this code!
+        // private void MainPage_BackPressed(object sender, BackPressedEventArgs e)
+        // {
+        //     if (wvMain.CanGoBack) 
+        //     {
+        //         wvMain.GoBack();
+        //         e.Handled = true;
+        //     }
+        // }
     }
 }
