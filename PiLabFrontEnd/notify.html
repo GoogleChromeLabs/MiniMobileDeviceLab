@@ -34,7 +34,7 @@
           var url = snapshot.val();
           spanURL.innerText = url;
           try {
-            window.external.notify(url);
+            window.external.notify('URL:' + url);
             console.log('Notify', 'PASS', url);
           } catch (ex) {
             console.debug('Notify', 'FAIL', url);
@@ -42,6 +42,12 @@
         });
       }
     });
+
+    try {
+      window.external.notify('UA:' + navigator.userAgent);
+    } catch (ex) {
+      console.debug('Unable to announce userAgent');
+    }
   </script>
 
 </body>
