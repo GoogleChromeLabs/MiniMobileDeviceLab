@@ -34,6 +34,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
 using Windows.System.Display;
+using System.ComponentModel;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -56,10 +57,11 @@ namespace MMDL_uni
         {
             String newURL = e.Value;
             Debug.WriteLine("[wvListener_ScriptNotify] " + newURL);
-            // TODO: Determine if we can launch IE, and still remain alive.
-            if (false)
+            if (true)
             {
-                // Open the specified URL in IE, but keep listening!
+                var options = new Windows.System.LauncherOptions();
+                options.DesiredRemainingView = Windows.UI.ViewManagement.ViewSizePreference.UseNone;
+                var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(newURL), options);
             }
             else
             {
