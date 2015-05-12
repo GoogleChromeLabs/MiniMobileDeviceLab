@@ -65,22 +65,20 @@ namespace MMDL_uni
                     Debug.WriteLine("Windows RT: FALSE");
                     isWinRT = false;
                 }
+                return;
             }
-            else if (newURL.IndexOf("URL:") == 0)
-            {
-                newURL = newURL.Substring(4);
-                Debug.WriteLine("[wvListener_ScriptNotify] " + newURL);
-                if (isWinRT)
-                {
-                    wvMain.Navigate(new Uri(newURL));
-                }
-                else
-                {
-                    var options = new Windows.System.LauncherOptions();
-                    options.DesiredRemainingView = Windows.UI.ViewManagement.ViewSizePreference.UseNone;
-                    var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(newURL), options);
-                }
 
+            newURL = newURL.Substring(4);
+            Debug.WriteLine("[wvListener_ScriptNotify] " + newURL);
+            if (isWinRT)
+            {
+                wvMain.Navigate(new Uri(newURL));
+            }
+            else
+            {
+                var options = new Windows.System.LauncherOptions();
+                options.DesiredRemainingView = Windows.UI.ViewManagement.ViewSizePreference.UseNone;
+                var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(newURL), options);
             }
         }
     }
