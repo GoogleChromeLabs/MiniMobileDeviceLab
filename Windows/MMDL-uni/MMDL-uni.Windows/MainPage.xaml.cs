@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
+using Windows.System.Display;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -27,6 +28,8 @@ namespace MMDL_uni
         {
             this.InitializeComponent();
             wvListener.ScriptNotify += wvListener_ScriptNotify;
+            DisplayRequest dRequest = new DisplayRequest();
+            dRequest.RequestActive();
         }
 
         async void wvListener_ScriptNotify(object sender, NotifyEventArgs e)
