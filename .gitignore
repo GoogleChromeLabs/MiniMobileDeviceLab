@@ -15,6 +15,9 @@ config.js
 config.*.json
 config.*.js
 
+app.yaml
+app.*.yaml
+
 #
 # Xcode
 #
