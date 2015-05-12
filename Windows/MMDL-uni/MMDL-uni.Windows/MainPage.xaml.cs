@@ -58,19 +58,30 @@ namespace MMDL_uni
         async void wvListener_ScriptNotify(object sender, NotifyEventArgs e)
         {
             String newURL = e.Value;
-            Debug.WriteLine("[wvListener_ScriptNotify] " + newURL);
-            if (isWinRT)
+            if (newURL.IndexOf("UA:") == 0)
             {
-                // We couldn't open IE, so stay here and use the built in browser
-                wvMain.Navigate(new Uri(newURL));
+                if (newURL.IndexOf("WOW64;") >= 0)
+                {
+                    Debug.WriteLine("Windows RT: FALSE");
+                    isWinRT = false;
+                }
             }
-            else
+            else if (newURL.IndexOf("URL:") == 0)
             {
-                var options = new Windows.System.LauncherOptions();
-                options.DesiredRemainingView = Windows.UI.ViewManagement.ViewSizePreference.UseNone;
-                var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(newURL), options);
-            }
+                newURL = newURL.Substring(4);
+                Debug.WriteLine("[wvListener_ScriptNotify] " + newURL);
+                if (isWinRT)
+                {
+                    wvMain.Navigate(new Uri(newURL));
+                }
+                else
+                {
+                    var options = new Windows.System.LauncherOptions();
+                    options.DesiredRemainingView = Windows.UI.ViewManagement.ViewSizePreference.UseNone;
+                    var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(newURL), options);
+                }
 
+            }
         }
     }
 }

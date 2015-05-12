@@ -57,8 +57,11 @@ namespace MMDL_uni
         async void wvListener_ScriptNotify(object sender, NotifyEventArgs e)
         {
             String newURL = e.Value;
-            Debug.WriteLine("[wvListener_ScriptNotify] " + newURL);
-            wvMain.Navigate(new Uri(newURL));
+            if (newURL.IndexOf("URL:") == 0)
+            {
+                Debug.WriteLine("[wvListener_ScriptNotify] " + newURL);
+                wvMain.Navigate(new Uri(newURL.Substring(4)));
+            }
         }
 
         /// <summary>
