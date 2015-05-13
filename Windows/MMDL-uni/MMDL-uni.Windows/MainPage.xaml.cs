@@ -47,12 +47,11 @@ namespace MMDL_uni
     public sealed partial class MainPage : Page
     {
         private bool isWinRT = true;
+        private DisplayRequest dRequest;
         public MainPage()
         {
             this.InitializeComponent();
             wvListener.ScriptNotify += wvListener_ScriptNotify;
-            DisplayRequest dRequest = new DisplayRequest();
-            dRequest.RequestActive();
         }
 
         async void wvListener_ScriptNotify(object sender, NotifyEventArgs e)
@@ -79,6 +78,13 @@ namespace MMDL_uni
                 var options = new Windows.System.LauncherOptions();
                 options.DesiredRemainingView = Windows.UI.ViewManagement.ViewSizePreference.UseNone;
                 var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(newURL), options);
+            }
+
+            if (dRequest) {
+                dRequest.RequestActive();
+            } else {
+                dRequest = new DisplayRequest();
+                dRequest.RequestActive();
             }
         }
     }
