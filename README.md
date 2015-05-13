@@ -28,7 +28,7 @@ sleep 5
 
 You may want to change `client.sh` to `server.sh` depending on your config.
 
-#Auto Starting PiLab on GUI
+# Auto Starting PiLab on GUI
 
 1. Clone the repo to your pi
 1. Ensure forever is install `npm install forever -g`
@@ -42,3 +42,6 @@ You may want to change `client.sh` to `server.sh` depending on your config.
 
     sudo update-rc.d pilab-startup defaults
 
+## Cheating Install
+
+curl -s https://raw.githubusercontent.com/GoogleChrome/MiniMobileDeviceLab/master/scripts/install.sh | bash
