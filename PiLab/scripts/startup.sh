@@ -15,7 +15,7 @@ PILAB=/home/pi/MiniMobileDeviceLab/PiLab
 
 case "$1" in
   start)
-    sudo adb start-server
+    sudo /home/pi/adb start-server
     sudo -u pi forever start $PILAB/client.js -l /home/pi/.pilab/output.log
     ;;
   stop)

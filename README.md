@@ -32,7 +32,9 @@ You may want to change `client.sh` to `server.sh` depending on your config.
 
 1. Clone the repo to your pi
 1. Ensure forever is install `npm install forever -g`
-1. Edit the `PiLab/scripts/startup.sh` file to use client.js or server.js and if you don't have `MiniMobileDeviceLab` in your home directory, alter the location of the repo.
+1. Edit the `PiLab/scripts/startup.sh` file to use client.js or server.js 
+1. If you don't have `MiniMobileDeviceLab` in your home directory, alter the location of the repo.
+1. You should alter the path to the adb, current it assumes adb is at `/home/pi/adb`
 1. Copy the `PiLab/scripts/startup.sh` file to /etc/init.d/pilab-startup and add it to the boot process with:
 
     sudo cp <path>/startup.sh /etc/init.d/pilab-startup
