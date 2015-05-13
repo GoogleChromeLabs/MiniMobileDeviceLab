@@ -31,6 +31,7 @@ You may want to change `client.sh` to `server.sh` depending on your config.
 #Auto Starting PiLab on GUI
 
 1. Clone the repo to your pi
+1. Ensure forever is install `npm install forever -g`
 1. Edit the `PiLab/scripts/startup.sh` file to use client.js or server.js and if you don't have `MiniMobileDeviceLab` in your home directory, alter the location of the repo.
 1. Copy the `PiLab/scripts/startup.sh` file to /etc/init.d/pilab-startup and add it to the boot process with:
 

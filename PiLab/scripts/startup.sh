@@ -15,7 +15,7 @@ PILAB=/home/pi/MiniMobileDeviceLab/PiLab
 
 case "$1" in
   start)
-    sudo -u pi forever start $PILAB/client.js -l ~/.pilab/output.log
+    sudo -u pi forever start $PILAB/client.js -l /home/pi/.pilab/output.log
     ;;
   stop)
     sudo -u pi forever stop $PILAB/client.js
