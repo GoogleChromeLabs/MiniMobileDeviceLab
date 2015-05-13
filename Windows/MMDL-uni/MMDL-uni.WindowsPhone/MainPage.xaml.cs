@@ -45,6 +45,7 @@ namespace MMDL_uni
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private DisplayRequest dRequest;
         public MainPage()
         {
             this.InitializeComponent();
@@ -61,6 +62,13 @@ namespace MMDL_uni
             {
                 Debug.WriteLine("[wvListener_ScriptNotify] " + newURL);
                 wvMain.Navigate(new Uri(newURL.Substring(4)));
+            }
+
+            if (dRequest != null) {
+                dRequest.RequestActive();
+            } else {
+                dRequest = new DisplayRequest();
+                dRequest.RequestActive();
             }
         }
 
@@ -79,9 +87,6 @@ namespace MMDL_uni
             // If you are using the NavigationHelper provided by some templates,
             // this event is handled for you.
             Debug.WriteLine("[OnNavigatedTo]");
-            DisplayRequest dRequest = new DisplayRequest();
-            dRequest.RequestActive();
-
             HardwareButtons.BackPressed += this.MainPage_BackPressed;
         }
 
