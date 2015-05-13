@@ -55,7 +55,7 @@ function stashHistoryData() {
     '-fb-data-stash.txt';
 
   var writeStream = fs.createWriteStream(TEST_HISTORY_PATH + filename);
-  var dataDumpUrl = 'https://goog-lon-device-lab.firebaseio.com/.json?print=pretty&auth=' + config.firebaseKey;
+  var dataDumpUrl = config.firebaseUrl + '.json?print=pretty&auth=' + config.firebaseKey;
   https.get(dataDumpUrl, function(res) {
     if (res.statusCode !== 200) {
       console.error('Unexpected status code when attempting to get the ' +
