@@ -13,7 +13,7 @@ Mini Mobile Device Lab
 5. Visit the PiLabFrontEnd to control everything.
 
 
-# Auto Starting the PiLab
+# Auto Starting PiLab on Command Line Boot
 
 1. Clone the repo to your Pi
 1. Add `./login.sh` to the end of your local `.profile`
@@ -27,3 +27,15 @@ sleep 5
 1. Run `chmod +x login.sh` 
 
 You may want to change `client.sh` to `server.sh` depending on your config.
+
+#Auto Starting PiLab on GUI
+
+1. Clone the repo to your pi
+1. Edit the `PiLab/scripts/startup.sh` file to use client.js or server.js and if you don't have `MiniMobileDeviceLab` in your home directory, alter the location of the repo.
+1. Copy the `PiLab/scripts/startup.sh` file to /etc/init.d/pilab-startup and add it to the boot process with:
+
+    sudo cp <path>/startup.sh /etc/init.d/pilab-startup
+    sudo chmod 755 /etc/init.d/pilab-startup
+
+    sudo update-rc.d pilab-startup defaults
+
