@@ -80,7 +80,7 @@ namespace MMDL_uni
                 var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(newURL), options);
             }
 
-            if (dRequest) {
+            if (dRequest != null) {
                 dRequest.RequestActive();
             } else {
                 dRequest = new DisplayRequest();

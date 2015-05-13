@@ -64,7 +64,7 @@ namespace MMDL_uni
                 wvMain.Navigate(new Uri(newURL.Substring(4)));
             }
 
-            if (dRequest) {
+            if (dRequest != null) {
                 dRequest.RequestActive();
             } else {
                 dRequest = new DisplayRequest();
