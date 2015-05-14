@@ -44,4 +44,4 @@ You may want to change `client.sh` to `server.sh` depending on your config.
 
 ## Cheating Install
 
-curl -s https://raw.githubusercontent.com/GoogleChrome/MiniMobileDeviceLab/master/PiLab/scripts/install.sh | bash
+    curl -s https://raw.githubusercontent.com/GoogleChrome/MiniMobileDeviceLab/master/PiLab/scripts/install.sh | bash
