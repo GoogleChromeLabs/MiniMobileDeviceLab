@@ -19,7 +19,7 @@ function ConfigModel(fb) {
     var newMode = snapshot.val();
     var shouldEmitChange = newMode !== useMode;
     useMode = newMode;
-    if (shouldEmitChange) {
+    if (shouldEmitChange && this.emit) {
       this.emit('UseModeChange', this.getUseMode());
     }
   }.bind(this));
@@ -29,7 +29,7 @@ function ConfigModel(fb) {
     var newMode = snapshot.val();
     var shouldEmitChange = newMode !== globalMode;
     globalMode = newMode;
-    if (shouldEmitChange) {
+    if (shouldEmitChange && this.emit) {
       this.emit('GlobalModeChange', this.getGlobalMode());
     }
   }.bind(this));
@@ -58,7 +58,7 @@ function ConfigModel(fb) {
     }
     firebase.child('config/useMode').set(mode);
     return mode;
-  }
+  };
 
   this.getGlobalMode = function() {
     if (globalMode !== 'use' && globalMode !== 'config') {
