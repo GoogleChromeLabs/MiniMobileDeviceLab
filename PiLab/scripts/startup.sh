@@ -15,8 +15,24 @@ PILAB=/home/pi/MiniMobileDeviceLab/PiLab
 
 case "$1" in
   start)
+    cd /home/pi/MiniMobileDeviceLab/
+    
+    current_commit=$(git rev-list HEAD --max-count=1 | cut -c1-7)
+    echo ""
+    echo Current commit ${current_commit}
+    echo "${current_commit}" > version.txt
+
+    cd PiLab
+
+    echo ""
+    echo Starting ADB Server with sudo
     sudo /home/pi/adb start-server
-    sudo -u pi forever start -l /home/pi/MiniMobileDeviceLab/output.log $PILAB/client.js
+
+    echo ""
+    echo Installing and updating node modules
+    npm install
+
+    sudo -u pi forever start -a -l /home/pi/MiniMobileDeviceLab/output.log $PILAB/client.js
     ;;
   stop)
     sudo -u pi forever stop $PILAB/client.js
