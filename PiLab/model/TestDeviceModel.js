@@ -1,6 +1,8 @@
 'use strict';
 
 var BrowserIntentHelper = require('./../helper/BrowserIntentHelper.js');
+var KeepScreenOnIntentHelper = require(
+  './../helper/KeepScreenOnIntentHelper.js');
 
 var ChromeRemoteInterface = require('chrome-remote-interface');
 
@@ -30,9 +32,6 @@ function TestDeviceModel(deviceId, adb) {
   adbClient.forward(deviceId, 'tcp:9222',
     'localabstract:chrome_devtools_remote');
 
-  var intent = BrowserIntentHelper.buildChromeIntent();
-  adbClient.startActivity(deviceId, intent);
-
   var results = {
     themeColor: null,
     manifest: null,
@@ -43,13 +42,24 @@ function TestDeviceModel(deviceId, adb) {
 
   var chromeConnection;
   setTimeout(function() {
-    new ChromeRemoteInterface(function(chrome) {
-      chromeConnection = chrome;
-      this.prepareChrome();
-    }.bind(this)).on('error', function(e) {
-      console.error('Error connecting to Chrome.', e);
-    });
-  }.bind(this), 1000);
+    var keepScreenOnIntent = KeepScreenOnIntentHelper.
+      getKeepScreenOnIntent();
+    adbClient.startActivity(deviceId, keepScreenOnIntent);
+
+    setTimeout(function() {
+      var intent = BrowserIntentHelper.buildChromeIntent();
+      adbClient.startActivity(deviceId, intent);
+
+      setTimeout(function() {
+        new ChromeRemoteInterface(function(chrome) {
+          chromeConnection = chrome;
+          this.prepareChrome();
+        }.bind(this)).on('error', function(e) {
+          console.error('Error connecting to Chrome.', e);
+        });
+      }.bind(this), 2000);
+    }.bind(this), 3000);
+  }.bind(this), 3000);
 
   this.checkStatus = function() {
     if (results.themeColor !== null &&
