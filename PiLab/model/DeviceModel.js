@@ -1,6 +1,7 @@
 'use strict';
 
 var BrowserIntentHelper = require('./../helper/BrowserIntentHelper.js');
+var KeepScreenOnIntentHelper = require('./../helper/KeepScreenOnIntentHelper.js');
 var URLKeyModel = require('./URLKeyModel');
 var CurrentURLModel = require('./CurrentURLModel.js');
 var ConfigModel = require('./ConfigModel.js');
@@ -75,6 +76,9 @@ function DeviceModel(fb, adb, id) {
   this.getConfigModel = function() {
     return configModel;
   };
+
+  var keepScreenOnIntent = KeepScreenOnIntentHelper.getKeepScreenOnIntentHandler();
+  this.launchIntent(keepScreenOnIntent);
 
   firebase.child('device-display-types/' + deviceId)
     .on('value', function(snapshot) {

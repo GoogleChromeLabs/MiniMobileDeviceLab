@@ -9,31 +9,6 @@ function ConfigModel(fb) {
   var useMode = null;
   var globalMode = null;
 
-  firebase.child('config/apiKeys').on('value', function(snapshot) {
-    this.log('Received api keys from Firebase');
-    apiKeys = snapshot.val();
-  }.bind(this));
-
-  firebase.child('config/useMode').on('value', function(snapshot) {
-    this.log('Received useMode from Firebase');
-    var newMode = snapshot.val();
-    var shouldEmitChange = newMode !== useMode;
-    useMode = newMode;
-    if (shouldEmitChange && this.emit) {
-      this.emit('UseModeChange', this.getUseMode());
-    }
-  }.bind(this));
-
-  firebase.child('config/globalMode').on('value', function(snapshot) {
-    this.log('Received globalMode from Firebase');
-    var newMode = snapshot.val();
-    var shouldEmitChange = newMode !== globalMode;
-    globalMode = newMode;
-    if (shouldEmitChange && this.emit) {
-      this.emit('GlobalModeChange', this.getGlobalMode());
-    }
-  }.bind(this));
-
   this.getApiKey = function(apiKeyName) {
     if (!apiKeys) {
       return null;
@@ -69,6 +44,31 @@ function ConfigModel(fb) {
 
     return globalMode;
   };
+
+  firebase.child('config/apiKeys').on('value', function(snapshot) {
+    this.log('Received api keys from Firebase');
+    apiKeys = snapshot.val();
+  }.bind(this));
+
+  firebase.child('config/useMode').on('value', function(snapshot) {
+    this.log('Received useMode from Firebase');
+    var newMode = snapshot.val();
+    var shouldEmitChange = newMode !== useMode;
+    useMode = newMode;
+    if (shouldEmitChange && this.emit) {
+      this.emit('UseModeChange', this.getUseMode());
+    }
+  }.bind(this));
+
+  firebase.child('config/globalMode').on('value', function(snapshot) {
+    this.log('Received globalMode from Firebase');
+    var newMode = snapshot.val();
+    var shouldEmitChange = newMode !== globalMode;
+    globalMode = newMode;
+    if (shouldEmitChange && this.emit) {
+      this.emit('GlobalModeChange', this.getGlobalMode());
+    }
+  }.bind(this));
 }
 
 ConfigModel.prototype = events.EventEmitter.prototype;
