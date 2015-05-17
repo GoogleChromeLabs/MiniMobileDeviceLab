@@ -344,17 +344,20 @@ DeviceModel.prototype.generateResultsUrl = function(data) {
 DeviceModel.prototype.launchIntent = function(intentHandler) {
   if (this.isDeviceBusy()) {
     // Busy - stash intent for later
+    console.log('launchIntent: Device is Busy()');
     this.setPendingIntent(intentHandler);
     return;
   }
 
   this.setDeviceBusy(true);
 
+  console.log('launchIntent: About to fire intent');
   return intentHandler(this.getAdbClient(), this.getDeviceId())
     .then(function() {
+      console.log('launchIntent: Intent fired successfully');
       this.setDeviceBusy(false);
     }.bind(this)).catch(function(err) {
-      console.err('DeviceModel: Unable to fire intent', err);
+      console.error('DeviceModel: Unable to fire intent', err);
       this.setDeviceBusy(false);
     }.bind(this));
 };
