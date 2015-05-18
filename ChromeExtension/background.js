@@ -66,10 +66,12 @@ var currentWindow, currentTab;
 function createWindow(urls, callback) {
   var options = {
     'focused': settings.grabFocus,
-    'url': urls,
-    'width': screen.width,
-    'height': screen.height
+    'url': urls
   };
+  if (navigator.userAgent.indexOf('Mozilla/5.0 (X11; CrOS') === 0) {
+    options.width = screen.width,
+    options.height = screen.height;
+  }
   chrome.windows.create(options, function(win) {
     currentWindow = win;
     currentTab = null;
@@ -80,6 +82,18 @@ function createWindow(urls, callback) {
 }
 
 function createTab(url, callback) {
+  var windowId;
+  try {
+    windowId = currentWindow.id;
+  } catch (ex) {
+    createWindow(url, callback);
+    return;
+  }
+  if (windowId === undefined) {
+    createWindow(url, callback);
+    return;
+  }
+
   var options = {
     'url': url,
     'active': settings.grabFocus,
@@ -88,7 +102,7 @@ function createTab(url, callback) {
   };
   chrome.tabs.create(options, function(tab) {
     if (chrome.runtime.lastError) {
-      stopFirebase();
+      startFirebase();
     } else {
       currentTab = tab;
       if (callback) {
@@ -139,12 +153,7 @@ function startFirebase() {
 
   var fbURL = 'https://' + settings.appID + '.firebaseio.com/';
   fbRef = new Firebase(fbURL);
-  if (settings.key) {
-    console.log('[Firebase] authWithCustomToken.');
-    fbRef.authWithCustomToken(settings.key, onFirebaseConnected);
-  } else {
-    fbRef.authAnonymously(onFirebaseConnected);
-  }
+  fbRef.authAnonymously(onFirebaseConnected);
 }
 
 function stopFirebase() {
@@ -175,12 +184,14 @@ function startListening() {
 function onFirebaseConnected(err, authToken) {
   console.log('[onFirebaseConnect]', err, authToken);
   if (err) {
-    openURL('setup.html');
+    console.error('[Firebase Auth Failure]', err);
+    console.log('Trying again...');
+    startFirebase();
   } else {
     if (currentWindow) {
       startListening();
     } else {
-      createWindow('status.html', function() {
+      createWindow('about:blank', function() {
         startListening(); 
       });
     }
