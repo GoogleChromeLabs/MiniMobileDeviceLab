@@ -1,6 +1,8 @@
 'use strict';
 
 var BrowserIntentHelper = require('./../helper/BrowserIntentHelper.js');
+var KeepScreenOnIntentHelper = require(
+  './../helper/KeepScreenOnIntentHelper.js');
 var URLKeyModel = require('./URLKeyModel');
 var CurrentURLModel = require('./CurrentURLModel.js');
 var ConfigModel = require('./ConfigModel.js');
@@ -76,7 +78,14 @@ function DeviceModel(fb, adb, id) {
     return configModel;
   };
 
-  firebase.child('device-display-types/' + deviceId)
+  // The timeout is to give adb time to
+  // register the devices
+  setTimeout(function() {
+    var keepScreenOnIntent = KeepScreenOnIntentHelper.
+      getKeepScreenOnIntentHandler();
+    this.launchIntent(keepScreenOnIntent);
+
+    firebase.child('device-display-types/' + deviceId)
     .on('value', function(snapshot) {
       var value = snapshot.val();
       deviceDisplayType = value;
@@ -84,13 +93,14 @@ function DeviceModel(fb, adb, id) {
       this.updateDisplay();
     }.bind(this));
 
-  currentUrlModel.on('URLChange', function(url) {
+    currentUrlModel.on('URLChange', function(url) {
+        this.updateDisplay();
+      }.bind(this));
+
+    configModel.on('GlobalModeChange', function() {
       this.updateDisplay();
     }.bind(this));
-
-  configModel.on('GlobalModeChange', function() {
-    this.updateDisplay();
-  }.bind(this));
+  }.bind(this), 3000);
 }
 
 DeviceModel.prototype.updateDisplay = function() {
@@ -340,17 +350,20 @@ DeviceModel.prototype.generateResultsUrl = function(data) {
 DeviceModel.prototype.launchIntent = function(intentHandler) {
   if (this.isDeviceBusy()) {
     // Busy - stash intent for later
+    console.log('launchIntent: Device is Busy()');
     this.setPendingIntent(intentHandler);
     return;
   }
 
   this.setDeviceBusy(true);
 
+  console.log('launchIntent: About to fire intent');
   return intentHandler(this.getAdbClient(), this.getDeviceId())
     .then(function() {
+      console.log('launchIntent: Intent fired successfully');
       this.setDeviceBusy(false);
     }.bind(this)).catch(function(err) {
-      console.err('DeviceModel: Unable to fire intent', err);
+      console.error('DeviceModel: Unable to fire intent', err);
       this.setDeviceBusy(false);
     }.bind(this));
 };
