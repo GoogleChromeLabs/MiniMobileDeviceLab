@@ -46,7 +46,6 @@ namespace MMDL_uni
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private bool isWinRT = true;
         private DisplayRequest dRequest;
         public MainPage()
         {
@@ -59,26 +58,12 @@ namespace MMDL_uni
             String newURL = e.Value;
             if (newURL.IndexOf("UA:") == 0)
             {
-                if (newURL.IndexOf("WOW64;") >= 0)
-                {
-                    Debug.WriteLine("Windows RT: FALSE");
-                    isWinRT = false;
-                }
                 return;
             }
 
             newURL = newURL.Substring(4);
             Debug.WriteLine("[wvListener_ScriptNotify] " + newURL);
-            if (isWinRT)
-            {
-                wvMain.Navigate(new Uri(newURL));
-            }
-            else
-            {
-                var options = new Windows.System.LauncherOptions();
-                options.DesiredRemainingView = Windows.UI.ViewManagement.ViewSizePreference.UseNone;
-                var success = await Windows.System.Launcher.LaunchUriAsync(new Uri(newURL), options);
-            }
+            wvMain.Navigate(new Uri(newURL));
 
             if (dRequest != null) {
                 dRequest.RequestActive();
