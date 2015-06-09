@@ -1,0 +1,31 @@
+{
+  "config": {
+    "apiKeys": {
+      "PageSpeedInsights":"",
+      "WebPageTest":""
+    },
+    "globalMode":"use",
+    "useMode":"loop"
+  },
+  "device-display-types": {},
+  "loop": {
+    "index": 0,
+    "loopintervalms": 45000,
+    "looppausems": 180000,
+    "urls":[
+      "https://gauntface.com/blog/",
+      "http://addyosmani.com/",
+      "http://paul.kinlan.me/",
+      "https://developers.google.com/web/fundamentals/",
+      "https://events.google.com/io2015/",
+      "http://jakearchibald.com/",
+      "https://github.com/google/WebFundamentals",
+      "https://www.google.com/?gws_rd=ssl#q=do+a+barrel+roll",
+      "https://twitter.com/chromiumdev",
+      "http://www.petelepage.com"
+    ]
+  },
+  "tests": {},
+  "url":"https://www.google.com",
+  "urlkeys": {}
+}

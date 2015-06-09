@@ -1,0 +1,24 @@
+{
+  "rules": {
+    ".read": "auth !== null && auth.provider !== 'anonymous'",
+    ".write": "auth !== null && auth.provider !== 'anonymous'",
+    "tests": {
+      "psi": {
+        ".indexOn": "timestamp"
+      }
+    },
+    "urlkeys": {
+      ".indexOn": ".value",
+      ".read": "auth !== null",
+      ".write": "auth !== null && auth.provider !== 'anonymous'"
+    },
+    "url": {
+      ".read": "auth !== null",
+      ".write": "auth !== null && auth.provider !== 'anonymous'"
+    },
+    "currenturl": {
+      ".read": "auth !== null",
+      ".write": "auth !== null && auth.provider !== 'anonymous'"
+    }
+  }
+}
