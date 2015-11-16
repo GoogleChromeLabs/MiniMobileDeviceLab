@@ -67,6 +67,7 @@ static const CGFloat kAddressHeight = 22.0f;
     }
 
     NSString *fbURL = [NSString stringWithFormat:@"https://%@.firebaseio.com/url", fbAppName];
+    NSLog(@"%@", fbURL.uppercaseString);
 
     self.myRootRef = [[Firebase alloc] initWithUrl:fbURL];
     [self.myRootRef authAnonymouslyWithCompletionBlock:^(NSError *error, FAuthData *authData) {
@@ -74,22 +75,24 @@ static const CGFloat kAddressHeight = 22.0f;
             [self informError:error];
         } else {
             NSLog(@"Firebase authentication completed.");
+            
+            [self.myRootRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+                @try {
+                    self.strURL = snapshot.value;
+                    NSLog(@"** New URL: %@", self.strURL);
+                    [self loadRequestFromString:self.strURL];
+                }
+                @catch (NSException *ex) {
+                    NSLog(@"%@", ex.reason);
+                }
+            }];
         }
     }];
 }
 
+
 - (void)connectFirebase {
     NSLog(@"connectFirebase");
-    [self.myRootRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-         @try {
-             self.strURL = snapshot.value;
-             NSLog(@"** New URL: %@", self.strURL);
-             [self loadRequestFromString:self.strURL];
-         }
-         @catch (NSException *ex) {
-             NSLog(@"%@", ex.reason);
-         }
-     }];
 }
 
 - (void)disconnectFirebase {
