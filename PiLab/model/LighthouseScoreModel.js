@@ -37,21 +37,27 @@ LighthouseScoreModel.prototype.updateStatus = function(urlKey, url, cb) {
       }
     }
 
-    Promise.all([
-      this.performTests(url)
-    ]).then(function(arrayOfResults) {
-      console.log('LighthouseScoreModel: results = ', arrayOfResults);
-      /** var status = {
-        https: arrayOfResults[0],
-        webManifest: arrayOfResults[1].manifest,
-        themeColor: arrayOfResults[1].themeColor,
-        sw: arrayOfResults[1].sw
-      };
+    this.performTests(url)
+    .then(function(results) {
+      const fbFriendlyResults = {};
+      results.forEach(aggregateResult => {
+        const fbFriendlyResult = {
+          title: aggregateResult.name,
+          overallScore: aggregateResult.score.overall,
+          tests: {}
+        };
+
+        const subItems = aggregateResult.score.subItems;
+        subItems.forEach(subItem => {
+          fbFriendlyResult.tests[subItem.name] = subItem.value;
+        });
+        fbFriendlyResults[fbFriendlyResult.title] = fbFriendlyResult;
+      });
 
       urlsResults.update(
         {
           url: url,
-          results: status,
+          results: fbFriendlyResults,
           lastUpdate: Firebase.ServerValue.TIMESTAMP
         }
       );
@@ -60,7 +66,7 @@ LighthouseScoreModel.prototype.updateStatus = function(urlKey, url, cb) {
       historyRef.push(
         {
           url: url,
-          results: status,
+          results: results,
           timestamp: Firebase.ServerValue.TIMESTAMP
         }
       );
@@ -68,9 +74,9 @@ LighthouseScoreModel.prototype.updateStatus = function(urlKey, url, cb) {
       if (cb) {
         cb({
           url: url,
-          results: status
+          results: results
         });
-      }**/
+      }
     });
   }.bind(this));
 };
@@ -79,8 +85,9 @@ LighthouseScoreModel.prototype.performTests = function(url) {
   return lighthouse({
     url: url,
     flags: {}
-  }).then(results => {
-    console.log(results);
+  })
+  .catch(err => {
+    console.log('Lighthouse Error. Did you run `npm run startLighthouse` ? ', err);
   });
 };
 
