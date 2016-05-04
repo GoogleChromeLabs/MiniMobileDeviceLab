@@ -14,7 +14,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "startLighthouse": "./node_modules/lighthouse/launch-chrome.sh"
+    "startLighthouse": "export LIGHTHOUSE_CHROMIUM_PATH=$(which google-chrome-unstable) && ./node_modules/lighthouse/launch-chrome.sh"
   },
   "keywords": [
     "Raspberry",

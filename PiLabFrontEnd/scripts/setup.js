@@ -1,8 +1,6 @@
 'use strict';
 
-var template = document.querySelector('#tmpl');
-template.appbarTitle = 'PiLab Config';
-template.selected = 'section-device-config';
+var setupPanel = document.querySelector('setup-panel');
 
 Firebase.goOffline();
 
@@ -13,9 +11,8 @@ firebase.authWithCustomToken(window.PiLab.config.firebaseKey, function(error) {
   }
 });
 
-template.onConfigClick = function(event) {
-  var template = document.querySelector('#tmpl');
-  var deviceId = template.deviceId;
+setupPanel.onConfigClick = function(event) {
+  var deviceId = setupPanel.deviceId;
   if (!deviceId) {
     console.log('No device ID found.');
     return;
@@ -36,35 +33,20 @@ template.onConfigClick = function(event) {
   }
 
   setDisplayTypeUI(displayType);
-
 };
 
 var queryDict = {};
-template.disableBtns = true;
+setupPanel.disableBtns = true;
 location.hash.substr(1).split('&').forEach(function(item) {queryDict[item.split('=')[0]] = item.split('=')[1]});
-console.log(queryDict);
-if (queryDict && queryDict.deviceId) {
-  template.deviceId = queryDict.deviceId;
-  template.disableBtns = false;
+if (queryDict && queryDict.deviceId && queryDict.deviceId !== 'undefined') {
+  setupPanel.deviceId = queryDict.deviceId;
+  setupPanel.disableBtns = false;
 } else {
   console.error('Ooops, we really need a device ID here.');
 }
 
-var displayTypeId = queryDict.displayTypeId;
-template.addEventListener('template-bound', function() {
-  setDisplayTypeUI(displayTypeId);
-});
+setDisplayTypeUI(queryDict.displayTypeId);
 
 function setDisplayTypeUI(displayType) {
-  var currentSelectedButtons = document.querySelectorAll('.js-currently-selected');
-  for (var i = 0; i < currentSelectedButtons.length; i++) {
-    currentSelectedButtons[i].classList.remove('js-currently-selected');
-  }
-
-  var displayButton = document.querySelector('[data-display-type-id=\'' + displayType + '\']');
-  if (displayButton) {
-    displayButton.classList.add('js-currently-selected');
-  }
-
-  location.hash = 'deviceId=' + template.deviceId + '&displayTypeId=' + displayType;
+  location.hash = 'deviceId=' + setupPanel.deviceId + '&displayTypeId=' + displayType;
 }

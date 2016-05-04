@@ -1,0 +1,30 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+
+<polymer-element name="setup-panel">
+  <template>
+    <link rel="stylesheet" type="text/css" href="/styles/main.css">
+    <link rel="stylesheet" type="text/css" href="/styles/toolbar.css">
+
+    <div class="container" fit>
+      <p>Device ID: {{deviceId}}</p>
+
+      <div layout vertical>
+        <p><paper-button disabled="{{disableBtns}}" raised class="colorPrimary" on-tap="{{onConfigClick}}" data-display-type-id="default">Default</paper-button></p>
+
+        <p><paper-button disabled="{{disableBtns}}" raised class="colorPrimary" on-tap="{{onConfigClick}}" data-display-type-id="psi">PageSpeed</paper-button></p>
+
+        <p><paper-button disabled="{{disableBtns}}" raised class="colorPrimary" on-tap="{{onConfigClick}}" data-display-type-id="wpt">WebPageTest</paper-button></p>
+
+        <p><paper-button disabled="{{disableBtns}}" raised class="colorPrimary" on-tap="{{onConfigClick}}" data-display-type-id="lighthouse">lighthouse</paper-button></p>
+      </div>
+    </div>
+  </template>
+  <script type="text/javascript">
+    Polymer({
+      created: function() {
+        // NOOP
+      }
+    });
+  </script>
+</polymer-element>
