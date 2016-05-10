@@ -40,7 +40,7 @@ LighthouseScoreModel.prototype.updateStatus = function(urlKey, url, cb) {
     this.performTests(url)
     .then(function(results) {
       const fbFriendlyResults = {};
-      results.forEach(aggregateResult => {
+      results.aggregations.forEach(aggregateResult => {
         const fbFriendlyResult = {
           title: aggregateResult.name,
           overallScore: aggregateResult.score.overall,
@@ -82,10 +82,7 @@ LighthouseScoreModel.prototype.updateStatus = function(urlKey, url, cb) {
 };
 
 LighthouseScoreModel.prototype.performTests = function(url) {
-  return lighthouse({
-    url: url,
-    flags: {}
-  })
+  return lighthouse(url)
   .catch(err => {
     console.log('Lighthouse Error. Did you run `npm run startLighthouse` ? ', err);
   });
