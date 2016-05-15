@@ -29,27 +29,30 @@ static const CGFloat kLabelFontSize = 10.0f;
 static const CGFloat kAddressFontSize = 14.0f;
 static const CGFloat kAddressHeight = 22.0f;
 
-@interface ViewController () <UIWebViewDelegate>
-@property (strong, nonatomic) IBOutlet UIWebView *webView;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *butBack;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *butStop;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *butRefresh;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *butForward;
+
+@interface ViewController() <WKNavigationDelegate>
+
+- (IBAction)butBack:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *butBack;
+
+- (IBAction)butStop:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *butStop;
+
+- (IBAction)butReload:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *butReload;
+
+- (IBAction)butForward:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *butForward;
 
 @property (strong, nonatomic) UILabel *pageTitle;
 @property (strong, nonatomic) UITextField *addressField;
-
 @property (strong, nonatomic) NSString *strURL;
 
 - (void)loadRequestFromString:(NSString*)urlString;
 - (void)loadRequestFromAddressField:(id)addressField;
 
-- (void)updateTitle:(UIWebView*)aWebView;
-- (void)updateAddress:(NSURLRequest*)request;
 - (void)updateButtons;
-
 - (void)informError:(NSError*)error;
-
 - (void)initFirebase;
 - (void)connectFirebase;
 - (void)disconnectFirebase;
@@ -98,39 +101,50 @@ static const CGFloat kAddressHeight = 22.0f;
 - (void)disconnectFirebase {
     NSLog(@"disconnectFirebase");
     [self.myRootRef removeAllObservers];
-    
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    [self updateAddress:request];
-    //NSLog(@"shouldStartLoadWithRequest: %@", request.URL.absoluteString);
-    return YES;
-}
-
-- (void)webViewDidStartLoad:(UIWebView *)webView {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    [self updateButtons];
-}
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"WebKitCacheModelPreferenceKey"];
-    [self updateButtons];
-    [self updateTitle:webView];
-    [self updateAddress:[webView request]];
-}
-
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     if ([error code] == NSURLErrorCancelled) {
-        NSLog(@"didFailLoadWithError: (minor) %@", error.description);
+        NSLog(@"didFailNavigation: (minor) %@", error.description);
         return;
     }
-    NSLog(@"didFailLoadWithError: (MAJOR) %@", error.description);
-    [self.webView stopLoading];
+    NSLog(@"didiFailNavigation: (MAJOR) %@", error.description);
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     [self updateButtons];
     [self informError:error];
+}
+
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
+    if ([error code] == NSURLErrorCancelled) {
+        NSLog(@"didFailProvisionalNavigation: (minor) %@", error.description);
+        return;
+    }
+    NSLog(@"didFailProvisionalNavigation: (MAJOR) %@", error.description);
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    [self updateButtons];
+    [self informError:error];
+}
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    NSLog(@"didFinishNavigation");
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [self updateButtons];
+    self.pageTitle.text = _wkWebView.title;
+    self.addressField.text = [_wkWebView.URL absoluteString];
+}
+
+- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation {
+    NSLog(@"didReceiveServerRedirectForProvisionalNavigation");
+    self.addressField.text = [_wkWebView.URL absoluteString];
+}
+
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
+    NSLog(@"didStartProvisionalNavigation");
+    self.addressField.text = [_wkWebView.URL absoluteString];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    [self updateButtons];
 }
 
 - (void)viewDidLoad {
@@ -146,8 +160,10 @@ static const CGFloat kAddressHeight = 22.0f;
     [readyBody appendString:@"<h1>:P</h1><div>"];
     [readyBody appendString:@"goog-mtv-device-lab"];
     [readyBody appendString:@"</div></div></body></html>"];
-    [self.webView loadHTMLString:readyBody baseURL:nil];
-    
+    [_wkWebView loadHTMLString:readyBody baseURL:nil];
+    _wkWebView = [[WKWebView alloc] initWithFrame:self.view.frame];
+    [self.view addSubview:_wkWebView];
+  
     /* Create the page title label */
     UINavigationBar *navBar = self.navigationController.navigationBar;
     CGRect labelFrame = CGRectMake(kMargin, kSpacer, navBar.bounds.size.width - 2*kMargin, kLabelHeight);
@@ -172,7 +188,7 @@ static const CGFloat kAddressHeight = 22.0f;
       forControlEvents:UIControlEventEditingDidEndOnExit];
     [navBar addSubview:address];
     self.addressField = address;
-    self.webView.delegate = self;
+    _wkWebView.navigationDelegate = self;
     
     @try {
         [self initFirebase];
@@ -180,7 +196,6 @@ static const CGFloat kAddressHeight = 22.0f;
     @catch (NSException *ex) {
         NSLog(@"Firebase failed: %@", ex.reason);
     }
-
     
     UIApplication *thisApp = [UIApplication sharedApplication];
     thisApp.idleTimerDisabled = YES;
@@ -194,37 +209,20 @@ static const CGFloat kAddressHeight = 22.0f;
 }
 
 - (void)loadRequestFromString:(NSString*)urlString {
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
-    
     NSURL *url = [NSURL URLWithString:urlString];
     if (!url.scheme) {
         NSString *modifiedURL = [NSString stringWithFormat:@"http://%@", urlString];
         url = [NSURL URLWithString:modifiedURL];
     }
-    //NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
     NSURLRequestCachePolicy cachePol = NSURLRequestReloadIgnoringCacheData;
     NSTimeInterval reqTimeout = 60;
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url cachePolicy:cachePol timeoutInterval:reqTimeout];
-    if (self.webView.loading) {
-        [self.webView stopLoading];
-    }
-    [self.webView loadRequest:urlRequest];
+    [_wkWebView loadRequest:urlRequest];
 }
 
 - (void)loadRequestFromAddressField:(id)addressField {
     NSString *urlString = [addressField text];
     [self loadRequestFromString:urlString];
-}
-
-- (void)updateTitle:(UIWebView*)aWebView {
-    NSString* pageTitle = [aWebView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    self.pageTitle.text = pageTitle;
-}
-
-- (void)updateAddress:(NSURLRequest*)request {
-    NSURL *url = [request mainDocumentURL];
-    NSString *absoluteString = [url absoluteString];
-    self.addressField.text = absoluteString;
 }
 
 - (void)informError:(NSError *)error {
@@ -239,13 +237,33 @@ static const CGFloat kAddressHeight = 22.0f;
     [readyBody appendFormat:@"<code>%@</code>", error.localizedDescription];
     [readyBody appendFormat:@"<p><a href='%@'>%@</a></p>", self.strURL, self.strURL];
     [readyBody appendString:@"</div></body></html>"];
-    [self.webView loadHTMLString:readyBody baseURL:nil];
+    [self.wkWebView loadHTMLString:readyBody baseURL:nil];
 }
 
 - (void)updateButtons {
-    self.butForward.enabled = self.webView.canGoForward;
-    self.butBack.enabled = self.webView.canGoBack;
-    self.butStop.enabled = self.webView.loading;
+    self.butForward.enabled = _wkWebView.canGoForward;
+    self.butBack.enabled = _wkWebView.canGoBack;
+    self.butStop.enabled = _wkWebView.loading;
+}
+
+- (IBAction)butBack:(id)sender {
+    NSLog(@"butBack");
+    [_wkWebView goBack];
+}
+
+- (IBAction)butStop:(id)sender {
+    NSLog(@"butStop");
+    [_wkWebView stopLoading];
+}
+
+- (IBAction)butReload:(id)sender {
+    NSLog(@"butReload");
+    [_wkWebView reload];
+}
+
+- (IBAction)butForward:(id)sender {
+    NSLog(@"butForward");
+    [_wkWebView goForward];
 }
 
 @end
