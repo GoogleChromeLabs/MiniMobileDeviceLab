@@ -151,19 +151,6 @@ static const CGFloat kAddressHeight = 22.0f;
     [super viewDidLoad];
     NSLog(@"viewDidLoad");
     
-    NSMutableString *readyBody = [[NSMutableString alloc]init];
-    [readyBody appendString:@"<html><head>"];
-    [readyBody appendString:@"<meta name='viewport' content='width=device-width,initial-scale=1'>"];
-    [readyBody appendString:@"<style>body { font-family: Roboto, Helvetica; text-align: center; } "];
-    [readyBody appendString:@"h1 { font-size: 55vw; } "];
-    [readyBody appendString:@"</style><head><body><div>"];
-    [readyBody appendString:@"<h1>:P</h1><div>"];
-    [readyBody appendString:@"goog-mtv-device-lab"];
-    [readyBody appendString:@"</div></div></body></html>"];
-    [_wkWebView loadHTMLString:readyBody baseURL:nil];
-    _wkWebView = [[WKWebView alloc] initWithFrame:self.view.frame];
-    [self.view addSubview:_wkWebView];
-  
     /* Create the page title label */
     UINavigationBar *navBar = self.navigationController.navigationBar;
     CGRect labelFrame = CGRectMake(kMargin, kSpacer, navBar.bounds.size.width - 2*kMargin, kLabelHeight);
@@ -174,7 +161,7 @@ static const CGFloat kAddressHeight = 22.0f;
     label.textAlignment = NSTextAlignmentCenter;
     [navBar addSubview:label];
     self.pageTitle = label;
-
+    
     /* Create the address bar */
     CGRect addressFrame = CGRectMake(kMargin, kSpacer*2.0 + kLabelHeight, labelFrame.size.width, kAddressHeight);
     UITextField *address = [[UITextField alloc] initWithFrame:addressFrame];
@@ -188,7 +175,22 @@ static const CGFloat kAddressHeight = 22.0f;
       forControlEvents:UIControlEventEditingDidEndOnExit];
     [navBar addSubview:address];
     self.addressField = address;
+    
+    _wkWebView = [[WKWebView alloc] initWithFrame:self.view.frame];
+    NSMutableString *readyBody = [[NSMutableString alloc]init];
+    [readyBody appendString:@"<html><head>"];
+    [readyBody appendString:@"<meta name='viewport' content='width=device-width,initial-scale=1'>"];
+    [readyBody appendString:@"<style>body { font-family: Roboto, Helvetica; text-align: center; } "];
+    [readyBody appendString:@"h1 { font-size: 55vw; } "];
+    [readyBody appendString:@"</style><head><body><div>"];
+    [readyBody appendString:@"<h1>:P</h1><div>"];
+    [readyBody appendString:@"goog-mtv-device-lab"];
+    [readyBody appendString:@"</div></div></body></html>"];
+    [_wkWebView loadHTMLString:readyBody baseURL:nil];
     _wkWebView.navigationDelegate = self;
+    [self.view addSubview:_wkWebView];
+    NSString *myUA = @"Mozilla/5.0 (iPhone; CPU iPhone OS 9_3_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13E238 Safari/601.1";
+    _wkWebView.customUserAgent = myUA;
     
     @try {
         [self initFirebase];
