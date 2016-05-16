@@ -7,6 +7,9 @@ function CurrentURLModel(fb) {
   var firebase = fb;
   
   var currentUrl = null;
+  setInterval(function() {
+    firebase.child('ping').set(Date.now());
+  }, 750);
   firebase.child('url').on('value', function(snapshot) {
     var newUrl = snapshot.val();
     if (!newUrl) {
