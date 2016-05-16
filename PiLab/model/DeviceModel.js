@@ -1,6 +1,5 @@
 'use strict';
 
-var os = require('os');
 var BrowserIntentHelper = require('./../helper/BrowserIntentHelper.js');
 var KeepScreenOnIntentHelper = require(
   './../helper/KeepScreenOnIntentHelper.js');
@@ -22,14 +21,6 @@ function DeviceModel(fb, adb, id) {
   var urlKeyModel = new URLKeyModel(firebase);
   var currentUrlModel = new CurrentURLModel(firebase);
   var configModel = new ConfigModel(firebase);
-
-  this.getDeviceName = function() {
-    var deviceName = os.hostname();
-    if (deviceName.indexOf('.') >= 0) {
-      deviceName = deviceName.substring(0, deviceName.indexOf('.'));
-    }
-    return deviceName;
-  };
 
   this.getFirebase = function() {
     return firebase;
@@ -147,9 +138,6 @@ DeviceModel.prototype.updateDisplay = function() {
 
 DeviceModel.prototype.displayCurrentURL = function() {
   var url = this.getCurrentURLModel().getUrl();
-  var fbRoot = this.getFirebase();
-  var fbMonitor = fbRoot.child('monitor/' + this.getDeviceName());
-  fbMonitor.child('currentURL').set(url);
   var intentHandler = BrowserIntentHelper.getDeviceIntentHandler(url);
   this.launchIntent(intentHandler);
 };
