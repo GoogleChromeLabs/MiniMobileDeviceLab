@@ -1,6 +1,9 @@
 #!/bin/bash
 # server.sh - Starts the MMDL Server
 
+echo Getting latest bits...
+git pull
+
 echo Starting Mini Mobile Device Lab Server
 
 current_commit=$(git rev-list HEAD --max-count=1 | cut -c1-7)
