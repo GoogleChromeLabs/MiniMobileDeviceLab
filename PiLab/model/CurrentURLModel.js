@@ -7,22 +7,6 @@ function CurrentURLModel(fb) {
   var firebase = fb;
   
   var currentUrl = null;
-  setInterval(function() {
-    console.log('Sending ping: ', Date.now());
-    firebase.child('ping').set(Date.now());
-  }, 750);
-  firebase.child('url').on('value', function(snapshot) {
-    var newUrl = snapshot.val();
-    if (!newUrl) {
-      return;
-    }
-    firebase.child('monitor/' + this.getComputerName() + '/url').set(newUrl);
-    var emitUrlChange = currentUrl ? newUrl !== currentUrl : true;
-    currentUrl = newUrl;
-    if (emitUrlChange) {
-      this.emit('URLChange', currentUrl);
-    }
-  }.bind(this));
 
   this.getComputerName = function() {
     var computerName = os.hostname();
@@ -42,6 +26,23 @@ function CurrentURLModel(fb) {
 
     return currentUrl;
   };
+
+  setInterval(function() {
+    console.log('Sending ping: ', Date.now());
+    firebase.child('ping').set(Date.now());
+  }, 750);
+  firebase.child('url').on('value', function(snapshot) {
+    var newUrl = snapshot.val();
+    if (!newUrl) {
+      return;
+    }
+    firebase.child('monitor/' + this.getComputerName() + '/url').set(newUrl);
+    var emitUrlChange = currentUrl ? newUrl !== currentUrl : true;
+    currentUrl = newUrl;
+    if (emitUrlChange) {
+      this.emit('URLChange', currentUrl);
+    }
+  }.bind(this));
 }
 
 CurrentURLModel.prototype = events.EventEmitter.prototype;
