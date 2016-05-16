@@ -35,11 +35,13 @@ function ClientController() {
         firebase,
         deviceController.getAdbClient(),
         device.id);
+      fbMonitor.child('clients/' + device.id).set(true);
     });
     deviceController.on('DeviceRemoved', function(device) {
       if (wrappedDevices[device.id]) {
         wrappedDevices[device.id].disconnected();
       }
+      fbMonitor.child('clients/' + device.id).remove();
       wrappedDevices[device.id] = null;
     });
   }.bind(this));
