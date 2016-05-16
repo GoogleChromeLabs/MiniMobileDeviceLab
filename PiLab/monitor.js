@@ -30,7 +30,7 @@ setTimeout(function() {
   console.log('***** 12 minute reboot.');
   var cmd = 'sudo reboot';
   exec(cmd, function(error, stdout, stderr) {});
-}, 12 * 60 * 1000);
+}, 28 * 60 * 1000);
 
 function fbReady() {
   fbNode = fb.child('monitor/' + deviceName);

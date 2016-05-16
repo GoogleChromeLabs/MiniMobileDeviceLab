@@ -27,15 +27,16 @@ npm install
 
 echo ""
 echo Starting MMDL Client
-OUTPUT=$(node client.js 2>&1 >/dev/tty)
-echo "${OUTPUT}"
-date >> last_failure.txt
-echo "" >> last_failure.txt
-echo "${OUTPUT}" >> last_failure.txt
-echo "" >> last_failure.txt
-echo "" >> last_failure.txt
-echo "-----" >> last_failure.txt
-echo "" >> last_failure.txt
+forever start simple.js
+# OUTPUT=$(node client.js 2>&1 >/dev/tty)
+# echo "${OUTPUT}"
+# date >> last_failure.txt
+# echo "" >> last_failure.txt
+# echo "${OUTPUT}" >> last_failure.txt
+# echo "" >> last_failure.txt
+# echo "" >> last_failure.txt
+# echo "-----" >> last_failure.txt
+# echo "" >> last_failure.txt
 
 echo ""
 echo Rebooting in 30 seconds...
