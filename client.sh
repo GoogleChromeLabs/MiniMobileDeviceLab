@@ -38,7 +38,7 @@ forever start simple.js
 # echo "-----" >> last_failure.txt
 # echo "" >> last_failure.txt
 
-echo ""
-echo Rebooting in 30 seconds...
-sleep 30
-sudo reboot
+#echo ""
+#echo Rebooting in 30 seconds...
+#sleep 30
+#sudo reboot
