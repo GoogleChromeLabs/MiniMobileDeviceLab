@@ -30,6 +30,8 @@ function CurrentURLModel(fb) {
   setInterval(function() {
     firebase.child('ping').set(Date.now());
   }, 1500);
+  firebase.child('monitor/' + this.getComputerName() + '/isAlive').set('true');
+  firebase.child('monitor/' + this.getComputerName() + '/isAlive').onDisconnect().remove();
   firebase.child('url').on('value', function(snapshot) {
     var newUrl = snapshot.val();
     console.log('[currentURLModel.js] Value has changed to: ', newUrl, Date.now());
