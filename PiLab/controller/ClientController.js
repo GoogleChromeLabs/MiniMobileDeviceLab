@@ -42,7 +42,7 @@ function ClientController() {
         wrappedDevices[device.id].disconnected();
       }
       fbMonitor.child('clients/' + device.id).remove();
-      wrappedDevices[device.id] = null;
+      delete wrappedDevices[device.id];
     });
   }.bind(this));
 
