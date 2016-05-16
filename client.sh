@@ -1,7 +1,10 @@
 #!/bin/bash
 # client.sh - Starts the MMDL Client
 
-echo Starting Mini Mobile Device Lab Client in 5 seconds...
+echo Getting latest bits...
+git pull
+
+echo Starting Mini Mobile Device Lab Client
 
 current_commit=$(git rev-list HEAD --max-count=1 | cut -c1-7)
 echo ""
