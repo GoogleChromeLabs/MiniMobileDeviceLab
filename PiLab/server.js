@@ -30,6 +30,7 @@ firebase.authWithCustomToken(config.firebaseKey, function(err, authToken) {
         deviceName = deviceName.substring(0, deviceName.indexOf('.'));
       }
       var fbMonitor = firebase.child('monitor/' + deviceName);
+      fbMonitor.child('serverHeartbeart').set(Date.now());
       setInterval(function() {
         fbMonitor.child('serverHeartbeart').set(Date.now());
       }, 90 * 1000);
