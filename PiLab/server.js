@@ -1,5 +1,6 @@
 'use strict';
 
+var os = require('os');
 var ServerController = require('./controller/ServerController.js');
 var config = require('./config.json');
 var Firebase = require('firebase');
@@ -23,6 +24,15 @@ firebase.authWithCustomToken(config.firebaseKey, function(err, authToken) {
       });
 
       new ServerController();
+
+      var deviceName = os.hostname();
+      if (deviceName.indexOf('.') >= 0) {
+        deviceName = deviceName.substring(0, deviceName.indexOf('.'));
+      }
+      var fbMonitor = firebase.child('monitor/' + deviceName);
+      setInterval(function() {
+        fbMonitor.child('serverHeartbeart').set(Date.now());
+      }, 90 * 1000);
     }
   });
 });

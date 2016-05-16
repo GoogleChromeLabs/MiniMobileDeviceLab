@@ -1,5 +1,6 @@
 'use strict';
 
+var os = require('os');
 var DeviceController = require('./DeviceController.js');
 var DeviceModel = require('./../model/DeviceModel');
 
@@ -17,6 +18,15 @@ function ClientController() {
     if (err) {
       throw new Error(err);
     }
+
+    var deviceName = os.hostname();
+    if (deviceName.indexOf('.') >= 0) {
+      deviceName = deviceName.substring(0, deviceName.indexOf('.'));
+    }
+    var fbMonitor = firebase.child('monitor/' + deviceName);
+    setInterval(function() {
+      fbMonitor.child('clientHeartbeart').set(Date.now());
+    }, 90 * 1000);
 
     deviceController = new DeviceController();
     deviceController.on('DeviceAdded', function(device) {
