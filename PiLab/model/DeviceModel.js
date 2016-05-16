@@ -93,13 +93,17 @@ function DeviceModel(fb, adb, id) {
       this.updateDisplay();
     }.bind(this));
 
-    currentUrlModel.on('URLChange', function(url) {
-        this.updateDisplay();
-      }.bind(this));
-
-    configModel.on('GlobalModeChange', function() {
+    this._urlChangeListener = function(url) {
       this.updateDisplay();
-    }.bind(this));
+    }.bind(this);
+
+    this._globalModeChangeListener = function() {
+      this.updateDisplay();
+    }.bind(this);
+
+    currentUrlModel.on('URLChange', this._urlChangeListener);
+
+    configModel.on('GlobalModeChange', this._globalModeChangeListener);
   }.bind(this), 3000);
 }
 
@@ -350,26 +354,39 @@ DeviceModel.prototype.generateResultsUrl = function(data) {
 DeviceModel.prototype.launchIntent = function(intentHandler) {
   if (this.isDeviceBusy()) {
     // Busy - stash intent for later
-    console.log('launchIntent: Device is Busy()');
+    console.log('DeviceModel.launchIntent(): Device is Busy()');
     this.setPendingIntent(intentHandler);
     return;
   }
 
   this.setDeviceBusy(true);
 
-  console.log('launchIntent: About to fire intent');
+  console.log('DeviceModel.launchIntent(): About to fire intent');
   return intentHandler(this.getAdbClient(), this.getDeviceId())
     .then(function() {
-      console.log('launchIntent: Intent fired successfully');
+      console.log('DeviceModel.launchIntent(): Intent fired successfully');
       this.setDeviceBusy(false);
     }.bind(this)).catch(function(err) {
-      console.error('DeviceModel: Unable to fire intent', err);
+      console.error('DeviceModel.launchIntent(): Unable to fire intent', err);
       this.setDeviceBusy(false);
     }.bind(this));
 };
 
 DeviceModel.prototype.disconnected = function() {
   this.clearFirebaseRefs();
+
+  const currentUrlModel = this.getCurrentURLModel();
+  if (currentUrlModel) {
+    currentUrlModel.removeListener('URLChange', this._urlChangeListener);
+  }
+
+  const configModel = this.getConfigModel();
+  if (configModel) {
+    configModel.removeListener('GlobalModeChange', this._globalModeChangeListener);
+  }
+
+  this._urlChangeListener = null;
+  this._globalModeChangeListener = null;
 };
 
 DeviceModel.prototype.log = function(msg, arg) {
