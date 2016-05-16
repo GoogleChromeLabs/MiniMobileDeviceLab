@@ -1,0 +1,7 @@
+{
+  "uid": "PiLabMonitor",
+  "append": true,
+  "sourceDir": "/home/pi/MiniMobileDeviceLab/PiLab/",
+  "workingDir": "/home/pi/MiniMobileDeviceLab/PiLab/",
+  "script": "monitor.js"
+}
