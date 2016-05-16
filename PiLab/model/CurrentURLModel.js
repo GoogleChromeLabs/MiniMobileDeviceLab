@@ -28,9 +28,8 @@ function CurrentURLModel(fb) {
   };
 
   setInterval(function() {
-    console.log('Sending ping: ', Date.now());
     firebase.child('ping').set(Date.now());
-  }, 750);
+  }, 1500);
   firebase.child('url').on('value', function(snapshot) {
     var newUrl = snapshot.val();
     if (!newUrl) {
