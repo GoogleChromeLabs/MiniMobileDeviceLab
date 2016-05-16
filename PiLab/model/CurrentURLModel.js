@@ -8,6 +8,7 @@ function CurrentURLModel(fb) {
   
   var currentUrl = null;
   setInterval(function() {
+    console.log('Sending ping: ', Date.now());
     firebase.child('ping').set(Date.now());
   }, 750);
   firebase.child('url').on('value', function(snapshot) {
