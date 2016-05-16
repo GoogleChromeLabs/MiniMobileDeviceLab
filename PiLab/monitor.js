@@ -26,6 +26,12 @@ fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
   }
 });
 
+setTimeout(function() {
+  console.log('***** 12 minute reboot.');
+  var cmd = 'sudo reboot';
+  exec(cmd, function(error, stdout, stderr) {});
+}, 12 * 60 * 1000);
+
 function fbReady() {
   fbNode = fb.child('monitor/' + deviceName);
   fb.child('.info/connected').on('value', function(snapshot) {
