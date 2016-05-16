@@ -5,7 +5,7 @@ var events = require('events');
 
 function CurrentURLModel(fb) {
   var firebase = fb;
-  
+
   var currentUrl = null;
 
   this.getComputerName = function() {
@@ -32,6 +32,7 @@ function CurrentURLModel(fb) {
   }, 1500);
   firebase.child('url').on('value', function(snapshot) {
     var newUrl = snapshot.val();
+    console.log('[currentURLModel.js] Value has changed to: ', newUrl, Date.now());
     if (!newUrl) {
       return;
     }
