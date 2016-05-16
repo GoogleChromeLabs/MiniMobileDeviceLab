@@ -26,6 +26,7 @@ function ClientController() {
     var fbMonitor = firebase.child('monitor/' + deviceName);
     fbMonitor.child('clientHeartbeart').set(Date.now());
     setInterval(function() {
+      console.log('clientHeartbeart', Date.now());
       fbMonitor.child('clientHeartbeart').set(Date.now());
     }, 90 * 1000);
 
