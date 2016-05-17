@@ -5,7 +5,7 @@ var os = require('os');
 var Firebase = require('firebase');
 var exec = require('child_process').exec;
 
-var FORCED_REBOOT_TIMEOUT = 28;
+var FORCED_REBOOT_TIMEOUT = 58;
 
 var clientStartedAt = Date.now();
 var deviceName = os.hostname();
