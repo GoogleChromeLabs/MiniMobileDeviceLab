@@ -65,14 +65,11 @@ fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
       }
     });
     heartBeat();
-    fb.child(reportPath + 'heartBeat').onDisconnect().remove();
   }
 });
 
 function heartBeat() {
-  var dt = new Date().toLocaleString();
-  console.log('>> Heartbeat', dt);
-  fb.child(reportPath + 'heartBeat').set(dt);
+  console.log('>> Heartbeat', new Date().toLocaleString());
   setTimeout(heartBeat, HEARTBEAT_INTERVAL);
 }
 
