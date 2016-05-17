@@ -30,7 +30,7 @@ fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
 });
 
 setTimeout(function() {
-  var reason = 'Monitor forced reboot after' + FORCED_REBOOT_TIMEOUT;
+  var reason = '*MONITOR* forced reboot after' + FORCED_REBOOT_TIMEOUT;
   reason += ' minutes.';
   console.log('***** ' + FORCED_REBOOT_TIMEOUT + ' minute reboot.');
   var now = Date.now();
@@ -44,6 +44,7 @@ setTimeout(function() {
   };
   if (fb) {
     fb.child('clients/' + deviceName + '/rebootLog').push(log);
+    fb.child('clients/' + deviceName + '/rebooting').set(reason);
   }
   setTimeout(function() {
     var cmd = 'sudo reboot';
