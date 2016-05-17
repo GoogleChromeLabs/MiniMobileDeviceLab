@@ -8,8 +8,8 @@ var exec = require('child_process').exec;
 
 var HEARTBEAT_INTERVAL = 30 * 1000;
 var TIME_BETWEEN_UPDATES_INTERVAL = 3 * 1000;
-var MAX_TIME_BETWEEN_UPDATES = 120 * 1000;
-var VERSION = '20160517-0943';
+var MAX_TIME_BETWEEN_UPDATES = 120;
+var VERSION = '20160517-1000';
 
 var config = fs.readFileSync('config.json', 'utf8');
 config = JSON.parse(config);
@@ -43,6 +43,7 @@ fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
     fb.child(reportPath + 'clients').remove();
     fb.child(reportPath + 'rebooting').remove();
     fb.child(reportPath + 'rebootTime').remove();
+    fb.child(reportPath + 'timeSinceChange').set(0);
     fb.child('url').on('value', pushURL);
     fb.child(reportPath + 'reboot').on('value', function(snapshot) {
       if (snapshot.val() === true) {
@@ -77,10 +78,14 @@ function heartBeat() {
 }
 
 setInterval(function() {
-  var timeSinceChange = Date.now() - urlLastChanged;
+  var timeSinceChange = (Date.now() - urlLastChanged) / 1000;
   if (urlLastChanged !== 0 && timeSinceChange > MAX_TIME_BETWEEN_UPDATES) {
-    rebootPi('Timeout since last URL change exceeded');
+    var msg = 'URL Change Timeout: ' + timeSinceChange + 's';
+    rebootPi(msg);
+  } else {
+    fb.child(reportPath + 'timeSinceChange').set(timeSinceChange);
   }
+
 }, TIME_BETWEEN_UPDATES_INTERVAL);
 
 function getIntent(url) {
@@ -109,6 +114,7 @@ function pushURL(snapshot) {
   console.log('***', url, '(' + dt + ')');
   fb.child(reportPath + 'url').set(url);
   fb.child(reportPath + 'urlTime').set(dt);
+  fb.child(reportPath + 'timeSinceChange').set(0);
   var intent = getIntent(url);
   Object.keys(deviceIds).forEach(function(id) {
     console.log(' ->', id);
