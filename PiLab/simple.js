@@ -9,6 +9,7 @@ var config = fs.readFileSync('config.json', 'utf8');
 config = JSON.parse(config);
 
 var deviceIds = {};
+var urlLastChanged = 0;
 
 var fb = new Firebase(config.firebaseUrl);
 fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
@@ -17,6 +18,7 @@ fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
   } else {
     console.log('Auth success.');
     fb.child('url').on('value', function(snapshot) {
+      urlLastChanged = Date.now();
       pushURL(snapshot.val());
     });
     fb.child('.info/connected').on('value', function(snapshot) {
@@ -27,6 +29,14 @@ fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
     });
   }
 });
+
+setInterval(function() {
+  var timeSinceChange = Date.now() - urlLastChanged;
+  if (urlLastChanged !== 0 && timeSinceChange > 90000) {
+    console.log('Time Since Change Exceeded, rebooting!');
+    rebootPi();
+  }
+}, 3000);
 
 function getIntent(url) {
   var FLAG_ACTIVITY_NEW_TASK = 0x10000000;
