@@ -8,7 +8,7 @@ var exec = require('child_process').exec;
 
 var HEARTBEAT_INTERVAL = 60 * 1000;
 var TIME_BETWEEN_UPDATES_INTERVAL = 3 * 1000;
-var MAX_TIME_BETWEEN_UPDATES = 120;
+var MAX_TIME_BETWEEN_UPDATES = 75;
 var VERSION = '20160517-1153';
 
 var keepScreenOnIntent = {
