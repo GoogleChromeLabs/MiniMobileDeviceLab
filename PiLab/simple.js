@@ -1,9 +1,15 @@
 'use strict';
 
+var os = require('os');
 var fs = require('fs');
 var adb = require('adbkit');
 var Firebase = require('firebase');
 var exec = require('child_process').exec;
+
+var HEARTBEAT_INTERVAL = 30 * 1000;
+var TIME_BETWEEN_UPDATES_INTERVAL = 3 * 1000;
+var MAX_TIME_BETWEEN_UPDATES = 120 * 1000;
+var VERSION = '20160517-0943';
 
 var config = fs.readFileSync('config.json', 'utf8');
 config = JSON.parse(config);
@@ -11,30 +17,64 @@ config = JSON.parse(config);
 var deviceIds = {};
 var urlLastChanged = 0;
 
-console.log('MiniMobileDeviceLab vYeahHah1');
+var piName = os.hostname();
+if (piName.indexOf('.') >= 0) {
+  piName = piName.substring(0, piName.indexOf('.'));
+}
+var reportPath = 'client/' + piName + '/';
+
+console.log('MiniMobileDeviceLab');
+console.log(' version:', VERSION);
+console.log(' computerName:', piName);
+console.log(' started at:', new Date().toLocaleString());
+console.log('');
 
 var fb = new Firebase(config.firebaseUrl);
 fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
   if (error) {
-    console.error('Firebase Auth Error', error);
+    console.error('FB Authentication Failure', error);
     process.exit();
   } else {
-    console.log('Firebase Auth success.');
+    console.log('FB Authenticated');
+    fb.child(reportPath + 'startedAt').set(new Date().toLocaleString());
+    fb.child(reportPath + 'version').set(VERSION);
+    fb.child(reportPath + 'clients').remove();
+    fb.child(reportPath + 'rebooting').remove();
+    fb.child(reportPath + 'rebootTime').remove();
     fb.child('url').on('value', pushURL);
     fb.child('.info/connected').on('value', function(snapshot) {
-      if (snapshot.val() === false) {
+      if (snapshot.val() === true) {
+        console.log('FB Connected');
+        fb.child(reportPath + 'connectedAt').set(new Date().toLocaleString());
+        fb.child(reportPath + 'connectedAt').onDisconnect().remove();
+        fb.child(reportPath + 'alive').set(true);
+        fb.child(reportPath + 'alive').onDisconnect().set(false);
+        fb.child(reportPath + 'disconnectedAt').remove();
+        fb.child(reportPath + 'disconnectedAt')
+          .onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
+      } else if (snapshot.val() === false) {
         rebootPi('Firebase connection lost');
+        return;
       }
     });
+    heartBeat();
+    fb.child(reportPath + 'heartBeat').onDisconnect().remove();
   }
 });
 
+function heartBeat() {
+  var dt = new Date().toLocaleString();
+  console.log('>> Heartbeat', dt);
+  fb.child(reportPath + 'heartBeat').set(dt);
+  setTimeout(heartBeat, HEARTBEAT_INTERVAL);
+}
+
 setInterval(function() {
   var timeSinceChange = Date.now() - urlLastChanged;
-  if (urlLastChanged !== 0 && timeSinceChange > 90000) {
+  if (urlLastChanged !== 0 && timeSinceChange > MAX_TIME_BETWEEN_UPDATES) {
     rebootPi('Timeout since last URL change exceeded');
   }
-}, 3000);
+}, TIME_BETWEEN_UPDATES_INTERVAL);
 
 function getIntent(url) {
   var FLAG_ACTIVITY_NEW_TASK = 0x10000000;
@@ -58,7 +98,10 @@ function getIntent(url) {
 function pushURL(snapshot) {
   var url = snapshot.val();
   urlLastChanged = Date.now();
-  console.log('*** New URL', url);
+  var dt = new Date().toLocaleString();
+  console.log('***', url, '(' + dt + ')');
+  fb.child(reportPath + 'url').set(url);
+  fb.child(reportPath + 'urlTime').set(dt);
   var intent = getIntent(url);
   Object.keys(deviceIds).forEach(function(id) {
     console.log(' ->', id);
@@ -66,27 +109,32 @@ function pushURL(snapshot) {
   });
 }
 
-function rebootPi(sender, extra) {
-  console.log('*-*-*-* REBOOT!', sender, extra);
+function rebootPi(sender) {
+  console.log('*-*-*-* REBOOT!', sender);
+  fb.child(reportPath + 'rebooting').set(sender);
+  fb.child(reportPath + 'rebootTime').set(new Date().toLocaleString());
   var cmd = 'sudo reboot';
   exec(cmd, function(error, stdout, stderr) {});
 }
 
 function addDevice(id) {
-  console.log('*** New Device', id);
+  console.log('+', id);
   adbClient.startActivity(id, getIntent('https://www.google.com/'));
   deviceIds[id] = true;
+  fb.child(reportPath + 'clients/' + id).set(true);
 }
 
 function removeDevice(id) {
-  console.log('*** Remove Device', id);
+  console.log('-', id);
   delete deviceIds[id];
+  fb.child(reportPath + 'clients/' + id).remove();
 }
 
 var adbClient = adb.createClient();
 adbClient.trackDevices(function(err, tracker) {
   if (err) {
-    rebootPi('ADB Client error', err);
+    console.log('*-*-*-* ADB Client Error', err);
+    rebootPi('ADB Client error');
     return;
   }
   tracker.on('add', function(device) {
