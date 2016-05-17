@@ -69,7 +69,8 @@ fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
         fb.child(reportPath + 'disconnectedAt')
           .onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
       } else if (snapshot.val() === false) {
-        rebootPi('Firebase connection lost');
+        process.exit();
+        //rebootPi('Firebase connection lost');
         return;
       }
     });
@@ -86,7 +87,8 @@ setInterval(function() {
   var timeSinceChange = (Date.now() - urlLastChanged) / 1000;
   if (urlLastChanged !== 0 && timeSinceChange > MAX_TIME_BETWEEN_UPDATES) {
     var msg = 'URL Change Timeout: ' + timeSinceChange + 's';
-    rebootPi(msg);
+    process.exit();
+    //rebootPi(msg);
   } else {
     fb.child(reportPath + 'timeSinceChange').set(timeSinceChange);
   }
