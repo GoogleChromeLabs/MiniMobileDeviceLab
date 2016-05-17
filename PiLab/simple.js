@@ -42,7 +42,6 @@ fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
     fb.child(reportPath + 'reboot').onDisconnect().remove();
     fb.child(reportPath + 'clients').remove();
     fb.child(reportPath + 'rebooting').remove();
-    fb.child(reportPath + 'rebootTime').remove();
     fb.child(reportPath + 'timeSinceChange').set(0);
     fb.child('url').on('value', pushURL);
     fb.child(reportPath + 'reboot').on('value', function(snapshot) {
@@ -124,8 +123,15 @@ function pushURL(snapshot) {
 
 function rebootPi(sender) {
   console.log('*-*-*-* REBOOT!', sender);
+  var now = Date.now();
+  var dt = new Date().toLocaleString()
+  var log = {
+    date: now,
+    dt: dt,
+    reason: sender
+  };
+  fb.child(reportPath + 'rebootLog').push(log);
   fb.child(reportPath + 'rebooting').set(sender);
-  fb.child(reportPath + 'rebootTime').set(new Date().toLocaleString());
   var cmd = 'sudo reboot';
   exec(cmd, function(error, stdout, stderr) {});
 }
