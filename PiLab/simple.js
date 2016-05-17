@@ -21,7 +21,7 @@ var piName = os.hostname();
 if (piName.indexOf('.') >= 0) {
   piName = piName.substring(0, piName.indexOf('.'));
 }
-var reportPath = 'client/' + piName + '/';
+var reportPath = 'clients/' + piName + '/';
 
 console.log('MiniMobileDeviceLab');
 console.log(' version:', VERSION);
@@ -38,10 +38,17 @@ fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
     console.log('FB Authenticated');
     fb.child(reportPath + 'startedAt').set(new Date().toLocaleString());
     fb.child(reportPath + 'version').set(VERSION);
+    fb.child(reportPath + 'reboot').set(false);
+    fb.child(reportPath + 'reboot').onDisconnect().remove();
     fb.child(reportPath + 'clients').remove();
     fb.child(reportPath + 'rebooting').remove();
     fb.child(reportPath + 'rebootTime').remove();
     fb.child('url').on('value', pushURL);
+    fb.child(reportPath + 'reboot').on('value', function(snapshot) {
+      if (snapshot.val() === true) {
+        rebootPi('Remote reboot requested.');
+      }
+    });
     fb.child('.info/connected').on('value', function(snapshot) {
       if (snapshot.val() === true) {
         console.log('FB Connected');
