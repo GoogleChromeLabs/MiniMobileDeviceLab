@@ -4,6 +4,9 @@
 echo Getting latest bits...
 git pull
 
+echo "Copying login.sh file to root..."
+cp login.sh ~/
+
 echo Starting Mini Mobile Device Lab Client
 
 current_commit=$(git rev-list HEAD --max-count=1 | cut -c1-7)
