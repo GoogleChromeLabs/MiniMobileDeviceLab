@@ -5,6 +5,9 @@ var os = require('os');
 var Firebase = require('firebase');
 var exec = require('child_process').exec;
 
+var FORCED_REBOOT_TIMEOUT = 28;
+
+var clientStartedAt = Date.now();
 var deviceName = os.hostname();
 if (deviceName.indexOf('.') >= 0) {
   deviceName = deviceName.substring(0, deviceName.indexOf('.'));
@@ -27,10 +30,26 @@ fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
 });
 
 setTimeout(function() {
-  console.log('***** 12 minute reboot.');
-  var cmd = 'sudo reboot';
-  exec(cmd, function(error, stdout, stderr) {});
-}, 28 * 60 * 1000);
+  var reason = 'Monitor forced reboot after' + FORCED_REBOOT_TIMEOUT;
+  reason += ' minutes.';
+  console.log('***** ' + FORCED_REBOOT_TIMEOUT + ' minute reboot.');
+  var now = Date.now();
+  var dt = new Date().toLocaleString();
+  var ranFor = (Date.now() - clientStartedAt) / 1000;
+  var log = {
+    date: now,
+    dt: dt,
+    ranFor: ranFor,
+    reason: reason
+  };
+  if (fb) {
+    fb.child('clients/' + deviceName + '/rebootLog').push(log);
+  }
+  setTimeout(function() {
+    var cmd = 'sudo reboot';
+    exec(cmd, function(error, stdout, stderr) {});
+  }, 500);
+}, FORCED_REBOOT_TIMEOUT * 60 * 1000);
 
 function fbReady() {
   fbNode = fb.child('monitor/' + deviceName);
