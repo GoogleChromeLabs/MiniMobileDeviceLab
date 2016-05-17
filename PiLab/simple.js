@@ -9,12 +9,19 @@ var exec = require('child_process').exec;
 var HEARTBEAT_INTERVAL = 60 * 1000;
 var TIME_BETWEEN_UPDATES_INTERVAL = 3 * 1000;
 var MAX_TIME_BETWEEN_UPDATES = 120;
-var VERSION = '20160517-1017';
+var VERSION = '20160517-1153';
+
+var keepScreenOnIntent = {
+  'wait': true,
+  'action': 'android.intent.category.LAUNCHER',
+  'component': 'com.synetics.stay.alive/.main'
+};
 
 var config = fs.readFileSync('config.json', 'utf8');
 config = JSON.parse(config);
 
 var deviceIds = {};
+var url = 'https://www.google.com';
 var urlLastChanged = 0;
 
 var piName = os.hostname();
@@ -86,7 +93,7 @@ setInterval(function() {
 
 }, TIME_BETWEEN_UPDATES_INTERVAL);
 
-function getIntent(url) {
+function getBrowseIntent(url) {
   var FLAG_ACTIVITY_NEW_TASK = 0x10000000;
   var intent = {
     'component': 'com.android.chrome/com.google.android.apps.chrome.Main',
@@ -106,15 +113,15 @@ function getIntent(url) {
 }
 
 function pushURL(snapshot) {
-  var url = snapshot.val();
+  url = snapshot.val();
   urlLastChanged = Date.now();
   var dt = new Date().toLocaleString();
-  var keys = Object.keys(deviceIds)
+  var keys = Object.keys(deviceIds);
   console.log('***', url, '[' + keys.length + ']', '(' + dt + ')');
   fb.child(reportPath + 'url').set(url);
   fb.child(reportPath + 'urlTime').set(dt);
   fb.child(reportPath + 'timeSinceChange').set(0);
-  var intent = getIntent(url);
+  var intent = getBrowseIntent(url);
   keys.forEach(function(id) {
     console.log(' ->', id);
     adbClient.startActivity(id, intent, function(err) {
@@ -144,7 +151,12 @@ function rebootPi(sender) {
 
 function addDevice(id) {
   console.log('+', id);
-  adbClient.startActivity(id, getIntent('https://www.google.com/'));
+  adbClient.startActivity(id, keepScreenOnIntent, function(err) {
+    if (err) {
+      console.log(' +', id, 'Unable to start KeepScreenOn');
+    }
+    adbClient.startActivity(id, getBrowseIntent(url));
+  });
   deviceIds[id] = true;
   fb.child(reportPath + 'clients/' + id).set(true);
 }
