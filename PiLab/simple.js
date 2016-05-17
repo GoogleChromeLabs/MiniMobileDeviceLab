@@ -116,7 +116,11 @@ function pushURL(snapshot) {
   var intent = getIntent(url);
   Object.keys(deviceIds).forEach(function(id) {
     console.log(' ->', id);
-    adbClient.startActivity(id, intent);
+    adbClient.startActivity(id, intent, function(err) {
+      if (err) {
+        console.log('  -> error:', err);
+      }
+    });
   });
 }
 
