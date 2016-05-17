@@ -109,16 +109,17 @@ function pushURL(snapshot) {
   var url = snapshot.val();
   urlLastChanged = Date.now();
   var dt = new Date().toLocaleString();
-  console.log('***', url, '(' + dt + ')');
+  var keys = Object.keys(deviceIds)
+  console.log('***', url, '[' + keys.length + ']', '(' + dt + ')');
   fb.child(reportPath + 'url').set(url);
   fb.child(reportPath + 'urlTime').set(dt);
   fb.child(reportPath + 'timeSinceChange').set(0);
   var intent = getIntent(url);
-  Object.keys(deviceIds).forEach(function(id) {
+  keys.forEach(function(id) {
     console.log(' ->', id);
     adbClient.startActivity(id, intent, function(err) {
       if (err) {
-        console.log('  -> error:', err);
+        console.log('  -> error', id, err);
       }
     });
   });
