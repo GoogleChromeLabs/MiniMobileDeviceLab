@@ -54,16 +54,15 @@ setTimeout(function() {
 
 function fbReady() {
   fbNode = fb.child('monitor/' + deviceName);
+  heartbeat();
+  fbNode.child('reboot').set(false);
   fb.child('.info/connected').on('value', function(snapshot) {
     if (snapshot.val() === true) {
       console.log('Connected.');
-      fbNode.child('alive').set(true);
+      heartbeat();
       fbNode.child('alive').onDisconnect().set(false);
-      fbNode.child('reboot').set(false);
       fbNode.child('reboot').onDisconnect().remove();
-      fbNode.child('heartbeat').set(Date.now());
       fbNode.child('heartbeat').onDisconnect().remove();
-      fbNode.child('offlineAt').remove();
       fbNode.child('offlineAt')
         .onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
     } else {
@@ -75,7 +74,9 @@ function fbReady() {
 }
 
 function heartbeat() {
-  fbNode.child('heartbeat').set(Date.now());
+  fbNode.child('alive').set(true);
+  fbNode.child('offlineAt').remove();
+  fbNode.child('heartbeat').set(new Date().toLocaleString());
 }
 
 function rebootRequest(snapshot) {
