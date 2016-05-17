@@ -6,10 +6,10 @@ var adb = require('adbkit');
 var Firebase = require('firebase');
 var exec = require('child_process').exec;
 
-var HEARTBEAT_INTERVAL = 30 * 1000;
+var HEARTBEAT_INTERVAL = 60 * 1000;
 var TIME_BETWEEN_UPDATES_INTERVAL = 3 * 1000;
 var MAX_TIME_BETWEEN_UPDATES = 120;
-var VERSION = '20160517-1007';
+var VERSION = '20160517-1017';
 
 var config = fs.readFileSync('config.json', 'utf8');
 config = JSON.parse(config);
@@ -22,6 +22,8 @@ if (piName.indexOf('.') >= 0) {
   piName = piName.substring(0, piName.indexOf('.'));
 }
 var reportPath = 'clients/' + piName + '/';
+
+var clientStartedAt = Date.now();
 
 console.log('MiniMobileDeviceLab');
 console.log(' version:', VERSION);
@@ -121,10 +123,12 @@ function pushURL(snapshot) {
 function rebootPi(sender) {
   console.log('*-*-*-* REBOOT!', sender);
   var now = Date.now();
-  var dt = new Date().toLocaleString()
+  var dt = new Date().toLocaleString();
+  var ranFor = (Date.now() - clientStartedAt) / 1000;
   var log = {
     date: now,
     dt: dt,
+    ranFor: ranFor,
     reason: sender
   };
   fb.child(reportPath + 'rebootLog').push(log);
