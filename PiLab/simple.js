@@ -11,6 +11,8 @@ config = JSON.parse(config);
 var deviceIds = {};
 var urlLastChanged = 0;
 
+console.log('MiniMobileDeviceLab vYeahHah1');
+
 var fb = new Firebase(config.firebaseUrl);
 fb.authWithCustomToken(config.firebaseKey, function(error, authToken) {
   if (error) {
