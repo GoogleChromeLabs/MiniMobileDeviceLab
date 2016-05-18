@@ -55,7 +55,6 @@ setTimeout(function() {
 function fbReady() {
   fbNode = fb.child('monitor/' + deviceName);
   heartbeat();
-  fbNode.child('reboot').set(false);
   fb.child('.info/connected').on('value', function(snapshot) {
     if (snapshot.val() === true) {
       console.log('Connected.');
@@ -75,6 +74,7 @@ function fbReady() {
 
 function heartbeat() {
   fbNode.child('alive').set(true);
+  fbNode.child('reboot').set(false);
   fbNode.child('offlineAt').remove();
   fbNode.child('heartbeat').set(new Date().toLocaleString());
 }
