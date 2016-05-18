@@ -30,4 +30,5 @@ node simple.js
 echo ""
 echo Restarting simple in 5 seconds
 sleep 5
+cd ..
 ./client.sh
