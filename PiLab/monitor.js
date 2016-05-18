@@ -54,7 +54,8 @@ setTimeout(function() {
 
 function fbReady() {
   fbNode = fb.child('monitor/' + deviceName);
-  fbNode.child('version').set('1814');
+  fbNode.child('version').set('0917');
+  fbNode.child('startedAt').set(new Date().toLocaleString());
   heartbeat();
   fb.child('.info/connected').on('value', function(snapshot) {
     if (snapshot.val() === true) {

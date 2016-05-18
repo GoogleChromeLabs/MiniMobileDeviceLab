@@ -28,7 +28,6 @@ echo Starting MMDL Client
 node simple.js
 
 echo ""
-echo Restarting simple in 5 seconds
+echo Rebooting simple in 5 seconds
 sleep 5
-cd ..
-./client.sh
+sudo reboot
