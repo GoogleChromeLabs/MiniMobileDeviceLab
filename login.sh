@@ -2,6 +2,6 @@
 # login.sh - Starts the MMDL Client
 
 cd /home/pi/MiniMobileDeviceLab
-echo "Starting MiniMobileDeviceLab in 2 seconds..."
-sleep 2
+echo "Starting MiniMobileDeviceLab in 7 seconds..."
+sleep 7
 ./client.sh
