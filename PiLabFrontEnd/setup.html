@@ -1,60 +1,35 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
+<head>
+  <title>MMDL</title>
+  <link rel="manifest" href="manifest-admin.json">
+  <meta name="theme-color" content="#2196f3">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <script src="/bower_components/webcomponentsjs/webcomponents.js"></script>
+  <link rel="import" href="/bower_components/font-roboto/roboto.html">
+  <link rel="import" href="/bower_components/core-animated-pages/core-animated-pages.html">
+  <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+  <link rel="import" href="/elements/error-toast.html">
+  <link rel="import" href="/elements/setup-panel.html">
+  <link rel="stylesheet" type="text/css" href="/styles/main.css">
+  <link rel="icon" sizes="96x96" href="/images/dev_lab_logo_96.png">
+  <link rel="icon" sizes="48x48" href="/images/dev_lab_logo_48.png">
+</head>
 
-        <title>Mini Mobile Device Lab</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<body unresolved fullbleed layout vertical>
 
-        <link rel="import" href="elements.html">
-        <link rel="stylesheet" href="styles/app.css">
+  <setup-panel></setup-panel>
 
-        <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    </head>
-    <body fullbleed layout vertical>
+  <paper-toast id="toast"></paper-toast>
+  <error-toast id="errorToast" role="error">
+  </error-toast>
 
-      <template is="auto-binding" id="tmpl">
-        <core-drawer-panel id="drawerPanel">
-          <core-header-panel drawer>
-            <core-toolbar>Menu</core-toolbar>
-            <core-menu selected="{{selected}}" valueattr="data-section-name">
-              <core-item label="Device Config" data-section-name="section-device-config"></core-item>
-            </core-menu>
-          </core-header-panel>
 
-          <core-header-panel main>
-            <core-toolbar>
-              <core-icon-button id="navIcon" icon="menu" on-tap="{{menuAction}}"></core-icon-button>
-              <div flex>{{appbarTitle}}</div>
-            </core-toolbar>
+  <script src="/bower_components/moment/moment.js"></script>
+  <script src="/bower_components/firebase/firebase.js"></script>
+  <script src="/config.js"></script>
+  <script src="/scripts/setup.js"></script>
 
-            <core-pages selected="{{selected}}" on-core-select="{{onPageSelectionChange}}" class="content js-core-pages" valueattr="data-section-name">
 
-              <!-- Controls Section -->
-              <section data-section-name="section-device-config">
-                <p>Device ID: {{deviceId}}</p>
-                
-                <div layout vertical>
-                  <p><paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="default">Default</paper-button></p>
-
-                  <p><paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="psi">PageSpeed</paper-button></p>
-                  
-                  <p><paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="wpt">WebPageTest</paper-button></p>
-
-                  <p><paper-button disabled="{{disableBtns}}" raised="" class="colored" on-tap="{{onConfigClick}}" data-display-type-id="owp">OWP</paper-button></p>
-                </div>
-
-                <paper-toast class="js-toast"></paper-toast>
-              </section>
-            </core-pages>
-
-          </core-header-panel>
-        </core-drawer-panel>
-      </template>
-      
-      <script src="config.js" type="text/javascript"></script>
-      <script src="/bower_components/firebase/firebase.js"></script>
-      <script src="scripts/drawer-panel.js" type="text/javascript" ></script>
-      <script src="scripts/setup.js" type="text/javascript"></script>
-    </body>
+</body>
 </html>

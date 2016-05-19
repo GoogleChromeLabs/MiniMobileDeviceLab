@@ -44,7 +44,10 @@ function TestDeviceModel(deviceId, adb) {
   setTimeout(function() {
     var keepScreenOnIntent = KeepScreenOnIntentHelper.
       getKeepScreenOnIntent();
-    adbClient.startActivity(deviceId, keepScreenOnIntent);
+    adbClient.startActivity(deviceId, keepScreenOnIntent)
+    .catch(function(err) {
+      console.log('WARN: Unable to start stay alive app on server device.');
+    });
 
     setTimeout(function() {
       var intent = BrowserIntentHelper.buildChromeIntent();
@@ -145,7 +148,7 @@ TestDeviceModel.prototype.performTests = function(url) {
     this.setPromiseCallbacks(resolve, reject);
 
     chrome.Page.navigate({'url': url});
-    
+
   }.bind(this));
 };
 

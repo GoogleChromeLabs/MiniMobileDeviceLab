@@ -3,11 +3,9 @@
 var URLKeyModel = require('./../model/URLKeyModel');
 var ConfigModel = require('./../model/ConfigModel');
 var CurrentURLModel = require('./../model/CurrentURLModel.js');
-var TestDeviceModel = require('./../model/TestDeviceModel.js');
 var PageSpeedModel = require('./../model/PageSpeedModel');
 var WebPageTestModel = require('./../model/WebPageTestModel');
-var DeviceController = require('./DeviceController.js');
-var OWPModel = require('./../model/OWPModel');
+var LighthouseScoreModel = require('./../model/LighthouseScoreModel');
 var chalk = require('chalk');
 
 function TestController(fb) {
@@ -17,17 +15,14 @@ function TestController(fb) {
   var currentUrlModel;
   var pageSpeedModel;
   var webPageTestModel;
-  var owpModel;
-  var deviceController;
-  var testDevice;
+  var lighthouseScoreModel;
 
   urlKeyModel = new URLKeyModel(firebase);
   configModel = new ConfigModel(firebase);
   currentUrlModel = new CurrentURLModel(firebase);
   pageSpeedModel = new PageSpeedModel(firebase, configModel);
   webPageTestModel = new WebPageTestModel(firebase, configModel);
-  owpModel = new OWPModel(firebase);
-  deviceController = new DeviceController();
+  lighthouseScoreModel = new LighthouseScoreModel(firebase);
 
   this.getFirebase = function() {
     return firebase;
@@ -45,45 +40,13 @@ function TestController(fb) {
     return webPageTestModel;
   };
 
-  this.getOWPModel = function() {
-    return owpModel;
+  this.getLighthouseScoreModel = function() {
+    return lighthouseScoreModel;
   };
 
   this.getCurrentURLModel = function() {
     return currentUrlModel;
   };
-
-  this.setUpTestDevice = function() {
-    if (testDevice) {
-      // Already got one
-      return;
-    }
-
-    var deviceIds = deviceController.getDeviceIds();
-    if (deviceIds.length === 0) {
-      return;
-    }
-
-    testDevice = new TestDeviceModel(deviceIds[0], deviceController.getAdbClient());
-  };
-
-  this.getTestDevice = function() {
-    return testDevice;
-  };
-
-  deviceController.on('DeviceAdded', function(device) {
-    setTimeout(function() {
-      this.setUpTestDevice();
-    }.bind(this), 2000);
-  }.bind(this));
-
-  deviceController.on('DeviceRemoved', function(device) {
-    if (testDevice) {
-      testDevice.cancelTest();
-    }
-    testDevice = null;
-    this.setUpTestDevice();
-  }.bind(this));
 }
 
 TestController.prototype.performTests = function(url) {
@@ -105,8 +68,8 @@ TestController.prototype.performTests = function(url) {
     var webPageTestModel = this.getWebPageTestModel();
     webPageTestModel.updateTests(urlKey, url);
 
-    var owpModel = this.getOWPModel();
-    owpModel.updateStatus(urlKey, url, this.getTestDevice());
+    var lighthouseScoreModel = this.getLighthouseScoreModel();
+    lighthouseScoreModel.updateStatus(urlKey, url);
   }.bind(this));
 };
 

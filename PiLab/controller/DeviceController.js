@@ -6,7 +6,7 @@ var events = require('events');
 
 function DeviceController() {
   var deviceIds = [];
-  
+
   var adbClient = adb.createClient();
   adbClient.trackDevices(function(err, tracker) {
     if (err) {

@@ -3,16 +3,18 @@
   "version": "0.0.1",
   "description": "A device which controls up to 10 devices per Raspberry Pi",
   "dependencies": {
-    "adbkit": "^2.2.0",
+    "adbkit": "^2.4.1",
     "chalk": "^1.0.0",
     "chrome-remote-interface": "^0.7.0",
-    "firebase": "^2.2.3",
+    "firebase": "^2.4.2",
+    "lighthouse": "^1.0.1",
     "mkdirp": "^0.5.0",
     "regex-theme-color": "^0.1.1"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "startLighthouse": "./lighthouseChromeStart.sh"
   },
   "keywords": [
     "Raspberry",

@@ -2,7 +2,7 @@
 
 The Mini Mobile Device Lab (MMDL) is a framework to help developers test pages
 across multiple devices, including phones, tablets, Desktops, etc. It works with
-Android, iOS, Windows (including phone, RT and desktop), and Chrome OS. 
+Android, iOS, Windows (including phone, RT and desktop), and Chrome OS.
 
 When a A URL is pushed, the devices will simultaneously open the page, allowing
 you to see how the page looks across each device. In addition, it will also run
@@ -18,10 +18,10 @@ which acts as the back end, syncing URLs out to all of the connected devices.
 
 **Android:** The Node client app running on a Raspberry Pi (or other computer)
 listens for new URLs and uses ADB to fire a browse intent, opening the URL on
-the device. 
+the device.
 
 **iOS & Windows:** A native app receives URLs from Firebase and opens them in a
-WebView. 
+WebView.
 
 **ChromeOS or Chrome Desktop:** A Chrome Extension listens for new URLs sent
 from Firebase and opens a new tab or uses the existing tab to display the
@@ -56,12 +56,13 @@ the looper or test pages, you can skip this section.
  **PreRequisites:** Node (0.12.x), ADB
 
 1. Clone the repo to a local directory
-1. In the `PiLab` folder, run `npm install` 
+1. In the `PiLab` folder, run `npm install`
 1. Copy [`config.sample.json`](https://github.com/GoogleChrome/MiniMobileDeviceLab/blob/master/PiLab/config.sample.json) to `config.json`.
 1. Fill in the attributes of `config.json` accordingly.
     1. `firebaseUrl` is the URL for your Firebase project.
     1. `firebaseKey` is the api key for that Firebase project.
     1. `frontEndUrl` is the URL for where you've hosted the **PiLabFrontEnd**.
+1. Start a browser for the Lighthouse tests with `npm run startLighthouse`.
 1. Start the server with `node server.js`.
 1. Plug a single Android device into this computer, it will be used for testing
 the open web features.
@@ -74,7 +75,7 @@ the open web features.
 1. Follow the same step as required to set up the server, but instead, start the
 client with `node client.js`
 1. On each Android device, enable **Developer Mode**
-1. Under **Developer Options**: 
+1. Under **Developer Options**:
     1. Enable **USB Debugging**
     1. Enable **Stay awake**
 1. Install [Stay Alive!](https://play.google.com/store/apps/details?id=com.synetics.stay.alive)
@@ -157,7 +158,7 @@ echo Starting PiLab in 5 seconds
 sleep 5
 ./client.sh
 ```
-9. Make the `~/login.sh` file executable by running `chmod +x ~/login.sh` 
+9. Make the `~/login.sh` file executable by running `chmod +x ~/login.sh`
 10. Reboot the Pi, and it should automatically log in and start the client app.
 
 

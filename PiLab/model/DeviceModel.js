@@ -131,8 +131,8 @@ DeviceModel.prototype.updateDisplay = function() {
     case 'wpt':
       this.displayWPTResults();
       break;
-    case 'owp':
-      this.displayOWPResults();
+    case 'lighthouse':
+      this.displayLighthouseResults();
       break;
     default:
       this.displayCurrentURL();
@@ -154,8 +154,8 @@ DeviceModel.prototype.displayPSIResults = function() {
   this.displayResultsUI('psi', this.generatePSIUrl.bind(this));
 };
 
-DeviceModel.prototype.displayOWPResults = function() {
-  this.displayResultsUI('owp', this.generateOWPUrl.bind(this));
+DeviceModel.prototype.displayLighthouseResults = function() {
+  this.displayResultsUI('lighthouse', this.generateLighthouseUrl.bind(this));
 };
 
 DeviceModel.prototype.displayResultsUI = function(resultSet, cb) {
@@ -289,7 +289,7 @@ DeviceModel.prototype.generateWPTUrl = function(testData) {
   return this.generateResultsUrl(data);
 };
 
-DeviceModel.prototype.generateOWPUrl = function(testData) {
+DeviceModel.prototype.generateLighthouseUrl = function(testData) {
   var data = {
     url: testData.url
   };
@@ -297,35 +297,59 @@ DeviceModel.prototype.generateOWPUrl = function(testData) {
   var testResults = testData.results;
   var results = [4];
   results[0] = {
-    title: 'HTTPS'
+    title: 'Is Secure'
   };
-  if (testResults && testResults.https !== null) {
-    results[0].result = testResults.https ? 'Yay' : 'Boo';
-    results[0].bg = testResults.https ? 'good' : 'bad';
+  if (testResults && testResults['Is Secure'] !== null) {
+    const isSecure = testResults['Is Secure'].overallScore;
+    results[0].result = (isSecure === 1) ? 'Yay' : ((isSecure * 100) + '%');
+    results[0].bg = 'ok';
+    if (isSecure === 1) {
+      results[0].bg = 'good';
+    } else if (isSecure < 0.5) {
+      results[0].bg = 'bad';
+    }
   }
 
   results[1] = {
-    title: 'Service Worker'
+    title: 'Is Mobile Friendly'
   };
-  if (testResults && testResults.sw !== null) {
-    results[1].result = testResults.sw ? 'Yay' : 'Boo';
-    results[1].bg = testResults.sw ? 'good' : 'bad';
+  if (testResults && testResults['Is Mobile Friendly'] !== null) {
+    const mobileFriendly = testResults['Is Mobile Friendly'].overallScore;
+    results[1].result = (mobileFriendly === 1) ? 'Yay' : ((mobileFriendly * 100) + '%');
+    results[1].bg = 'ok';
+    if (mobileFriendly === 1) {
+      results[1].bg = 'good';
+    } else if (mobileFriendly < 0.5) {
+      results[1].bg = 'bad';
+    }
   }
 
   results[2] = {
-    title: 'Theme Color'
+    title: 'Will Get Add to Homescreen Prompt'
   };
-  if (testResults && testResults.themeColor !== null) {
-    results[2].result = testResults.themeColor ? 'Yay' : 'Boo';
-    results[2].bg = testResults.themeColor ? 'good' : 'bad';
+  if (testResults && testResults['Will Get Add to Homescreen Prompt'] !== null) {
+    const homescreenPrompt = testResults['Will Get Add to Homescreen Prompt'].overallScore;
+    results[2].result = (homescreenPrompt === 1) ? 'Yay' : ((homescreenPrompt * 100) + '%');
+    results[2].bg = 'ok';
+    if (homescreenPrompt === 1) {
+      results[2].bg = 'good';
+    } else if (homescreenPrompt < 0.5) {
+      results[2].bg = 'bad';
+    }
   }
 
   results[3] = {
-    title: 'Web App Manifest'
+    title: 'Works Offline'
   };
-  if (testResults && testResults.webManifest !== null) {
-    results[3].result = testResults.webManifest ? 'Yay' : 'Boo';
-    results[3].bg = testResults.webManifest ? 'good' : 'bad';
+  if (testResults && testResults['Works Offline'] !== null) {
+    const worksOffline = testResults['Works Offline'].overallScore;
+    results[3].result = (worksOffline === 1) ? 'Yay' : ((worksOffline * 100) + '%');
+    results[3].bg = 'ok';
+    if (worksOffline === 1) {
+      results[3].bg = 'good';
+    } else if (worksOffline < 0.5) {
+      results[3].bg = 'bad';
+    }
   }
 
   data.results = results;
