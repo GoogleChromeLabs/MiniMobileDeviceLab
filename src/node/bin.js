@@ -18,7 +18,9 @@
 'use strict';
 
 const meow = require('meow');
+
 const CLI = require('./cli.js');
+const logHelper = require('./utils/log-helper.js');
 
 const cliInstance = new CLI();
 const meowOutput = meow(`
@@ -32,4 +34,8 @@ const meowOutput = meow(`
       $ mmdl --config ./mmdl-config.json
 `);
 
-cliInstance.argv(meowOutput);
+try {
+  cliInstance.argv(meowOutput);
+} catch (err) {
+  logHelper.error(err);
+}

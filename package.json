@@ -2,9 +2,9 @@
   "name": "mmdl",
   "version": "1.0.0",
   "description": "Mini mobile device lab.",
-  "main": "index.js",
+  "main": "src/node/index.js",
   "bin": {
-    "mmdl": "./bin.js"
+    "mmdl": "src/node/bin.js"
   },
   "scripts": {
     "test": "mocha run test/node/**/*.js"

@@ -1,13 +1,19 @@
-const getErrorDetails = require('../utils/error-details');
 const errorCodes = require('./errors/codes.js');
 
 class MMDLError extends Error {
   constructor(errorCode, extra = {}) {
     super();
 
+    // Forces node to use MMDLError when printing stack trace.
+    Object.defineProperty(this, 'name', {
+      value: `MMDLError`,
+    });
+
     Error.captureStackTrace(this, this.constructor);
 
-    this.name = errorCode;
+    // Log helper will print out the error code.
+    this.code = errorCode;
+
     if (extra) {
       this.extra = extra;
     }
