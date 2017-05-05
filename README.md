@@ -2,7 +2,7 @@
 
 The Mini Mobile Device Lab (MMDL) is a framework to help developers test pages
 across multiple devices, including phones, tablets, Desktops, etc. It works with
-Android, iOS, Windows (including phone, RT and desktop), and Chrome OS. 
+Android, iOS, Windows (including phone, RT and desktop), and Chrome OS.
 
 When a A URL is pushed, the devices will simultaneously open the page, allowing
 you to see how the page looks across each device. In addition, it will also run
@@ -18,10 +18,10 @@ which acts as the back end, syncing URLs out to all of the connected devices.
 
 **Android:** The Node client app running on a Raspberry Pi (or other computer)
 listens for new URLs and uses ADB to fire a browse intent, opening the URL on
-the device. 
+the device.
 
 **iOS & Windows:** A native app receives URLs from Firebase and opens them in a
-WebView. 
+WebView.
 
 **ChromeOS or Chrome Desktop:** A Chrome Extension listens for new URLs sent
 from Firebase and opens a new tab or uses the existing tab to display the
@@ -32,8 +32,24 @@ content.
 ### Setup Firebase & front end
 
 1. Create a new Firebase app (and account if necessary)
-1. Import the initial config from [`init-data.json`](https://github.com/GoogleChrome/MiniMobileDeviceLab/blob/master/FirebaseSetup/init-data.json)
-1. In **Security & Rules**, paste the contents of [`rules.json`](https://github.com/GoogleChrome/MiniMobileDeviceLab/blob/master/FirebaseSetup/rules.json)
+1. In **Security & Rules**, paste the following:
+    ```
+    {
+      "rules": {
+        ".read": "auth !== null && auth.provider !== 'anonymous'",
+        ".write": "auth !== null && auth.provider !== 'anonymous'",
+        "urlkeys": {
+          ".indexOn": ".value",
+          ".read": "auth !== null",
+          ".write": "auth !== null && auth.provider !== 'anonymous'"
+        },
+        "currenturl": {
+          ".read": "auth !== null",
+          ".write": "auth !== null && auth.provider !== 'anonymous'"
+        }
+      }
+    }
+    ```
 1. In **Login & Auth**, enable Anonymous Authentication
 1. In **Secrets**, create a new Secret, and note it down for later.
 1. In _PiLabFrontEnd_, copy [`config.sample.js`](https://github.com/GoogleChrome/MiniMobileDeviceLab/blob/master/PiLabFrontEnd/config.sample.js) to `config.js`
@@ -56,7 +72,7 @@ the looper or test pages, you can skip this section.
  **PreRequisites:** Node (0.12.x), ADB
 
 1. Clone the repo to a local directory
-1. In the `PiLab` folder, run `npm install` 
+1. In the `PiLab` folder, run `npm install`
 1. Copy [`config.sample.json`](https://github.com/GoogleChrome/MiniMobileDeviceLab/blob/master/PiLab/config.sample.json) to `config.json`.
 1. Fill in the attributes of `config.json` accordingly.
     1. `firebaseUrl` is the URL for your Firebase project.
@@ -74,7 +90,7 @@ the open web features.
 1. Follow the same step as required to set up the server, but instead, start the
 client with `node client.js`
 1. On each Android device, enable **Developer Mode**
-1. Under **Developer Options**: 
+1. Under **Developer Options**:
     1. Enable **USB Debugging**
     1. Enable **Stay awake**
 1. Install [Stay Alive!](https://play.google.com/store/apps/details?id=com.synetics.stay.alive)
@@ -157,7 +173,7 @@ echo Starting PiLab in 5 seconds
 sleep 5
 ./client.sh
 ```
-9. Make the `~/login.sh` file executable by running `chmod +x ~/login.sh` 
+9. Make the `~/login.sh` file executable by running `chmod +x ~/login.sh`
 10. Reboot the Pi, and it should automatically log in and start the client app.
 
 

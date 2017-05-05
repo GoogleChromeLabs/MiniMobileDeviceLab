@@ -1,0 +1,36 @@
+{
+  "name": "mmdl",
+  "version": "1.0.0",
+  "description": "Mini mobile device lab.",
+  "main": "index.js",
+  "bin": {
+    "mmdl": "./bin.js"
+  },
+  "scripts": {
+    "test": "mocha run test/node/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoogleChrome/MiniMobileDeviceLab.git"
+  },
+  "keywords": [
+    "Device",
+    "Lab",
+    "MiniMobileDeviceLab",
+    "Testing",
+    "MMDL"
+  ],
+  "author": "gauntface",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/GoogleChrome/MiniMobileDeviceLab/issues"
+  },
+  "homepage": "https://github.com/GoogleChrome/MiniMobileDeviceLab#readme",
+  "dependencies": {
+    "meow": "^3.7.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-google": "^0.7.1"
+  }
+}
