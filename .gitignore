@@ -53,7 +53,6 @@ DerivedData
 #
 # Saving data (PiLab/stash.js)
 #
-/test/
 /PiLab/last_failure.txt
 
 ## Ignore Visual Studio temporary files, build results, and

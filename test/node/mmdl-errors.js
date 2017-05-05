@@ -1,3 +1,5 @@
+const MMDLError = require('../../models/mmdl-error');
+
 describe('Test MMDLError', function() {
   it('should construct an empty error', function() {
     new MMDLError();
@@ -8,6 +10,8 @@ describe('Test MMDLError', function() {
   });
 
   it('should construct with a valid code', function() {
-    new MMDLError('no-config-file');
+    const error = new MMDLError('no-config-file');
+    expect(error.name).to.equal('no-config-file');
+    expect(error.message).to.equal();
   });
 });
