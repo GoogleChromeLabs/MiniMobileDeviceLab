@@ -90,7 +90,7 @@ class ServerController {
         return deviceController.triggerIntent(deviceId, genericIntent);
       })
       .catch((err) => {
-        logHelper.warn('Unable to launch Browser intent.', err);
+        logHelper.error('Unable to launch Browser intent.', err.message);
       });
     });
 

@@ -70,14 +70,6 @@ class DeviceController {
 
   triggerIntent(deviceId, intent) {
     return this._adbClient.startActivity(deviceId, intent);
-      return adbclient.startActivity(deviceId, intent)
-        .catch(function(err) {
-          var intent = this.buildGenericBrowserIntent(url);
-          return adbclient.startActivity(deviceId, intent)
-            .catch(function(err) {
-              // NOOP
-            }.bind(this));
-        }.bind(this));
   }
 }
 

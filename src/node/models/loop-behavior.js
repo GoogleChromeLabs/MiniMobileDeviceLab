@@ -7,7 +7,7 @@ class LoopBehavior extends EventEmitter {
     super();
 
     this._running = false;
-    this._loopDuration = 20 * 1000;
+    this._loopDuration = 10 * 1000;
     this._loopTimeoutId = null;
   }
 
