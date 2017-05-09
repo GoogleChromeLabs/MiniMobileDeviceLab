@@ -35,7 +35,12 @@ const meowOutput = meow(`
 `);
 
 try {
-  cliInstance.argv(meowOutput);
+  cliInstance.argv(meowOutput)
+  .catch((err) => {
+    logHelper.error(err);
+    process.exit(1);
+  });
 } catch (err) {
   logHelper.error(err);
+  process.exit(1);
 }

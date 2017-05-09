@@ -1,6 +1,5 @@
 {
-  "urls": [
-    "https://developers.google.com/web/",
-    "https://google.com/"
-  ]
+  "apiKey": "example-api-key",
+  "authDomain": "example-auth-domain.firebaseapp.com",
+  "databaseURL": "example-db-url.firebaseio.com"
 }
