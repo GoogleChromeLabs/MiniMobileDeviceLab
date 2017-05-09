@@ -1,7 +1,6 @@
 const firebase = require('firebase');
 const admin = require('firebase-admin');
 
-const MMDLError = require('./mmdl-error');
 const logHelper = require('../utils/log-helper');
 
 

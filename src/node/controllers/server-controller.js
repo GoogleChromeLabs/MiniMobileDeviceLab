@@ -1,3 +1,5 @@
+const os = require('os');
+
 const MMDLError = require('../models/mmdl-error');
 const logHelper = require('../utils/log-helper');
 
@@ -15,29 +17,38 @@ class ServerController {
 
       // TODO: Start server loop
       logHelper.log('Starting Device Lab Server.');
-      return this._beginLoop();
-    });
-  }
-
-  _beginLoop() {
-    return this._firebaseDb.isConnected()
+      return this._firebaseDb.isConnected();
+    })
     .then((isConnected) => {
       if (!isConnected) {
         throw new MMDLError('not-connected-to-firebase');
       }
 
       return this._firebaseDb.setLoopRunning();
+    })
+    .then(() => {
+      return this._startServerHeartbeat();
+    })
+    .then(() => {
+      return this._beginLoop();
     });
+  }
 
-    /** var deviceName = os.hostname();
+  _beginLoop() {
+    logHelper.log('Starting Loop');
+  }
+
+  _startServerHeartbeat() {
+    let deviceName = os.hostname();
     if (deviceName.indexOf('.') >= 0) {
       deviceName = deviceName.substring(0, deviceName.indexOf('.'));
     }
-    var fbMonitor = firebase.child('monitor/' + deviceName);
-    fbMonitor.child('serverHeartbeart').set(Date.now());
+
+    const fbMonitorRef = this._firebaseDb.database.ref('monitor/' + deviceName);
+    fbMonitorRef.child('serverHeartbeart').set(new Date().toString());
     setInterval(function() {
-      fbMonitor.child('serverHeartbeart').set(Date.now());
-    }, 90 * 1000); **/
+      fbMonitorRef.child('serverHeartbeart').set(new Date().toString());
+    }, 90 * 1000);
   }
 }
 
