@@ -26,4 +26,8 @@ module.exports = {
   'server-already-running': {
     message: `The Device Lab server is already running.`,
   },
+  'server-controller-no-firebase-db': {
+    message: `You must supply an instance of the FirebaseDBSingleton to the ` +
+      `ServerController constructor.`,
+  },
 };

@@ -2,10 +2,16 @@ const os = require('os');
 
 const MMDLError = require('../models/mmdl-error');
 const logHelper = require('../utils/log-helper');
+const LoopBehavior = require('../models/loop-behavior');
 
 class ServerController {
   constructor(firebaseDb) {
+    if (!firebaseDb) {
+      throw new MMDLError('server-controller-no-firebase-db');
+    }
     this._firebaseDb = firebaseDb;
+    this._loopBehavior = new LoopBehavior();
+    this._loopBehavior.on('loop-iteration', () => this._onLoopIteration());
   }
 
   start() {
@@ -15,8 +21,6 @@ class ServerController {
         throw new MMDLError('server-already-running');
       }
 
-      // TODO: Start server loop
-      logHelper.log('Starting Device Lab Server.');
       return this._firebaseDb.isConnected();
     })
     .then((isConnected) => {
@@ -30,12 +34,46 @@ class ServerController {
       return this._startServerHeartbeat();
     })
     .then(() => {
-      return this._beginLoop();
+      logHelper.log('Starting Device Lab Server.');
+      this._loopBehavior.startLoop();
     });
   }
 
-  _beginLoop() {
-    logHelper.log('Starting Loop');
+  stop() {
+    this._loopBehavior.stopLooping();
+  }
+
+  _onLoopIteration() {
+    return Promise.all([
+      this._firebaseDb.getLoopIndex(),
+      this._firebaseDb.getUrls(),
+    ])
+    .then((results) => {
+      let loopIndex = results[0];
+      const urls = results[1];
+
+      if (urls.length === 0) {
+        logHelper.warn('No URLs to loop over.');
+        return;
+      }
+
+      if (loopIndex >= urls.length) {
+        loopIndex = 0;
+      }
+
+      return this._showUrl(urls[loopIndex])
+      .then(() => {
+        loopIndex = (loopIndex + 1) % urls.length;
+        return this._firebaseDb.setLoopIndex(loopIndex);
+      });
+    })
+    .catch((err) => {
+      logHelper.error('Unexpected error in loop-iteration.', err);
+    });
+  }
+
+  _showUrl(url) {
+
   }
 
   _startServerHeartbeat() {

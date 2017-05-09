@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "eslint": "^3.19.0",
-    "eslint-config-google": "^0.7.1"
+    "eslint-config-google": "^0.7.1",
+    "sinon": "^2.2.0"
   }
 }
