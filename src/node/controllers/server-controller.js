@@ -2,7 +2,9 @@ const os = require('os');
 
 const MMDLError = require('../models/mmdl-error');
 const logHelper = require('../utils/log-helper');
+const intentUtils = require('../utils/intent-utils');
 const LoopBehavior = require('../models/loop-behavior');
+const deviceController = require('./device-controller');
 
 class ServerController {
   constructor(firebaseDb) {
@@ -32,6 +34,9 @@ class ServerController {
     })
     .then(() => {
       return this._startServerHeartbeat();
+    })
+    .then(() => {
+      return deviceController.init();
     })
     .then(() => {
       logHelper.log('Starting Device Lab Server.');
@@ -73,7 +78,23 @@ class ServerController {
   }
 
   _showUrl(url) {
+    const devices = deviceController.getDevices();
+    const chromeIntent = intentUtils.buildChromeIntent(url);
+    const genericIntent = intentUtils.buildGenericBrowserIntent(url);
 
+    const promises = Object.keys(devices).map((deviceId) => {
+      return deviceController.triggerIntent(deviceId, chromeIntent)
+      .catch((err) => {
+        logHelper.warn('Unable to launch Chrome intent. Attempting generic ' +
+          'browser intent.');
+        return deviceController.triggerIntent(deviceId, genericIntent);
+      })
+      .catch((err) => {
+        logHelper.warn('Unable to launch Browser intent.', err);
+      });
+    });
+
+    return Promise.all(promises);
   }
 
   _startServerHeartbeat() {

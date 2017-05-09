@@ -30,4 +30,7 @@ module.exports = {
     message: `You must supply an instance of the FirebaseDBSingleton to the ` +
       `ServerController constructor.`,
   },
+  'unable-to-track-devices': {
+    message: `Unable to instantiate 'adb' to track Android devices.`,
+  },
 };
