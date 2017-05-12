@@ -23,43 +23,7 @@ class FirebaseDB {
     return this._database;
   }
 
-  isServerRunning() {
-    return this._once('loop-controller-running')
-    .then((value) => {
-      return value ? true : false;
-    });
-  }
-
-  setLoopRunning() {
-    const loopRunningRef = this.database.ref('loop-controller-running');
-    loopRunningRef.onDisconnect().remove();
-    return loopRunningRef.set(true);
-  }
-
-  isConnected() {
-    return this._once('.info/connected');
-  }
-
-  getUrls() {
-    return this._once('loop/urls')
-    .then((value) => {
-      return value || [];
-    });
-  }
-
-  getLoopIndex() {
-    return this._once('loop/index')
-    .then((value) => {
-      return value || 0;
-    });
-  }
-
-  setLoopIndex(newLoopIndex) {
-    const loopIndexRef = this.database.ref('loop/index');
-    return loopIndexRef.set(newLoopIndex);
-  }
-
-  _once(refPath) {
+  once(refPath) {
     return new Promise((resolve, reject) => {
       const fbRef = this.database.ref(refPath);
       fbRef.once('value', (snapshot) => {

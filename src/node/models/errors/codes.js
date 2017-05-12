@@ -1,6 +1,7 @@
 module.exports = {
   'no-config-file': {
-    message: `You must define a config file in the CLI to use MMDL.`,
+    message: `Missing --config flag. You must define a config file in the ` +
+      `CLI to use MMDL.`,
   },
   'cant-read-config-file': {
     message: (extras = {}) => {
@@ -14,8 +15,11 @@ module.exports = {
     },
   },
   'no-service-account-file': {
-    message: `You must define a serice account private key file in the CLI ` +
-      `to use MMDL.`,
+    message: `Missing --service-account flag. You must define a service ` +
+      `account private key file in the CLI to use MMDL.`,
+  },
+  'no-lab-name': {
+    message: `Missing --lab-name flag. You must define a lab name.`
   },
   'cant-read-service-account-file': {
     message: (extras = {}) => {
@@ -26,9 +30,12 @@ module.exports = {
   'server-already-running': {
     message: `The Device Lab server is already running.`,
   },
-  'server-controller-no-firebase-db': {
+  'controller-no-firebase-db': {
     message: `You must supply an instance of the FirebaseDBSingleton to the ` +
-      `ServerController constructor.`,
+      `Server | Client Controller constructor.`,
+  },
+  'controller-no-lab-name': {
+    message: 'You must supply a lab name to the Server | Client Controller.'
   },
   'unable-to-track-devices': {
     message: `Unable to instantiate 'adb' to track Android devices.`,

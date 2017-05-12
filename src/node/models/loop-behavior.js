@@ -3,11 +3,11 @@ const EventEmitter = require('events');
 const logHelper = require('../utils/log-helper');
 
 class LoopBehavior extends EventEmitter {
-  constructor() {
+  constructor(durationInSeconds) {
     super();
 
     this._running = false;
-    this._loopDuration = 10 * 1000;
+    this._loopDuration = durationInSeconds * 1000;
     this._loopTimeoutId = null;
   }
 

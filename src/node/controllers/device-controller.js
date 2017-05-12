@@ -1,12 +1,15 @@
 'use strict';
 
 const adb = require('adbkit');
+const EventEmitter = require('events');
 
 const MMDLError = require('../models/mmdl-error');
 const logHelper = require('../utils/log-helper');
 
-class DeviceController {
+class DeviceController extends EventEmitter {
   constructor() {
+    super();
+
     this._adbClient = adb.createClient();
     this._devices = {};
   }
@@ -50,7 +53,13 @@ class DeviceController {
         return;
       }
 
-      this._devices[device.id] = device;
+      // Adding a small delay to avoid permissions issues
+      // that occur if you try and trigger an intent as
+      // soon as the device is added.
+      setTimeout(() => {
+        this._devices[device.id] = device;
+        this.emit('device-added', {deviceId: device.id});
+      }, 500);
     } catch (err) {
       logHelper.error(err);
     }
@@ -59,6 +68,7 @@ class DeviceController {
   _removeDevice(device) {
     try {
       delete this._devices[device.id];
+      this.emit('device-removed', {deviceId: device.id});
     } catch (err) {
       logHelper.error(err);
     }

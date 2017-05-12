@@ -3,9 +3,7 @@ const logHelper = require('./utils/log-helper');
 const MMDLError = require('./models/mmdl-error');
 const getFirebaseDb = require('./models/firebase-db-singleton');
 const ServerController = require('./controllers/server-controller');
-// Read in a config file
-//     OR
-// No file, ask for details?
+const ClientController = require('./controllers/client-controller');
 
 class MMDLCLI {
   argv(meowOutput) {
@@ -15,14 +13,25 @@ class MMDLCLI {
     if (typeof meowOutput.flags.serviceAccount !== 'string') {
       throw new MMDLError('no-service-account-file');
     }
+    if (typeof meowOutput.flags.labName !== 'string') {
+      throw new MMDLError('no-lab-name');
+    }
 
     const config = this._loadConfigFile(meowOutput.flags.config);
     const serviceAccount = this._loadServiceAccountFile(
       meowOutput.flags.serviceAccount);
     this._validateConfig(config);
+
     let firebaseDb = getFirebaseDb(config, serviceAccount);
-    let serverController = new ServerController(firebaseDb);
-    return serverController.start();
+    if (meowOutput.flags.server) {
+      let serverController = new ServerController(
+        firebaseDb, meowOutput.flags.labName);
+      return serverController.start();
+    } else {
+      let clientController = new ClientController(
+        firebaseDb, meowOutput.flags.labName);
+      return clientController.start();
+    }
   }
 
   _loadConfigFile(configPath) {
