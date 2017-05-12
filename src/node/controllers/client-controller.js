@@ -21,6 +21,7 @@ class ClientController extends ControllerInterface {
 
     logHelper.log('');
     logHelper.log('MiniMobileDeviceLab > ClientController');
+    logHelper.log('   lab:', this._labName);
     logHelper.log('   version:', VERSION);
     logHelper.log('   computerName:', this.getDeviceName());
     logHelper.log('   started at:', new Date().toLocaleString());
