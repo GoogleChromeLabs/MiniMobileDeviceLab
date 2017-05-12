@@ -59,7 +59,7 @@ class DeviceController extends EventEmitter {
       setTimeout(() => {
         this._devices[device.id] = device;
         this.emit('device-added', {deviceId: device.id});
-      }, 500);
+      }, 2000);
     } catch (err) {
       logHelper.error(err);
     }

@@ -37,17 +37,22 @@ class ClientController extends ControllerInterface {
     })
     .then(() => {
       deviceController.on('device-added', (event) => {
-        this._launchKeepScreenOn(this._currentUrl, event.deviceId);
-        this._showUrlOnDevice(this._currentUrl, event.deviceId);
+        this._launchKeepScreenOn(this._currentUrl, event.deviceId)
+        .then(() => {
+          return this._showUrlOnDevice(
+            this._currentUrl, event.deviceId);
+        })
+        .then(() => {
+          const database = this._firebaseDb.database;
+          database.ref(`${this._reportPath}devices/${event.deviceId}`)
+            .set(true);
 
-        const database = this._firebaseDb.database;
-        database.ref(`${this._reportPath}devices/${event.deviceId}`)
-          .set(true);
-      });
-      deviceController.on('device-removed', (event) => {
-        const database = this._firebaseDb.database;
-        database.ref(`${this._reportPath}devices/${event.deviceId}`)
-          .remove();
+          deviceController.on('device-removed', (event) => {
+            const database = this._firebaseDb.database;
+            database.ref(`${this._reportPath}devices/${event.deviceId}`)
+              .remove();
+          });
+        });
       });
     });
   }
@@ -148,7 +153,7 @@ class ClientController extends ControllerInterface {
       'component': 'com.synetics.stay.alive/.main',
     };
 
-    deviceController.triggerIntent(deviceId, keepScreenOnIntent)
+    return deviceController.triggerIntent(deviceId, keepScreenOnIntent)
     .catch((err) => {
       logHelper.error('Unable to launch keep screen on intent.',
         err.message);
