@@ -148,7 +148,11 @@ class ClientController extends ControllerInterface {
       'component': 'com.synetics.stay.alive/.main',
     };
 
-    deviceController.triggerIntent(deviceId, keepScreenOnIntent);
+    deviceController.triggerIntent(deviceId, keepScreenOnIntent)
+    .catch((err) => {
+      logHelper.error('Unable to launch keep screen on intent.',
+        err.message);
+    });
   }
 
   _heartbeat() {
