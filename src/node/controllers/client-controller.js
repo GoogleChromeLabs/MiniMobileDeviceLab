@@ -37,7 +37,7 @@ class ClientController extends ControllerInterface {
     })
     .then(() => {
       deviceController.on('device-added', (event) => {
-        this._launchKeepScreenOn(this._currentUrl, event.deviceId)
+        this._launchKeepScreenOn(event.deviceId)
         .then(() => {
           return this._showUrlOnDevice(
             this._currentUrl, event.deviceId);
