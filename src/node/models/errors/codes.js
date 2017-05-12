@@ -18,9 +18,6 @@ module.exports = {
     message: `Missing --service-account flag. You must define a service ` +
       `account private key file in the CLI to use MMDL.`,
   },
-  'no-lab-name': {
-    message: `Missing --lab-name flag. You must define a lab name.`
-  },
   'cant-read-service-account-file': {
     message: (extras = {}) => {
       return `Unable to read service account private key file at: ` +

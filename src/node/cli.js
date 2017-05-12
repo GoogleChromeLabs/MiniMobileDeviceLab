@@ -13,23 +13,21 @@ class MMDLCLI {
     if (typeof meowOutput.flags.serviceAccount !== 'string') {
       throw new MMDLError('no-service-account-file');
     }
-    if (typeof meowOutput.flags.labName !== 'string') {
-      throw new MMDLError('no-lab-name');
-    }
 
     const config = this._loadConfigFile(meowOutput.flags.config);
     const serviceAccount = this._loadServiceAccountFile(
       meowOutput.flags.serviceAccount);
     this._validateConfig(config);
 
-    let firebaseDb = getFirebaseDb(config, serviceAccount);
-    if (meowOutput.flags.server) {
+    let firebaseDb = getFirebaseDb(config.firebase, serviceAccount);
+    let labName = config.mmdl.labName;
+    if (config.mmdl.type === 'server') {
       let serverController = new ServerController(
-        firebaseDb, meowOutput.flags.labName);
+        firebaseDb, labName);
       return serverController.start();
     } else {
       let clientController = new ClientController(
-        firebaseDb, meowOutput.flags.labName);
+        firebaseDb, labName);
       return clientController.start();
     }
   }
@@ -57,9 +55,31 @@ class MMDLCLI {
   }
 
   _validateConfig(config = {}) {
-    const keys = ['apiKey', 'authDomain', 'databaseURL'];
-    keys.forEach((key) => {
+    const topLevelObjects = ['firebase', 'mmdl'];
+    topLevelObjects.forEach((key) => {
       const value = config[key];
+      if(typeof value !== 'object') {
+        throw new MMDLError('required-config-value-missing', {
+          key,
+          value,
+        });
+      }
+    });
+
+    const firebaseKeys = ['apiKey', 'authDomain', 'databaseURL'];
+    firebaseKeys.forEach((key) => {
+      const value = config.firebase[key];
+      if(typeof value !== 'string' || value.length === 0) {
+        throw new MMDLError('required-config-value-missing', {
+          key,
+          value,
+        });
+      }
+    });
+
+    const mmdlKeys = ['labName', 'type'];
+    mmdlKeys.forEach((key) => {
+      const value = config.mmdl[key];
       if(typeof value !== 'string' || value.length === 0) {
         throw new MMDLError('required-config-value-missing', {
           key,
