@@ -10,7 +10,9 @@ class DeviceController extends EventEmitter {
   constructor() {
     super();
 
-    this._adbClient = adb.createClient();
+    this._adbClient = adb.createClient({
+      host: '127.0.0.1',
+    });
     this._devices = {};
   }
 
