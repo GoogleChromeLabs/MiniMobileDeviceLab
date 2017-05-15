@@ -32,7 +32,7 @@ module.exports = {
       `Server | Client Controller constructor.`,
   },
   'controller-no-lab-name': {
-    message: 'You must supply a lab name to the Server | Client Controller.'
+    message: 'You must supply a lab name to the Server | Client Controller.',
   },
   'unable-to-track-devices': {
     message: `Unable to instantiate 'adb' to track Android devices.`,
