@@ -11,6 +11,12 @@ class LoopBehavior extends EventEmitter {
     this._loopTimeoutId = null;
   }
 
+  changeSpeed(durationInSeconds) {
+    this._loopDuration = durationInSeconds * 1000;
+
+    this._onLoop();
+  }
+
   startLoop() {
     this._running = true;
     if (this._loopTimeoutId) {

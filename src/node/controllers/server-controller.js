@@ -3,13 +3,15 @@ const MMDLError = require('../models/mmdl-error');
 const logHelper = require('../utils/log-helper');
 const LoopBehavior = require('../models/loop-behavior');
 
+const DEFAULT_LOOP_SPEED_SECS = 10;
+
 class ServerController extends ControllerInterface {
   constructor(firebaseDb, labName) {
     super(firebaseDb, labName);
 
     logHelper.log(`Starting '${labName}' server....`);
 
-    this._loopBehavior = new LoopBehavior(10);
+    this._loopBehavior = new LoopBehavior(DEFAULT_LOOP_SPEED_SECS);
     this._loopBehavior.on('loop-iteration', () => this._onLoopIteration());
   }
 
@@ -38,6 +40,19 @@ class ServerController extends ControllerInterface {
     })
     .then(() => {
       logHelper.log('Starting server loop...');
+      this._firebaseDb.database.ref(`lab/${this._labName}/loop-speed`)
+      .on('value', (snapshot) => {
+        let newValue = snapshot.val();
+        if (typeof newValue !== 'number') {
+          logHelper.warn(`The 'loop-speed' for '${this._labName}' is not a ` +
+            `number. Please correct this.`);
+          newValue = DEFAULT_LOOP_SPEED_SECS;
+        } else {
+          logHelper.log(`Changing loop-speed to '${newValue}'`);
+        }
+
+        this._loopBehavior.changeSpeed(newValue);
+      });
       this._loopBehavior.startLoop();
     });
   }
