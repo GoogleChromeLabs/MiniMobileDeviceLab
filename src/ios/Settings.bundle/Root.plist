@@ -22,7 +22,7 @@
 			<key>KeyboardType</key>
 			<string>URL</string>
 			<key>Title</key>
-			<string>FB App ID</string>
+			<string>Lab Name</string>
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>

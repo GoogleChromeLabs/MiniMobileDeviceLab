@@ -20,7 +20,8 @@
  **/
 
 #import "ViewController.h"
-#import <Firebase/Firebase.h>
+#import "Firebase.h"
+//#import <Firebase/Firebase.h>
 
 static const CGFloat kLabelHeight = 14.0f;
 static const CGFloat kMargin = 10.0f;
@@ -66,31 +67,33 @@ static const CGFloat kAddressHeight = 22.0f;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *fbAppName = [defaults stringForKey:@"fbAppName"];
     if (!fbAppName) {
-        fbAppName = [NSString stringWithFormat:@"goog-mtv-device-lab"];
+        fbAppName = [NSString stringWithFormat:@"pwa"];
     }
 
-    NSString *fbURL = [NSString stringWithFormat:@"https://%@.firebaseio.com/url", fbAppName];
+    NSString *fbURL = [NSString stringWithFormat:@"lab/%@/current-url", fbAppName];
     NSLog(@"%@", fbURL.uppercaseString);
 
-    self.myRootRef = [[Firebase alloc] initWithUrl:fbURL];
-    [self.myRootRef authAnonymouslyWithCompletionBlock:^(NSError *error, FAuthData *authData) {
+    self.myRootRef = [[FIRDatabase database] reference];
+    [[FIRAuth auth] signInAnonymouslyWithCompletion:^(FIRUser * _Nullable user, NSError * _Nullable error) {
         if (error) {
             [self informError:error];
         } else {
-            NSLog(@"Firebase authentication completed.");
-            
-            [self.myRootRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+            NSLog(@"Firebase auth completed.");
+            FIRDatabaseReference *urlRef = [self.myRootRef child:fbURL];
+            [urlRef observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
                 @try {
-                    self.strURL = snapshot.value;
-                    NSLog(@"** New URL: %@", self.strURL);
-                    [self loadRequestFromString:self.strURL];
+                    NSString *url = snapshot.value;
+                    NSLog(@"** New URL: %@", url);
+                    [self loadRequestFromString:url];
                 }
-                @catch (NSException *ex) {
+                @catch(NSException *ex) {
                     NSLog(@"%@", ex.reason);
                 }
             }];
+            
         }
     }];
+
 }
 
 

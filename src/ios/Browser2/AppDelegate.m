@@ -22,6 +22,9 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 
+@import FirebaseCore;
+@import FirebaseDatabase;
+
 @interface AppDelegate ()
 
 @end
@@ -33,6 +36,7 @@
     // Override point for customization after application launch.
     // Register the preference defaults early.
     NSLog(@"didFinishLaunchingWithOptions");
+    [FIRApp configure];
     return YES;
 }
 

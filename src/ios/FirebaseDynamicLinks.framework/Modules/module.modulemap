@@ -1,0 +1,10 @@
+framework module FirebaseDynamicLinks {
+  umbrella header "FirebaseDynamicLinks.h"
+  export *
+  module * { export *}
+  link "c++"
+  link "sqlite3"
+  link "z"
+  link framework "UIKit"
+  link framework "WebKit"
+}
