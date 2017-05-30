@@ -31,8 +31,8 @@ module.exports = {
     message: `You must supply an instance of the FirebaseDBSingleton to the ` +
       `Server | Client Controller constructor.`,
   },
-  'controller-no-lab-name': {
-    message: 'You must supply a lab name to the Server | Client Controller.',
+  'controller-no-lab-id': {
+    message: 'You must supply a lab ID to the Server / Client Controller.',
   },
   'unable-to-track-devices': {
     message: `Unable to instantiate 'adb' to track Android devices.`,

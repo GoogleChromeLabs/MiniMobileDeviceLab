@@ -3,16 +3,16 @@ const os = require('os');
 const MMDLError = require('../models/mmdl-error');
 
 class ControllerInterface {
-  constructor(firebaseDb, labName) {
+  constructor(firebaseDb, labId) {
     if (!firebaseDb) {
       throw new MMDLError('controller-no-firebase-db');
     }
 
-    if (!labName) {
-      throw new MMDLError('controller-no-lab-name');
+    if (!labId) {
+      throw new MMDLError('controller-no-lab-id');
     }
     this._firebaseDb = firebaseDb;
-    this._labName = labName;
+    this._labId = labId;
   }
 
   getDeviceName() {

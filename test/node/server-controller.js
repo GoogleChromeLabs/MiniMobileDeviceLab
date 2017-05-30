@@ -30,15 +30,24 @@ describe('Server Controller', function() {
   it('should throw if constructed without a firebase DB', function() {
     expect(function() {
       new ServerController();
-    }).to.throw().property('code', 'server-controller-no-firebase-db');
+    }).to.throw().property('code', 'controller-no-firebase-db');
+  });
+
+   it('should throw if constructed without a lab ID', function() {
+    expect(function() {
+      new ServerController({});
+    }).to.throw().property('code', 'controller-no-lab-id');
   });
 
   it('should throw is server is already running', function() {
     globalServerController = new ServerController({
-      isServerRunning: () => {
-        return Promise.resolve(true);
+      once: (dbPath) => {
+        if (dbPath === `lab/example-lab-id/server-running`) {
+          return Promise.resolve(true);
+        }
+        throw new Error('Unexpected db once path: ' + dbPath);
       },
-    });
+    }, 'example-lab-id');
     return globalServerController.start()
     .then(() => {
       throw new Error('Expected to reject promise.');
@@ -47,26 +56,8 @@ describe('Server Controller', function() {
     });
   });
 
-  it('should throw if firebase db is not connected', function() {
-    globalServerController = new ServerController({
-      isServerRunning: () => {
-        return Promise.resolve(false);
-      },
-      isConnected: () => {
-        return Promise.resolve(false);
-      },
-    });
-    return globalServerController.start()
-    .then(() => {
-      throw new Error('Expected to reject promise.');
-    }, (err) => {
-      expect(err.code).to.equal('not-connected-to-firebase');
-    });
-  });
-
-  it('should mark the loop as running, start heart beat and ' +
-    'begin loop on start', function() {
-    let setLoopRunning = false;
+  it('should mark server as running and start heart beat', function() {
+    let setServerRunning = false;
     let startHeartbeat = false;
 
     const heartbeatStub = sinon.stub(
@@ -77,22 +68,50 @@ describe('Server Controller', function() {
     });
     stubs.push(heartbeatStub);
 
-    globalServerController = new ServerController({
-      isServerRunning: () => {
-        return Promise.resolve(false);
-      },
-      isConnected: () => {
-        return Promise.resolve(true);
-      },
-      setLoopRunning: () => {
-        setLoopRunning = true;
-        return Promise.resolve();
-      },
+    const serverRunningStub = sinon.stub(
+      ServerController.prototype, '_setServerRunning');
+    serverRunningStub.callsFake(() => {
+      setServerRunning = true;
+      return Promise.resolve();
     });
+    stubs.push(serverRunningStub);
+
+    globalServerController = new ServerController({
+      once: (dbPath) => {
+        switch(dbPath) {
+          case 'lab/example-lab-id/server-running': {
+            return Promise.resolve(false);
+          }
+          default: {
+            throw new Error('Expected once value: ', dbPath);
+          }
+        }
+      },
+      database: {
+        ref: (refPath) => {
+          if (refPath === `lab/example-lab-id/loop-speed`) {
+            return {
+              on: (eventName, cb) => {
+                if (eventName === 'value') {
+                  return cb({
+                    val: () => {
+                      return 30;
+                    }
+                  });
+                }
+                throw new Error('Unexpected event name given: ' + eventName);
+              },
+            };
+          }
+
+          throw new Error('Unexpected ref path given: ' + refPath);
+        }
+      }
+    }, 'example-lab-id');
 
     return globalServerController.start()
     .then(() => {
-      expect(setLoopRunning).to.equal(true);
+      expect(setServerRunning).to.equal(true);
       expect(startHeartbeat).to.equal(true);
     });
   });
@@ -100,54 +119,58 @@ describe('Server Controller', function() {
   it('should handle larger loopIndex than URLS', function() {
     const EXAMPLE_URL = 'https://example.com/1';
     const EXAMPLE_URL_TWO = 'https://example.com/2';
-    let showUrlCalled = false;
+    let testIndex = -1;
+    let shownUrl;
+    let shownLoopIndex;
 
-    return new Promise((resolve) => {
-      globalServerController = new ServerController({
-        isServerRunning: () => {
-          return Promise.resolve(false);
-        },
-        isConnected: () => {
-          return Promise.resolve(true);
-        },
-        setLoopRunning: () => {
-          return Promise.resolve();
-        },
-        getLoopIndex: () => {
-          return Promise.resolve(3);
-        },
-        setLoopIndex: (newIndex) => {
-          expect(newIndex).to.equal(1);
-          resolve();
-          return Promise.resolve();
-        },
-        getUrls: () => {
-          return Promise.resolve([EXAMPLE_URL, EXAMPLE_URL_TWO]);
-        },
-      });
+    globalServerController = new ServerController({}, 'example-lab-id');
 
-      const showurlStub = sinon.stub(globalServerController, '_showUrl');
-      showurlStub.callsFake((url) => {
-        showUrlCalled = true;
-        expect(url).to.equal(EXAMPLE_URL);
-        return Promise.resolve();
-      });
-      stubs.push(showurlStub);
+    const getLoopIndexStub = sinon.stub(globalServerController, '_getLoopIndex');
+    getLoopIndexStub.callsFake(() => {
+      return Promise.resolve(testIndex);
+    });
+    stubs.push(getLoopIndexStub);
 
-      const heartbeatStub = sinon.stub(
-        globalServerController, '_startServerHeartbeat');
-      heartbeatStub.callsFake(() => {
-        return Promise.resolve();
-      });
-      stubs.push(heartbeatStub);
+    const getUrlsStub = sinon.stub(globalServerController, '_getUrls');
+    getUrlsStub.callsFake(() => {
+      return Promise.resolve([
+        EXAMPLE_URL,
+        EXAMPLE_URL_TWO,
+      ]);
+    });
+    stubs.push(getUrlsStub);
 
-      globalServerController.start()
-      .then(() => {
-        sinonClock.tick(5000);
-      });
+    const seturlStub = sinon.stub(globalServerController, '_setUrl');
+    seturlStub.callsFake((url) => {
+      shownUrl = url;
+      return Promise.resolve();
+    });
+    stubs.push(seturlStub);
+
+    const setLoopIndexStub = sinon.stub(globalServerController, '_setLoopIndex');
+    setLoopIndexStub.callsFake((loopIndex) => {
+      shownLoopIndex = loopIndex;
+      testIndex = loopIndex;
+      return Promise.resolve();
+    });
+    stubs.push(setLoopIndexStub);
+
+    return globalServerController._onLoopIteration()
+    .then(() => {
+      expect(shownUrl).to.equal(EXAMPLE_URL);
+      expect(shownLoopIndex).to.equal(0);
+
+      return globalServerController._onLoopIteration();
     })
     .then(() => {
-      expect(showUrlCalled).to.equal(true);
+      expect(shownUrl).to.equal(EXAMPLE_URL_TWO);
+      expect(shownLoopIndex).to.equal(1);
+
+      return globalServerController._onLoopIteration();
+    })
+    .then(() => {
+      expect(shownUrl).to.equal(EXAMPLE_URL);
+      expect(shownLoopIndex).to.equal(0);
     });
   });
 

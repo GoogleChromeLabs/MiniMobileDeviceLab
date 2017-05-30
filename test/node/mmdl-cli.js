@@ -3,14 +3,10 @@ const path = require('path');
 
 const CLI = require('../../src/node/cli');
 
-const EXAMPLE_CONFIG = {
-  'apiKey': 'example-api-key',
-  'authDomain': 'example-auth-domain.firebaseapp.com',
-  'databaseURL': 'example-db-url.firebaseio.com',
-};
+const EXAMPLE_CONFIG = require('../static/example-config.json');
 
 describe('Test MMDL CLI', function() {
-  it('should on no config', function() {
+  it('should throw on no config', function() {
     expect(function() {
       const cli = new CLI();
       cli.argv({flags: {}});
@@ -100,13 +96,19 @@ describe('Test MMDL CLI', function() {
     }).to.throw().property('code', 'required-config-value-missing');
   });
 
-  it('should handle empty string config values for validation', function() {
+  it('should pass for valid config input', function() {
     expect(function() {
       const cli = new CLI();
       cli._validateConfig({
-        'apiKey': 'example-api-key',
-        'authDomain': 'example-auth-domain.firebaseapp.com',
-        'databaseURL': 'example-db-url.firebaseio.com',
+        firebase: {
+          'apiKey': 'example-api-key',
+          'authDomain': 'example-auth-domain.firebaseapp.com',
+          'databaseURL': 'example-db-url.firebaseio.com',
+        },
+        mmdl: {
+          'labId': 'lab-id',
+          'type': 'client',
+        }
       });
     }).to.not.throw();
   });

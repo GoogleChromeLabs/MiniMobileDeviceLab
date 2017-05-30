@@ -15,9 +15,14 @@ class MMDLCLI {
     }
 
     const config = this._loadConfigFile(meowOutput.flags.config);
+    logHelper.log(`Reading config from: `, path.relative(process.cwd(), meowOutput.flags.config));
+    
+    this._validateConfig(config);
+
     const serviceAccount = this._loadServiceAccountFile(
       meowOutput.flags.serviceAccount);
-    this._validateConfig(config);
+    logHelper.log(`Reading service account private key from: `,
+        path.relative(process.cwd(), serviceAccountPath));
 
     let firebaseDb = getFirebaseDb(config.firebase, serviceAccount);
     let labName = config.mmdl.labName;
@@ -33,9 +38,6 @@ class MMDLCLI {
   }
 
   _loadConfigFile(configPath) {
-    logHelper.log(`Reading config from: `,
-        path.relative(process.cwd(), configPath));
-
     if (!path.isAbsolute(configPath)) {
       configPath = path.join(process.cwd(), configPath);
     }
@@ -77,7 +79,7 @@ class MMDLCLI {
       }
     });
 
-    const mmdlKeys = ['labName', 'type'];
+    const mmdlKeys = ['labId', 'type'];
     mmdlKeys.forEach((key) => {
       const value = config.mmdl[key];
       if(typeof value !== 'string' || value.length === 0) {
@@ -90,9 +92,6 @@ class MMDLCLI {
   }
 
   _loadServiceAccountFile(serviceAccountPath) {
-    logHelper.log(`Reading service account private key from: `,
-        path.relative(process.cwd(), serviceAccountPath));
-
     if (!path.isAbsolute(serviceAccountPath)) {
       serviceAccountPath = path.join(process.cwd(), serviceAccountPath);
     }

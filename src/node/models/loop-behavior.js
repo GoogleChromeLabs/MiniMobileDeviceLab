@@ -2,19 +2,23 @@ const EventEmitter = require('events');
 
 const logHelper = require('../utils/log-helper');
 
+const DEFAULT_LOOP_SPEED_SECS = 10;
+
 class LoopBehavior extends EventEmitter {
-  constructor(durationInSeconds) {
+  constructor(labId) {
     super();
 
     this._running = false;
-    this._loopDuration = durationInSeconds * 1000;
+    this._loopDuration = DEFAULT_LOOP_SPEED_SECS * 1000;
     this._loopTimeoutId = null;
   }
 
   changeSpeed(durationInSeconds) {
     this._loopDuration = durationInSeconds * 1000;
 
-    this._onLoop();
+    if (this._running) {
+      this._onLoop();
+    }
   }
 
   startLoop() {

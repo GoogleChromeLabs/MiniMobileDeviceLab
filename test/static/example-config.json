@@ -1,5 +1,11 @@
 {
-  "apiKey": "example-api-key",
-  "authDomain": "example-auth-domain.firebaseapp.com",
-  "databaseURL": "example-db-url.firebaseio.com"
+  "firebase": {
+    "apiKey": "example-api-key",
+    "authDomain": "example-auth-domain.firebaseapp.com",
+    "databaseURL": "example-db-url.firebaseio.com"
+  },
+  "mmdl": {
+    "labId": "example-lab-id",
+    "type": "client"
+  }
 }
