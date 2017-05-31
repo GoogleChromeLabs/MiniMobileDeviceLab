@@ -28,7 +28,7 @@
   "homepage": "https://github.com/GoogleChrome/MiniMobileDeviceLab#readme",
   "dependencies": {
     "firebase": "^3.9.0",
-    "firebase-admin": "^4.2.1",
+    "firebase-admin": "^5.0.0",
     "meow": "^3.7.0"
   },
   "devDependencies": {
@@ -36,6 +36,7 @@
     "chai": "^4.0.0",
     "eslint": "^3.19.0",
     "eslint-config-google": "^0.7.1",
+    "proxyquire": "^1.8.0",
     "sinon": "^2.2.0"
   }
 }

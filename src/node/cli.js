@@ -22,17 +22,17 @@ class MMDLCLI {
     const serviceAccount = this._loadServiceAccountFile(
       meowOutput.flags.serviceAccount);
     logHelper.log(`Reading service account private key from: `,
-        path.relative(process.cwd(), serviceAccountPath));
+        path.relative(process.cwd(), meowOutput.flags.serviceAccount));
 
     let firebaseDb = getFirebaseDb(config.firebase, serviceAccount);
-    let labName = config.mmdl.labName;
+    let labId = config.mmdl.labId;
     if (config.mmdl.type === 'server') {
       let serverController = new ServerController(
-        firebaseDb, labName);
+        firebaseDb, labId);
       return serverController.start();
     } else {
       let clientController = new ClientController(
-        firebaseDb, labName);
+        firebaseDb, labId);
       return clientController.start();
     }
   }

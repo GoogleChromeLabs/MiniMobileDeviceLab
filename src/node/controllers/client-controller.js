@@ -9,7 +9,7 @@ const VERSION = '20170412-1309';
 
 class ClientController extends ControllerInterface {
   constructor(firebaseDb, labName) {
-    super(firebaseDb, labName);
+    super(firebaseDb, labName, 'client');
 
     this._currentUrl = 'https://www.google.com';
     this._urlLastChanged = 0;

@@ -6,10 +6,11 @@ const ServerModel = require('../models/server-model');
 
 class ServerController extends ControllerInterface {
   constructor(firebaseDb, labId) {
-    super(firebaseDb, labId);
+    super(firebaseDb, labId, 'server');
 
     logHelper.log(`Starting '${labId}' server....`);
 
+    this._debug = false;
     this._loopBehavior = new LoopBehavior();
     this._loopBehavior.on('loop-iteration', () => this._onLoopIteration());
 
@@ -22,7 +23,10 @@ class ServerController extends ControllerInterface {
 
   start() {
     logHelper.log(`Checking if '${this._labId}' is already running....`);
-    return this._serverModel.isServerRunning()
+    return this._prepareFirebaseDb()
+    .then(() => {
+      return this._serverModel.isServerRunning();
+    })
     .then((isRunning) => {
       if (isRunning) {
         throw new MMDLError('server-already-running');
@@ -46,7 +50,7 @@ class ServerController extends ControllerInterface {
   }
 
   _onLoopIteration() {
-    logHelper.log('Starting new loop iteration');
+    logHelper.log('Changing URL...');
 
     return Promise.all([
       this._serverModel.getLoopIndex(),
@@ -56,11 +60,15 @@ class ServerController extends ControllerInterface {
       let loopIndex = results[0];
       const urls = results[1];
 
-      logHelper.log(`    Current loopIndex: ${loopIndex}`);
-      logHelper.log(`    Current URL count: ${urls.length}`);
+      if (this._debug) {
+        logHelper.log(`    Current loopIndex: ${loopIndex}`);
+        logHelper.log(`    Current URL count: ${urls.length}`);
+      }
 
       if (urls.length === 0) {
-        logHelper.warn('No URLs to loop over.');
+        if (this._debug) {
+          logHelper.warn('No URLs to loop over.');
+        }
         return;
       }
 
@@ -71,8 +79,10 @@ class ServerController extends ControllerInterface {
       const newLoopIndex = (loopIndex + 1) % urls.length;
       const newUrl = urls[newLoopIndex];
 
-      logHelper.log(`    New loopIndex: ${newLoopIndex}`);
-      logHelper.log(`    New URL count: ${newUrl}`);
+      if (this._debug) {
+        logHelper.log(`    New loopIndex: ${newLoopIndex}`);
+        logHelper.log(`    New URL count: ${newUrl}`);
+      }
 
       return Promise.all([
         this._serverModel.setUrl(newUrl),
@@ -82,15 +92,6 @@ class ServerController extends ControllerInterface {
     .catch((err) => {
       logHelper.error('Unexpected error in loop-iteration.', err);
     });
-  }
-
-  _startServerHeartbeat() {
-    let deviceName = this.getDeviceName();
-
-    this._serverModel.updateHeartbeat();
-    setInterval(function() {
-      this._serverModel.updateHeartbeat();
-    }, 90 * 1000);
   }
 }
 

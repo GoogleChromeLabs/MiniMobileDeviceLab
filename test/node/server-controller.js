@@ -1,20 +1,25 @@
 const expect = require('chai').expect;
-const sinon = require('sinon');
+const proxyquire = require('proxyquire');
 
-const ServerController = require(
-  '../../src/node/controllers/server-controller');
+const firebaseConfig = require('../demo/firebase-details');
+const firebaseServiceAccount = require('../demo/firebase-service-account.json');
+
+const getFirebaseDb = require('../../src/node/models/firebase-db-singleton');
+const ServerController = require('../../src/node/controllers/server-controller');
 
 describe('Server Controller', function() {
-  let sinonClock = null;
+  let firebaseDb;
   let stubs = [];
   let globalServerController;
 
-  before(function() {
-    sinonClock = sinon.useFakeTimers(Date.now());
-  });
+  const clearDb = () => {
+    const rootRef = firebaseDb.database.ref();
+    return rootRef.set(null);
+  };
 
-  after(function() {
-    sinonClock.restore();
+  before(function() {
+    firebaseDb = getFirebaseDb(firebaseConfig, firebaseServiceAccount);
+    return clearDb();
   });
 
   afterEach(function() {
@@ -25,6 +30,8 @@ describe('Server Controller', function() {
     if (globalServerController) {
       globalServerController.stop();
     }
+
+    return clearDb();
   });
 
   it('should throw if constructed without a firebase DB', function() {
@@ -39,16 +46,12 @@ describe('Server Controller', function() {
     }).to.throw().property('code', 'controller-no-lab-id');
   });
 
-  it('should throw is server is already running', function() {
-    globalServerController = new ServerController({
-      once: (dbPath) => {
-        if (dbPath === `lab/example-lab-id/server-running`) {
-          return Promise.resolve(true);
-        }
-        throw new Error('Unexpected db once path: ' + dbPath);
-      },
-    }, 'example-lab-id');
-    return globalServerController.start()
+  it('should throw if server is already running', function() {
+    return firebaseDb.database.ref(`lab/example-lab-id/server-running`).set(true)
+    .then(() => {
+      globalServerController = new ServerController(firebaseDb, 'example-lab-id');
+      return globalServerController.start();
+    })
     .then(() => {
       throw new Error('Expected to reject promise.');
     }, (err) => {
@@ -56,183 +59,95 @@ describe('Server Controller', function() {
     });
   });
 
-  it('should mark server as running and start heart beat', function() {
-    let setServerRunning = false;
-    let startHeartbeat = false;
-
-    const heartbeatStub = sinon.stub(
-      ServerController.prototype, '_startServerHeartbeat');
-    heartbeatStub.callsFake(() => {
-      startHeartbeat = true;
-      return Promise.resolve();
-    });
-    stubs.push(heartbeatStub);
-
-    const serverRunningStub = sinon.stub(
-      ServerController.prototype, '_setServerRunning');
-    serverRunningStub.callsFake(() => {
-      setServerRunning = true;
-      return Promise.resolve();
-    });
-    stubs.push(serverRunningStub);
-
-    globalServerController = new ServerController({
-      once: (dbPath) => {
-        switch(dbPath) {
-          case 'lab/example-lab-id/server-running': {
-            return Promise.resolve(false);
-          }
-          default: {
-            throw new Error('Expected once value: ', dbPath);
-          }
-        }
-      },
-      database: {
-        ref: (refPath) => {
-          if (refPath === `lab/example-lab-id/loop-speed`) {
-            return {
-              on: (eventName, cb) => {
-                if (eventName === 'value') {
-                  return cb({
-                    val: () => {
-                      return 30;
-                    }
-                  });
-                }
-                throw new Error('Unexpected event name given: ' + eventName);
-              },
-            };
-          }
-
-          throw new Error('Unexpected ref path given: ' + refPath);
-        }
-      }
-    }, 'example-lab-id');
-
+  it('should generate an outline in firebase on start up', function() {
+    this.timeout(20 * 1000);
+    globalServerController = new ServerController(firebaseDb, 'example-lab-id');
     return globalServerController.start()
     .then(() => {
-      expect(setServerRunning).to.equal(true);
-      expect(startHeartbeat).to.equal(true);
+      return new Promise((resolve) => {
+        setTimeout(resolve, 10 * 1000);
+      });
     });
   });
 
-  it('should handle larger loopIndex than URLS', function() {
-    const EXAMPLE_URL = 'https://example.com/1';
-    const EXAMPLE_URL_TWO = 'https://example.com/2';
-    let testIndex = -1;
-    let shownUrl;
-    let shownLoopIndex;
-
-    globalServerController = new ServerController({}, 'example-lab-id');
-
-    const getLoopIndexStub = sinon.stub(globalServerController, '_getLoopIndex');
-    getLoopIndexStub.callsFake(() => {
-      return Promise.resolve(testIndex);
-    });
-    stubs.push(getLoopIndexStub);
-
-    const getUrlsStub = sinon.stub(globalServerController, '_getUrls');
-    getUrlsStub.callsFake(() => {
-      return Promise.resolve([
-        EXAMPLE_URL,
-        EXAMPLE_URL_TWO,
-      ]);
-    });
-    stubs.push(getUrlsStub);
-
-    const seturlStub = sinon.stub(globalServerController, '_setUrl');
-    seturlStub.callsFake((url) => {
-      shownUrl = url;
-      return Promise.resolve();
-    });
-    stubs.push(seturlStub);
-
-    const setLoopIndexStub = sinon.stub(globalServerController, '_setLoopIndex');
-    setLoopIndexStub.callsFake((loopIndex) => {
-      shownLoopIndex = loopIndex;
-      testIndex = loopIndex;
-      return Promise.resolve();
-    });
-    stubs.push(setLoopIndexStub);
-
-    return globalServerController._onLoopIteration()
+  it('should mark server as running and start heart beat', function() {
+    globalServerController = new ServerController(firebaseDb, 'example-lab-id');
+    return globalServerController.start()
     .then(() => {
-      expect(shownUrl).to.equal(EXAMPLE_URL);
-      expect(shownLoopIndex).to.equal(0);
-
-      return globalServerController._onLoopIteration();
+      return firebaseDb.once(`lab/example-lab-id/server-running`);
+    })
+    .then((isRunning) => {
+      expect(isRunning).to.equal(true);
     })
     .then(() => {
-      expect(shownUrl).to.equal(EXAMPLE_URL_TWO);
-      expect(shownLoopIndex).to.equal(1);
-
-      return globalServerController._onLoopIteration();
+      return firebaseDb.once(`servers`);
     })
-    .then(() => {
-      expect(shownUrl).to.equal(EXAMPLE_URL);
-      expect(shownLoopIndex).to.equal(0);
+    .then((serverValue) => {
+      const serverKeys = Object.keys(serverValue);
+      expect(serverKeys.length).to.equal(1);
+
+      const value = serverValue[serverKeys[0]];
+      expect(value.heartbeat).to.exist;
     });
   });
 
-  it('should step to next url after loop timeout', function() {
+  it('should loop over URLS', function() {
+    this.timeout(20 * 1000);
+
     const EXAMPLE_URL = 'https://example.com/1';
     const EXAMPLE_URL_TWO = 'https://example.com/2';
-    const LOOP_TIMEOUT_PERIOD = 5001;
-
-    const urlsShown = [];
-    let currentIndex = 0;
-
-    return new Promise((resolve) => {
-      globalServerController = new ServerController({
-        isServerRunning: () => {
-          return Promise.resolve(false);
-        },
-        isConnected: () => {
-          return Promise.resolve(true);
-        },
-        setLoopRunning: () => {
-          return Promise.resolve();
-        },
-        getLoopIndex: () => {
-          return Promise.resolve(currentIndex);
-        },
-        setLoopIndex: (newIndex) => {
-          currentIndex = newIndex;
-          if (urlsShown.length >= 3) {
-            expect(urlsShown).to.deep.equal([
-              EXAMPLE_URL,
-              EXAMPLE_URL_TWO,
-              EXAMPLE_URL,
-            ]);
-            resolve();
-          } else {
-            sinonClock.tick(LOOP_TIMEOUT_PERIOD);
-          }
-          return Promise.resolve();
-        },
-        getUrls: () => {
-          return Promise.resolve([EXAMPLE_URL, EXAMPLE_URL_TWO]);
+    let eventCallbacks = {};
+    return firebaseDb.database.ref(`lab/example-lab-id/urls`).set([
+      EXAMPLE_URL,
+      EXAMPLE_URL_TWO,
+    ])
+    .then(() => {
+      return new Promise((resolve) => {
+        const ProxiedServerController = proxyquire('../../src/node/controllers/server-controller', {
+        '../models/loop-behavior': function() {
+          return {
+            on: (eventName, cb) => {
+              eventCallbacks[eventName] = cb;
+            },
+            startLoop: () => {
+              resolve();
+            },
+          };
         },
       });
-
-      const showurlStub = sinon.stub(globalServerController, '_showUrl');
-      showurlStub.callsFake((url) => {
-        urlsShown.push(url);
-        return Promise.resolve();
+      const testServerController = new ProxiedServerController(firebaseDb, 'example-lab-id');
+      return testServerController.start();
       });
-      stubs.push(showurlStub);
-
-      const heartbeatStub = sinon.stub(
-        globalServerController, '_startServerHeartbeat');
-      heartbeatStub.callsFake(() => {
-        return Promise.resolve();
-      });
-      stubs.push(heartbeatStub);
-
-      globalServerController.start()
-      .then(() => {
-        sinonClock.tick(5000);
-      });
+    })
+    .then(() => {
+      return eventCallbacks['loop-iteration']();
+    })
+    .then(() => {
+      return firebaseDb.once('lab/example-lab-id');
+    })
+    .then((value) => {
+      expect(value.index).to.equal(0);
+      expect(value['current-url']).to.equal(EXAMPLE_URL);
+    })
+    .then(() => {
+      return eventCallbacks['loop-iteration']();
+    })
+    .then(() => {
+      return firebaseDb.once('lab/example-lab-id');
+    })
+    .then((value) => {
+      expect(value.index).to.equal(1);
+      expect(value['current-url']).to.equal(EXAMPLE_URL_TWO);
+    })
+    .then(() => {
+      return eventCallbacks['loop-iteration']();
+    })
+    .then(() => {
+      return firebaseDb.once('lab/example-lab-id');
+    })
+    .then((value) => {
+      expect(value.index).to.equal(0);
+      expect(value['current-url']).to.equal(EXAMPLE_URL);
     });
   });
 });

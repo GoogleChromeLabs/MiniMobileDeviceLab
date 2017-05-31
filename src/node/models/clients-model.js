@@ -1,3 +1,7 @@
+const EventEmitter = require('events');
+
+const logHelper = require('../utils/log-helper');
+
 class ServerModel extends EventEmitter {
   constructor(firebaseDb, labId) {
     super();
@@ -15,11 +19,6 @@ class ServerModel extends EventEmitter {
       }
       this.emit('loop-speed-change', newValue);
     });
-  }
-
-  updateHeartbeat() {
-    const fbMonitorRef = this._firebaseDb.database.ref('servers/' + deviceName);
-    fbMonitorRef.child('serverHeartbeart').set(new Date().toString());
   }
 
   /**
@@ -56,7 +55,11 @@ class ServerModel extends EventEmitter {
   getLoopIndex() {
     return this._firebaseDb.once(`lab/${this._labId}/index`)
     .then((value) => {
-      return value || -1;
+      if (typeof value !== 'number') {
+        return -1;
+      }
+      
+      return value;
     });
   }
 
@@ -66,3 +69,5 @@ class ServerModel extends EventEmitter {
     return loopIndexRef.set(newLoopIndex);
   }
 }
+
+module.exports = ServerModel;

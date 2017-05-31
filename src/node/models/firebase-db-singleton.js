@@ -1,13 +1,9 @@
-const firebase = require('firebase');
 const admin = require('firebase-admin');
 
 const logHelper = require('../utils/log-helper');
 
-
 class FirebaseDB {
   constructor(config, serviceAccount) {
-    this._fbInstance = firebase.initializeApp(config);
-
     const adminConfig = Object.assign({
       credential: admin.credential.cert(serviceAccount),
     }, config);
@@ -28,7 +24,7 @@ class FirebaseDB {
       const fbRef = this.database.ref(refPath);
       fbRef.once('value', (snapshot) => {
         resolve(snapshot.val());
-      });
+      }, reject);
     });
   }
 }
