@@ -2,7 +2,7 @@ const ControllerInterface = require('./controller-interface');
 const MMDLError = require('../models/mmdl-error');
 const logHelper = require('../utils/log-helper');
 const LoopBehavior = require('../models/loop-behavior');
-const ServerModel = require('../models/server-model');
+const LabModel = require('../models/lab-model');
 
 class ServerController extends ControllerInterface {
   constructor(firebaseDb, labId) {
@@ -14,18 +14,18 @@ class ServerController extends ControllerInterface {
     this._loopBehavior = new LoopBehavior();
     this._loopBehavior.on('loop-iteration', () => this._onLoopIteration());
 
-    this._serverModel = new ServerModel(firebaseDb, labId);
-    this._serverModel.on('loop-speed-change', (newValue) => {
+    this._labModel = new LabModel(firebaseDb, labId);
+    this._labModel.on('loop-speed-change', (newValue) => {
       logHelper.log(`Changing loop-speed to '${newValue}'`);
-      this._loopBehavior.changeSpeed(newValue);
+      this._loopBehavior.changeSpeedSecs(newValue);
     });
   }
 
   start() {
     logHelper.log(`Checking if '${this._labId}' is already running....`);
-    return this._prepareFirebaseDb()
+    return super.start()
     .then(() => {
-      return this._serverModel.isServerRunning();
+      return this._labModel.isServerRunning();
     })
     .then((isRunning) => {
       if (isRunning) {
@@ -33,35 +33,36 @@ class ServerController extends ControllerInterface {
       }
 
       logHelper.log(`Marking '${this._labId}' as running....`);
-      return this._serverModel.markServerAsRunning();
+      return this._labModel.markServerAsRunning();
     })
     .then(() => {
-      logHelper.log(`Starting server heartbeat....`);
-      return this._startServerHeartbeat();
+      return this._labModel.getLoopSpeedSecs();
     })
-    .then(() => {
+    .then((loopSpeedSecs) => {
+      this._loopBehavior.changeSpeedSecs(loopSpeedSecs);
+
       logHelper.log('Starting server loop...');
       this._loopBehavior.startLoop();
     });
   }
 
   stop() {
-    this._loopBehavior.stopLooping();
+    this._loopBehavior.stopLoop();
   }
 
   _onLoopIteration() {
     logHelper.log('Changing URL...');
 
     return Promise.all([
-      this._serverModel.getLoopIndex(),
-      this._serverModel.getUrls(),
+      this._labModel.getUrlIndex(),
+      this._labModel.getUrls(),
     ])
     .then((results) => {
-      let loopIndex = results[0];
+      let urlIndex = results[0];
       const urls = results[1];
 
       if (this._debug) {
-        logHelper.log(`    Current loopIndex: ${loopIndex}`);
+        logHelper.log(`    Current urlIndex: ${urlIndex}`);
         logHelper.log(`    Current URL count: ${urls.length}`);
       }
 
@@ -72,21 +73,21 @@ class ServerController extends ControllerInterface {
         return;
       }
 
-      if (loopIndex >= urls.length) {
-        loopIndex = 0;
+      if (urlIndex >= urls.length) {
+        urlIndex = 0;
       }
 
-      const newLoopIndex = (loopIndex + 1) % urls.length;
-      const newUrl = urls[newLoopIndex];
+      const newUrlIndex = (urlIndex + 1) % urls.length;
+      const newUrl = urls[newUrlIndex];
 
       if (this._debug) {
-        logHelper.log(`    New loopIndex: ${newLoopIndex}`);
+        logHelper.log(`    New urlIndex: ${newUrlIndex}`);
         logHelper.log(`    New URL count: ${newUrl}`);
       }
 
       return Promise.all([
-        this._serverModel.setUrl(newUrl),
-        this._serverModel.setLoopIndex(newLoopIndex),
+        this._labModel.setCurrentUrl(newUrl),
+        this._labModel.setUrlIndex(newUrlIndex),
       ]);
     })
     .catch((err) => {
