@@ -1,22 +1,12 @@
 const expect = require('chai').expect;
 const proxyquire = require('proxyquire');
 
-const ServerController = require('../../src/node/controllers/server-controller');
+const ClientController = require('../../src/node/controllers/client-controller');
 
-describe('ServerController', function() {
-  let globalServerController;
-
-  afterEach(function() {
-    this.timeout(5 * 1000);
-
-    if (globalServerController) {
-      globalServerController.stop();
-    }
-  });
-
+describe('ClientController', function() {
   it('should throw if constructed without a firebase DB', function() {
     expect(function() {
-      new ServerController();
+      new ClientController();
     }).to.throw().property('code', 'controller-no-firebase-db');
   });
 

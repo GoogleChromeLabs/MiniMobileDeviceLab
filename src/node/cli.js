@@ -1,9 +1,12 @@
 const path = require('path');
+const chalk = require('chalk');
+const pkg = require('../../package');
 const logHelper = require('./utils/log-helper');
 const MMDLError = require('./models/mmdl-error');
 const getFirebaseDb = require('./models/firebase-db-singleton');
 const ServerController = require('./controllers/server-controller');
 const ClientController = require('./controllers/client-controller');
+const ClientModel = require('./models/client-model');
 
 class MMDLCLI {
   argv(meowOutput) {
@@ -14,9 +17,12 @@ class MMDLCLI {
       throw new MMDLError('no-service-account-file');
     }
 
+    this._printIntroDetails();
+
     const config = this._loadConfigFile(meowOutput.flags.config);
-    logHelper.log(`Reading config from: `, path.relative(process.cwd(), meowOutput.flags.config));
-    
+    logHelper.log(`Reading config from: `,
+      path.relative(process.cwd(), meowOutput.flags.config));
+
     this._validateConfig(config);
 
     const serviceAccount = this._loadServiceAccountFile(
@@ -35,6 +41,19 @@ class MMDLCLI {
         firebaseDb, labId);
       return clientController.start();
     }
+  }
+
+  _printIntroDetails() {
+    /* eslint-disable no-console */
+    console.log('');
+    console.log('');
+    console.log(chalk.cyan('    Welcome to MiniMobileDeviceLab.'));
+    console.log(chalk.blue(`      Version: `) + pkg.version);
+    console.log(chalk.blue(`      Device Name: `) +
+      ClientModel.getDeviceName());
+    console.log('');
+    console.log('');
+    /* eslint-enable no-console */
   }
 
   _loadConfigFile(configPath) {

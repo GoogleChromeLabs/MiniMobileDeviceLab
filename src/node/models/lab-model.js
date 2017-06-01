@@ -13,6 +13,7 @@ const SEGMENT = {
 };
 
 const LOOP_SPEED_CHANGE = 'loop-speed-change';
+const CURRENT_URL_CHANGE = 'current-url-change';
 
 class LabModel extends EventEmitter {
   constructor(firebaseDb, labId) {
@@ -34,6 +35,21 @@ class LabModel extends EventEmitter {
         return;
       }
       this.emit(LOOP_SPEED_CHANGE, newValue);
+    });
+
+    this._firebaseDb.database.ref([
+      SEGMENT.LABS, this._labId, SEGMENT.CURRENT_URL,
+    ].join('/'))
+    .on('value', (snapshot) => {
+      let newValue = snapshot.val();
+      if (typeof newValue !== 'string') {
+        if (newValue !== null) {
+          logHelper.warn(`The '${SEGMENT.CURRENT_URL}' has changed for ` +
+            `'${this._labId}' but is not a string. Please correct this.`);
+        }
+        return;
+      }
+      this.emit(CURRENT_URL_CHANGE, newValue);
     });
   }
 

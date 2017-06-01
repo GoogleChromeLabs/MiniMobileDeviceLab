@@ -27,7 +27,6 @@
   },
   "homepage": "https://github.com/GoogleChrome/MiniMobileDeviceLab#readme",
   "dependencies": {
-    "firebase": "^3.9.0",
     "firebase-admin": "^5.0.0",
     "meow": "^3.7.0"
   },

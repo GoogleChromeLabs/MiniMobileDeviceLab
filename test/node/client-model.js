@@ -1,5 +1,6 @@
 const expect = require('chai').expect;
 
+const pkg = require('../../package');
 const ClientModel = require('../../src/node/models/client-model');
 
 const firebaseConfig = require('../demo/firebase-details');
@@ -28,30 +29,36 @@ describe('ClientModel', function() {
   });
 
   it('should update heartbeat', function() {
+    const refPath = `clients/${ClientModel.getDeviceName()}/example-client-type`;
     const clientModel = new ClientModel(firebaseDb, 'example-client-type');
-    return firebaseDb.once(`clients/${ClientModel.getDeviceName()}`)
+    return clientModel.ready
+    .then(() => {
+      return firebaseDb.once(refPath);
+    })
     .then((value) => {
-      expect(value).to.equal(null);
+      expect(value.heartbeat).to.not.exist;
+      expect(value['started-at']).to.exist;
+      expect(value.version).to.equal(pkg.version);
+      expect(value.devices).to.not.exist;
+      expect(value['kill-process']).to.equal(false);
     })
     .then(() => {
       return clientModel.updateHeartbeat();
     })
     .then(() => {
-      return firebaseDb.once(`clients/${ClientModel.getDeviceName()}`);
+      return firebaseDb.once(refPath);
     })
     .then((value) => {
       expect(value.heartbeat).to.exist;
-      expect(value['client-type']).to.equal('example-client-type');
     })
     .then(() => {
       return clientModel.updateHeartbeat();
     })
     .then(() => {
-      return firebaseDb.once(`clients/${ClientModel.getDeviceName()}`);
+      return firebaseDb.once(refPath);
     })
     .then((value) => {
       expect(value.heartbeat).to.exist;
-      expect(value['client-type']).to.equal('example-client-type');
     });
   });
 
